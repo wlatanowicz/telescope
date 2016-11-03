@@ -4,7 +4,12 @@ declare(strict_types = 1);
 namespace wlatanowicz\AppBundle\Factory;
 
 use wlatanowicz\AppBundle\Data\HSV;
+use wlatanowicz\AppBundle\Data\Range;
+use wlatanowicz\AppBundle\Data\RangedValue;
 use wlatanowicz\AppBundle\Data\RGB as RGBData;
+use wlatanowicz\AppBundle\Data\Spectrum;
+use wlatanowicz\AppBundle\Factory\RangedValue as RangedValueFactory;
+use wlatanowicz\AppBundle\Factory\HSV as HSVFactory;
 
 class RGB
 {
@@ -12,9 +17,12 @@ class RGB
 
     public static function fromHSV(HSV $hsv): RGBData
     {
-        $H = $hsv->getH() / 360.0;
-        $S = $hsv->getS();
-        $V = $hsv->getV();
+        $range = Range::ONE();
+        $factory = new RangedValueFactory($range);
+
+        $H = $factory->convert($hsv->getH())->getValue();
+        $S = $factory->convert($hsv->getS())->getValue();
+        $V = $factory->convert($hsv->getV())->getValue();
 
         //1
         $H *= 6;
@@ -48,9 +56,62 @@ class RGB
                 break;
         }
         return new RGBData(
-            round($R, self::CONVERSION_PRECISION),
-            round($G, self::CONVERSION_PRECISION),
-            round($B, self::CONVERSION_PRECISION)
+            new RangedValue(round($R, self::CONVERSION_PRECISION), $range),
+            new RangedValue(round($G, self::CONVERSION_PRECISION), $range),
+            new RangedValue(round($B, self::CONVERSION_PRECISION), $range)
         );
+    }
+
+    /**
+     * @param RGBData[] $colors
+     * @return RGBData
+     */
+    public static function fromCollection(array $colors): RGBData
+    {
+        $range = Range::ONE();
+        $factory = new RangedValueFactory($range);
+        $r = 0;
+        $g = 0;
+        $b = 0;
+
+        foreach ($colors as $color) {
+            $r += pow($factory->convert($color->getR())->getValue(), 2);
+            $g += pow($factory->convert($color->getG())->getValue(), 2);
+            $b += pow($factory->convert($color->getB())->getValue(), 2);
+        }
+
+        $r = pow(3.0 * $r / count($colors), 0.5);
+        $g = pow(3.0 * $g / count($colors), 0.5);
+        $b = pow(3.0 * $b / count($colors), 0.5);
+
+        $r = $r > $range->getMax()
+            ? $range->getMax()
+            : $r;
+
+        $g = $g > $range->getMax()
+            ? $range->getMax()
+            : $g;
+
+        $b = $b > $range->getMax()
+            ? $range->getMax()
+            : $b;
+
+        return new RGBData(
+            new RangedValue($r, $range),
+            new RangedValue($g, $range),
+            new RangedValue($b, $range)
+        );
+    }
+
+    public static function fromSpectrum(Spectrum $spectrum): RGBData
+    {
+        $hsvFactory = new HSVFactory($spectrum->getFrequencyRange(), $spectrum->getPowerRange());
+        $rgbColors = [];
+        foreach ($spectrum->getDataPoints() as $dataPoint) {
+            $hsvColor = $hsvFactory->fromSpectrumPoint($dataPoint);
+            $rgbColors[] = self::fromHSV($hsvColor);
+        }
+
+        return self::fromCollection($rgbColors);
     }
 }

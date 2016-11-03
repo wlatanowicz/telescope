@@ -35,14 +35,6 @@ class DataPoint
     }
 
     /**
-     * @return RGB
-     */
-    public function getColor(): RGB
-    {
-        //@TODO
-    }
-
-    /**
      * @return Spectrum
      */
     private function getSpectrum(): Spectrum

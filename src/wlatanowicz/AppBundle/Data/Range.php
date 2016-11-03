@@ -26,6 +26,11 @@ class Range
         $this->max = $max;
     }
 
+    public function map(float $value, self $valuesRange): float
+    {
+        //@TODO
+    }
+
     /**
      * @return float
      */
@@ -40,5 +45,15 @@ class Range
     public function getMax(): float
     {
         return $this->max;
+    }
+
+    public static function ONE(): self
+    {
+        return new self(0, 1);
+    }
+
+    public static function DEGREE(): self
+    {
+        return new self(0, 359.99999999);
     }
 }

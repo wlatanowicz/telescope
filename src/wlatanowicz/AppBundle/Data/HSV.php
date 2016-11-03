@@ -6,27 +6,27 @@ namespace wlatanowicz\AppBundle\Data;
 class HSV
 {
     /**
-     * @var float
+     * @var RangedValue
      */
     private $h;
 
     /**
-     * @var float
+     * @var RangedValue
      */
     private $s;
 
     /**
-     * @var float
+     * @var RangedValue
      */
     private $v;
 
     /**
      * HSV constructor.
-     * @param float $h 0..259
-     * @param float $s 0..1
-     * @param float $v 0..1
+     * @param RangedValue $h
+     * @param RangedValue $s
+     * @param RangedValue $v
      */
-    public function __construct(float $h, float $s, float $v)
+    public function __construct(RangedValue $h, RangedValue $s, RangedValue $v)
     {
         $this->h = $h;
         $this->s = $s;
@@ -34,25 +34,25 @@ class HSV
     }
 
     /**
-     * @return float
+     * @return RangedValue
      */
-    public function getH(): float
+    public function getH(): RangedValue
     {
         return $this->h;
     }
 
     /**
-     * @return float
+     * @return RangedValue
      */
-    public function getS(): float
+    public function getS(): RangedValue
     {
         return $this->s;
     }
 
     /**
-     * @return float
+     * @return RangedValue
      */
-    public function getV(): float
+    public function getV(): RangedValue
     {
         return $this->v;
     }

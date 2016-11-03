@@ -26,5 +26,24 @@ class SpectrumPoint
         $this->power = $power;
     }
 
+    public function getFrequencyRange(): Range
+    {
+        //@TODO
+    }
 
+    /**
+     * @return float
+     */
+    public function getFrequency(): float
+    {
+        return $this->frequency;
+    }
+
+    /**
+     * @return float
+     */
+    public function getPower(): float
+    {
+        return $this->power;
+    }
 }

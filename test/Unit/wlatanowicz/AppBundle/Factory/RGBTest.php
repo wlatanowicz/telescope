@@ -3,6 +3,8 @@
 namespace Test\Unit\wlatanowicz\AppBundle\Factory;
 
 use wlatanowicz\AppBundle\Data\HSV;
+use wlatanowicz\AppBundle\Data\Range;
+use wlatanowicz\AppBundle\Data\RangedValue;
 use wlatanowicz\AppBundle\Data\RGB;
 use wlatanowicz\AppBundle\Factory\RGB as RGBFactory;
 
@@ -10,9 +12,9 @@ class RGBTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @test
-     * @dataProvider dataProvider
+     * @dataProvider hsvDataProvider
      */
-    public function itShouldConvertHSVtoRGB($rgb, $hsv)
+    public function itShouldConvertHSVtoRGB(RGB $rgb, HSV $hsv)
     {
         $expected = $rgb;
         $result = RGBFactory::fromHSV($hsv);
@@ -20,39 +22,132 @@ class RGBTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $result);
     }
 
-    public function dataProvider()
+    /**
+     * @test
+     * @dataProvider collectionDataProvider
+     * @param array $collection
+     * @param RGB $rgb
+     */
+    public function itShouldSummarizeColors(array $collection, RGB $rgb)
     {
+        $expected = $rgb;
+        $result = RGBFactory::fromCollection($collection);
+
+        $this->assertEquals($expected, $result);
+    }
+
+    public function hsvDataProvider()
+    {
+        $degreeRange = Range::DEGREE();
+        $unitRange = Range::ONE();
+
         return [
             "red" => [
-                "rgb" => new RGB(1, 0, 0),
-                "hsv" => new HSV(0, 1, 1),
+                "rgb" => new RGB(
+                    new RangedValue(1, $unitRange),
+                    new RangedValue(0, $unitRange),
+                    new RangedValue(0, $unitRange)
+                ),
+                "hsv" => new HSV(
+                    new RangedValue(0, $degreeRange),
+                    new RangedValue(1, $unitRange),
+                    new RangedValue(1, $unitRange)
+                ),
             ],
             "green" => [
-                "rgb" => new RGB(0, 1, 0),
-                "hsv" => new HSV(120, 1, 1),
+                "rgb" => new RGB(
+                    new RangedValue(0, $unitRange),
+                    new RangedValue(1, $unitRange),
+                    new RangedValue(0, $unitRange)
+                ),
+                "hsv" => new HSV(
+                    new RangedValue(120, $degreeRange),
+                    new RangedValue(1, $unitRange),
+                    new RangedValue(1, $unitRange)
+                ),
             ],
             "blue" => [
-                "rgb" => new RGB(0, 0, 1),
-                "hsv" => new HSV(240, 1, 1),
+                "rgb" => new RGB(
+                    new RangedValue(0, $unitRange),
+                    new RangedValue(0, $unitRange),
+                    new RangedValue(1, $unitRange)
+                ),
+                "hsv" => new HSV(
+                    new RangedValue(240, $degreeRange),
+                    new RangedValue(1, $unitRange),
+                    new RangedValue(1, $unitRange)
+                ),
             ],
-
             "white-1" => [
-                "rgb" => new RGB(1, 1, 1),
-                "hsv" => new HSV(0, 0, 1),
+                "rgb" => new RGB(
+                    new RangedValue(1, $unitRange),
+                    new RangedValue(1, $unitRange),
+                    new RangedValue(1, $unitRange)
+                ),
+                "hsv" => new HSV(
+                    new RangedValue(0, $degreeRange),
+                    new RangedValue(0, $unitRange),
+                    new RangedValue(1, $unitRange)
+                ),
             ],
             "white-2" => [
-                "rgb" => new RGB(1, 1, 1),
-                "hsv" => new HSV(180, 0, 1),
+                "rgb" => new RGB(
+                    new RangedValue(1, $unitRange),
+                    new RangedValue(1, $unitRange),
+                    new RangedValue(1, $unitRange)
+                ),
+                "hsv" => new HSV(
+                    new RangedValue(120, $degreeRange),
+                    new RangedValue(0, $unitRange),
+                    new RangedValue(1, $unitRange)
+                ),
             ],
             "white-3" => [
-                "rgb" => new RGB(1, 1, 1),
-                "hsv" => new HSV(360, 0, 1),
+                "rgb" => new RGB(
+                    new RangedValue(1, $unitRange),
+                    new RangedValue(1, $unitRange),
+                    new RangedValue(1, $unitRange)
+                ),
+                "hsv" => new HSV(
+                    new RangedValue(240, $degreeRange),
+                    new RangedValue(0, $unitRange),
+                    new RangedValue(1, $unitRange)
+                ),
             ],
-
             "black" => [
-                "rgb" => new RGB(0, 0, 0),
-                "hsv" => new HSV(0, 0, 0),
+                "rgb" => new RGB(
+                    new RangedValue(0, $unitRange),
+                    new RangedValue(0, $unitRange),
+                    new RangedValue(0, $unitRange)
+                ),
+                "hsv" => new HSV(
+                    new RangedValue(0, $degreeRange),
+                    new RangedValue(0, $unitRange),
+                    new RangedValue(0, $unitRange)
+                ),
             ],
+        ];
+    }
+
+    public function collectionDataProvider()
+    {
+        return [
+            [
+                [
+                    new RGB(RangedValue::ONE(), RangedValue::ZERO(), RangedValue::ZERO()),
+                    new RGB(RangedValue::ZERO(), RangedValue::ONE(), RangedValue::ZERO()),
+                    new RGB(RangedValue::ZERO(), RangedValue::ZERO(), RangedValue::ONE()),
+                ],
+                new RGB(RangedValue::ONE(), RangedValue::ONE(), RangedValue::ONE())
+            ],
+            [
+                [
+                    new RGB(RangedValue::ONE(), RangedValue::ZERO(), RangedValue::ZERO()),
+                    new RGB(RangedValue::ONE(), RangedValue::ZERO(), RangedValue::ZERO()),
+                    new RGB(RangedValue::ONE(), RangedValue::ZERO(), RangedValue::ZERO()),
+                ],
+                new RGB(RangedValue::ONE(), RangedValue::ZERO(), RangedValue::ZERO())
+            ]
         ];
     }
 }

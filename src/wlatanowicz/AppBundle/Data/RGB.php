@@ -6,27 +6,27 @@ namespace wlatanowicz\AppBundle\Data;
 class RGB
 {
     /**
-     * @var float
+     * @var RangedValue
      */
     private $r;
 
     /**
-     * @var float
+     * @var RangedValue
      */
     private $g;
 
     /**
-     * @var float
+     * @var RangedValue
      */
     private $b;
 
     /**
      * RGB constructor.
-     * @param float $r 0..1
-     * @param float $g 0..1
-     * @param float $b 0..1
+     * @param RangedValue $r
+     * @param RangedValue $g
+     * @param RangedValue $b
      */
-    public function __construct(float $r, float $g, float $b)
+    public function __construct(RangedValue $r, RangedValue $g, RangedValue $b)
     {
         $this->r = $r;
         $this->g = $g;
@@ -34,25 +34,25 @@ class RGB
     }
 
     /**
-     * @return float
+     * @return RangedValue
      */
-    public function getR(): float
+    public function getR(): RangedValue
     {
         return $this->r;
     }
 
     /**
-     * @return float
+     * @return RangedValue
      */
-    public function getG(): float
+    public function getG(): RangedValue
     {
         return $this->g;
     }
 
     /**
-     * @return float
+     * @return RangedValue
      */
-    public function getB(): float
+    public function getB(): RangedValue
     {
         return $this->b;
     }
