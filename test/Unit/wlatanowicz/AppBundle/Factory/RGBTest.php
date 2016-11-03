@@ -1,9 +1,10 @@
 <?php
 
-namespace Test\Unit\wlatanowicz\AppBundle\Data;
+namespace Test\Unit\wlatanowicz\AppBundle\Factory;
 
 use wlatanowicz\AppBundle\Data\HSV;
 use wlatanowicz\AppBundle\Data\RGB;
+use wlatanowicz\AppBundle\Factory\RGB as RGBFactory;
 
 class RGBTest extends \PHPUnit_Framework_TestCase
 {
@@ -14,7 +15,7 @@ class RGBTest extends \PHPUnit_Framework_TestCase
     public function itShouldConvertHSVtoRGB($rgb, $hsv)
     {
         $expected = $rgb;
-        $result = RGB::fromHSV($hsv);
+        $result = RGBFactory::fromHSV($hsv);
 
         $this->assertEquals($expected, $result);
     }
