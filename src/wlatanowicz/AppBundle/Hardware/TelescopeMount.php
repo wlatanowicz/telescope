@@ -30,16 +30,20 @@ class TelescopeMount
 
     private function writeCommand($fd, string $command)
     {
+        echo "WRITE: {$command}\n";
         fwrite($fd, $command);
     }
 
     private function readResponse($fd): string
     {
+        echo "READ: ";
         $response = '';
         do {
             $byte = fread($fd, 1);
+            echo $byte;
             $response .= $byte;
         } while ($byte != '#');
+        echo "\n";
         return substr($response, 0, -1);
     }
 }
