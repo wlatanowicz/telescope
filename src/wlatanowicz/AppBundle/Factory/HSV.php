@@ -29,7 +29,7 @@ class HSV
 
     public function fromSpectrumPoint(SpectrumPoint $spectrumPoint): HSVData
     {
-        $factory = new RangedValueFactory(new Range(0, 270));
+        $factory = new RangedValueFactory(new Range(0, 280));
         $frequency = new RangedValue($spectrumPoint->getFrequency(), $this->frequencyRange);
 
         $hValue = $factory->convert($frequency)->getValue();

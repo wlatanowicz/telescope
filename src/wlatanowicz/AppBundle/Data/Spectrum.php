@@ -3,6 +3,8 @@ declare(strict_types = 1);
 
 namespace wlatanowicz\AppBundle\Data;
 
+use wlatanowicz\AppBundle\Factory\Range as RangeFactory;
+
 class Spectrum
 {
     /**
@@ -42,19 +44,17 @@ class Spectrum
     public function getFrequencyRange(): Range
     {
         if ($this->frequencyRange === null) {
-            $minFrequency = null;
-            $maxFrequency = null;
+            $range = null;
             foreach ($this->dataPoints as $dataPoint) {
-                $minFrequency
-                    = $minFrequency === null || $dataPoint->getFrequency() < $minFrequency
-                    ? $dataPoint->getFrequency()
-                    : $minFrequency;
-                $maxFrequency
-                    = $maxFrequency === null || $dataPoint->getFrequency() > $maxFrequency
-                    ? $dataPoint->getFrequency()
-                    : $maxFrequency;
+                $range = RangeFactory::extend(
+                    $range,
+                    new Range(
+                        $dataPoint->getFrequency(),
+                        $dataPoint->getFrequency()
+                    )
+                );
             }
-            $this->frequencyRange = new Range($minFrequency, $maxFrequency);
+            $this->frequencyRange = $range;
         }
         return $this->frequencyRange;
     }
@@ -62,19 +62,17 @@ class Spectrum
     public function getPowerRange(): Range
     {
         if ($this->powerRange === null) {
-            $minPower = null;
-            $maxPower = null;
+            $range = null;
             foreach ($this->dataPoints as $dataPoint) {
-                $minPower
-                    = $minPower === null || $dataPoint->getPower() < $minPower
-                    ? $dataPoint->getPower()
-                    : $minPower;
-                $maxPower
-                    = $maxPower === null || $dataPoint->getPower() > $maxPower
-                    ? $dataPoint->getPower()
-                    : $maxPower;
+                $range = RangeFactory::extend(
+                    $range,
+                    new Range(
+                        $dataPoint->getPower(),
+                        $dataPoint->getPower()
+                    )
+                );
             }
-            $this->powerRange = new Range($minPower, $maxPower);
+            $this->powerRange = $range;
         }
         return $this->powerRange;
     }

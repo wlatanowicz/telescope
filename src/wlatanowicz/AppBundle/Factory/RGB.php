@@ -4,7 +4,7 @@ declare(strict_types = 1);
 namespace wlatanowicz\AppBundle\Factory;
 
 use wlatanowicz\AppBundle\Data\HSV;
-use wlatanowicz\AppBundle\Data\Range;
+use wlatanowicz\AppBundle\Data\Range as RangeData;
 use wlatanowicz\AppBundle\Data\RangedValue;
 use wlatanowicz\AppBundle\Data\RGB as RGBData;
 use wlatanowicz\AppBundle\Data\Spectrum;
@@ -17,7 +17,7 @@ class RGB
 
     public static function fromHSV(HSV $hsv): RGBData
     {
-        $range = Range::ONE();
+        $range = RangeData::ONE();
         $factory = new RangedValueFactory($range);
 
         $H = $factory->convert($hsv->getH())->getValue();
@@ -68,7 +68,7 @@ class RGB
      */
     public static function fromCollection(array $colors): RGBData
     {
-        $range = Range::ONE();
+        $range = RangeData::ONE();
         $factory = new RangedValueFactory($range);
         $r = 0;
         $g = 0;

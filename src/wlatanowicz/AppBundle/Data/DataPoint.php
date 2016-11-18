@@ -37,7 +37,7 @@ class DataPoint
     /**
      * @return Spectrum
      */
-    private function getSpectrum(): Spectrum
+    public function getSpectrum(): Spectrum
     {
         return $this->spectrum;
     }

@@ -1,0 +1,10 @@
+services:
+  telescope:
+    class: wlatanowicz\AppBundle\Hardware\Telescope
+    arguments:
+      - '@telescope-mount'
+
+  telescope-mount:
+    class: wlatanowicz\AppBundle\Hardware\TelescopeMount
+    arguments:
+      - '/dev/ttyUSB0'

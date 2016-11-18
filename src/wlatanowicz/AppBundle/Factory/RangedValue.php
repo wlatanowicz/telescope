@@ -3,13 +3,13 @@ declare(strict_types = 1);
 
 namespace wlatanowicz\AppBundle\Factory;
 
-use wlatanowicz\AppBundle\Data\Range;
+use wlatanowicz\AppBundle\Data\Range as RangeData;
 use wlatanowicz\AppBundle\Data\RangedValue as RangedValueData;
 
 class RangedValue
 {
     /**
-     * @var Range
+     * @var RangeData
      */
     private $targetRange;
 
@@ -17,7 +17,7 @@ class RangedValue
      * RangedValue constructor.
      * @param Range $targetRange
      */
-    public function __construct(Range $targetRange)
+    public function __construct(RangeData $targetRange)
     {
         $this->targetRange = $targetRange;
     }
