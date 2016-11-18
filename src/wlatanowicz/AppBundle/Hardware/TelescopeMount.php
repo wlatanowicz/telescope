@@ -21,7 +21,7 @@ class TelescopeMount
 
     public function sendCommand(string $command): string
     {
-        $fd = fopen($this->device, "r+");
+        $fd = fopen($this->device, "w+");
         $this->writeCommand($fd, $command);
         $response = $this->readResponse($fd);
         fclose($fd);
