@@ -40,6 +40,10 @@ class Telescope
     {
         $ra = 0xffff * ($coordinates->getRightAscension() / 24);
         $dec = 0xffff * ($coordinates->getDeclination() / 360);
-        return strtoupper(dechex($ra)) . "," . strtoupper(dechex($dec));
+
+        $raStr = str_pad(strtoupper(dechex($ra)), 8, '0', STR_PAD_LEFT);
+        $decStr = str_pad(strtoupper(dechex($dec)), 8, '0', STR_PAD_LEFT);
+        
+        return $raStr . "," . $decStr;
     }
 }
