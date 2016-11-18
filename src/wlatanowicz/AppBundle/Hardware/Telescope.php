@@ -7,8 +7,8 @@ use wlatanowicz\AppBundle\Data\Coordinates;
 
 class Telescope
 {
-    const SET_POSITION_COMMAND = '';
-    const GET_POSITION_COMMAND = '';
+    const SET_POSITION_COMMAND = 'r';
+    const GET_POSITION_COMMAND = 'e';
 
     const SETTLE_CHECK_WAIT = 1000000;
 
