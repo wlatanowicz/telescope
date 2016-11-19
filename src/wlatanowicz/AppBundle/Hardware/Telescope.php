@@ -14,8 +14,8 @@ class Telescope
     const DEFAULT_TOLERANCE_RA = 0.1;
     const DEFAULT_TOLERANCE_DEC = 0.1;
 
-    const SETTLE_CHECK_WAIT = 1000000;
-    const SETTLE_WAIT = 1000000;
+    const SETTLE_CHECK_WAIT = 100000;
+    const SETTLE_WAIT = 100000;
 
     /**
      * @var TelescopeMount
