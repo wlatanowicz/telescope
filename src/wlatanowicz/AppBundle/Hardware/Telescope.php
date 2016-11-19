@@ -4,13 +4,18 @@ declare(strict_types = 1);
 namespace wlatanowicz\AppBundle\Hardware;
 
 use wlatanowicz\AppBundle\Data\Coordinates;
+use wlatanowicz\AppBundle\Factory\TelescopeCoordinatesConverter;
 
 class Telescope
 {
     const SET_POSITION_COMMAND = 'r';
     const GET_POSITION_COMMAND = 'e';
 
+    const DEFAULT_TOLERANCE_RA = 0.1;
+    const DEFAULT_TOLERANCE_DEC = 0.1;
+
     const SETTLE_CHECK_WAIT = 1000000;
+    const SETTLE_WAIT = 1000000;
 
     /**
      * @var TelescopeMount
@@ -26,24 +31,45 @@ class Telescope
         $this->mount = $mount;
     }
 
-    public function setPosition(Coordinates $coordinates, bool $wait = true)
+    public function setPosition(
+        Coordinates $coordinates,
+        bool $wait = true,
+        Coordinates $tolerance = null
+    )
     {
-        $positionAsString = $this->coordinatesToString($coordinates);
-        $expectedResponse = $positionAsString."#";
-        $this->mount->sendCommand(self::SET_POSITION_COMMAND . $positionAsString);
-        while ($wait && $this->mount->sendCommand(self::GET_POSITION_COMMAND) != $expectedResponse) {
-            usleep(self::SETTLE_CHECK_WAIT);
+        if ($tolerance == null) {
+            $tolerance = new Coordinates(
+                self::DEFAULT_TOLERANCE_DEC,
+                self::DEFAULT_TOLERANCE_RA
+            );
         }
+
+        $positionAsString = TelescopeCoordinatesConverter::coordinatesToString($coordinates);
+
+        $this->mount->sendCommand(self::SET_POSITION_COMMAND . $positionAsString);
+
+        if ($wait) {
+            do {
+                usleep(self::SETTLE_CHECK_WAIT);
+
+                $currentPosition = $this->getPosition();
+
+                $decDiff = $coordinates->getDeclination() - $currentPosition->getDeclination();
+                $raDiff = $coordinates->getRightAscension() - $currentPosition->getRightAscension();
+
+                $positioned = abs($decDiff) <= abs($tolerance->getDeclination())
+                    && abs($raDiff) <= abs($tolerance->getRightAscension());
+
+            }while(!$positioned);
+
+            usleep(self::SETTLE_WAIT);
+        }
+
     }
 
-    private function coordinatesToString(Coordinates $coordinates): string
+    public function getPosition(): Coordinates
     {
-        $ra = 0xffff * ($coordinates->getRightAscension() / 24);
-        $dec = 0xffff * ($coordinates->getDeclination() / 360);
-
-        $raStr = str_pad(strtoupper(dechex($ra)), 8, '0', STR_PAD_LEFT);
-        $decStr = str_pad(strtoupper(dechex($dec)), 8, '0', STR_PAD_LEFT);
-        
-        return $raStr . "," . $decStr;
+        $response = $this->mount->sendCommand(self::GET_POSITION_COMMAND);
+        return TelescopeCoordinatesConverter::stringToCoordinates($response);
     }
 }
