@@ -1,0 +1,35 @@
+services:
+  telescope-local:
+    class: wlatanowicz\AppBundle\Hardware\Local\Telescope
+    arguments:
+      - '@telescope-mount'
+
+  telescope-mount:
+    class: wlatanowicz\AppBundle\Hardware\Local\TelescopeMount
+    arguments:
+      - '@telescope-mount-serial'
+
+  telescope-mount-serial:
+    class: wlatanowicz\AppBundle\Hardware\Helper\SerialPort
+    arguments:
+      - '/dev/ttyUSB0'
+
+  camera-local:
+    class: wlatanowicz\AppBundle\Hardware\Local\Camera
+    arguments:
+      - '@sys-process'
+      - '@sys-filesystem'
+      - '/usr/local/bin/gphoto2'
+      - '/tmp'
+
+  radio-local:
+    class: wlatanowicz\AppBundle\Hardware\Local\Radio
+    arguments:
+      - '@radio-receiver'
+
+  radio-receiver:
+    class: wlatanowicz\AppBundle\Hardware\Local\RadioReceiver
+    arguments:
+      - '@sys-process'
+      - '/opt/local/bin/rtl_power'
+      - 1

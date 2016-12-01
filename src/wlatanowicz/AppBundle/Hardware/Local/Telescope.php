@@ -1,12 +1,13 @@
 <?php
 declare(strict_types = 1);
 
-namespace wlatanowicz\AppBundle\Hardware;
+namespace wlatanowicz\AppBundle\Hardware\Local;
 
 use wlatanowicz\AppBundle\Data\Coordinates;
 use wlatanowicz\AppBundle\Factory\TelescopeCoordinatesConverter;
+use wlatanowicz\AppBundle\Hardware\TelescopeInterface;
 
-class Telescope
+class Telescope implements TelescopeInterface
 {
     const SET_POSITION_COMMAND = 'r';
     const GET_POSITION_COMMAND = 'e';

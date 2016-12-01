@@ -7,16 +7,16 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use wlatanowicz\AppBundle\Data\Coordinates;
-use wlatanowicz\AppBundle\Hardware\Telescope;
+use wlatanowicz\AppBundle\Hardware\TelescopeInterface;
 
 class TelescopeCommand extends Command
 {
     /**
-     * @var Telescope
+     * @var TelescopeInterface
      */
     private $telescope;
 
-    public function __construct(Telescope $telescope)
+    public function __construct(TelescopeInterface $telescope)
     {
         parent::__construct(null);
 

@@ -1,0 +1,5 @@
+# app/config/services.yml
+services:
+    ctrl-info:
+        class:     AppBundle\Controller\HelloController
+        arguments: ['@templating']
