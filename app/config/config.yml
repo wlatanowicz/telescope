@@ -2,3 +2,11 @@ imports:
     - { resource: parameters.yml }
     - { resource: services.yml }
     - { resource: commands.yml }
+    - { resource: controllers.yml }
+    - { resource: hardware.yml }
+
+framework:
+    router:
+        resource: "%kernel.root_dir%/config/routing.yml"
+        strict_requirements: true
+    profiler: { only_exceptions: false }

@@ -1,4 +1,13 @@
 info:
-    path:     /info
-    defaults:
-        _controller: ctrl-info:info
+  path: /info
+  defaults:
+    _controller: ctrl-info:getInfo
+    _format: json
+  methods: [GET]
+
+camera-image:
+  path: /camera/{name}/image
+  defaults:
+    _controller: ctrl-camera-image:getImage
+    _format: json
+  methods: [GET]

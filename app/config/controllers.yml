@@ -1,5 +1,9 @@
 # app/config/services.yml
 services:
-    ctrl-info:
-        class:     AppBundle\Controller\HelloController
-        arguments: ['@templating']
+  ctrl-info:
+    class: wlatanowicz\AppBundle\Api\Controller\Info
+
+  ctrl-camera-image:
+    class: wlatanowicz\AppBundle\Api\Controller\Camera\Image
+    arguments:
+      - '@camera-provider'

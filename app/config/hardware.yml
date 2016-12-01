@@ -33,3 +33,20 @@ services:
       - '@sys-process'
       - '/opt/local/bin/rtl_power'
       - 1
+
+  telesope-provider:
+    class: wlatanowicz\AppBundle\Hardware\Provider\TelescopeProvider
+    arguments:
+      local: '@telescope-local'
+
+  camera-provider:
+    class: wlatanowicz\AppBundle\Hardware\Provider\CameraProvider
+    arguments:
+      -
+        local: '@camera-local'
+
+  radio-provider:
+    class: wlatanowicz\AppBundle\Hardware\Provider\RadioProvider
+    arguments:
+      -
+        local: '@radio-local'

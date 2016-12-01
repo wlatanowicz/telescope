@@ -1,7 +1,7 @@
 services:
-  dac_app.command.import_briefcase_ids:
+  command-goto:
     class: wlatanowicz\AppBundle\Command\TelescopeCommand
     arguments:
-      - '@telescope'
+      - '@telescope-local'
     tags:
         - { name: console.command }
