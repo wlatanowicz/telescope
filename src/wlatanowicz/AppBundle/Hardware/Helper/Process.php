@@ -15,7 +15,7 @@ class Process
         exec($command, $result, $code);
 
         if ($code !== 0) {
-            throw new ProcessException();
+            throw new ProcessException($command, $code);
         }
 
         return $result;
