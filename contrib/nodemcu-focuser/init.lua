@@ -9,6 +9,7 @@ pin4 = 3
 
 position = 0
 targetPosition = 0
+startPosition = 0
 
 gpio.mode(pin1, gpio.OUTPUT)
 gpio.mode(pin2, gpio.OUTPUT)
@@ -60,6 +61,33 @@ function driveMotor(pos)
   end
 end
 
+function setSpeed(speed)
+    if (speed > 100) then
+        speed = 100;
+    end
+    if (speed < 0) then
+        speed = 0;
+    end
+    tmr.interval(0, 110 - speed);
+end
+
+function setSpeedByPosition()
+
+    local maxSpeed = 100
+    local flatOutDistance = 200
+
+    local distance = math.min( math.abs(startPosition - position), math.abs(targetPosition - position) )
+
+    local speed = maxSpeed
+
+    if (distance < flatOutDistance )
+    then
+        speed = ( maxSpeed * distance ) / flatOutDistance;
+    end
+
+    setSpeed(math.floor(maxSpeed))
+end
+
 srv=net.createServer(net.TCP)
 srv:listen(80,function(conn)
     conn:on("receive", function(client,request)
@@ -76,6 +104,7 @@ srv:listen(80,function(conn)
         end
 
         if (_GET.position ~= nil)then
+            startPosition = position;
             targetPosition = signedtonumber(_GET.position, 10);
         end
 
@@ -91,6 +120,12 @@ srv:listen(80,function(conn)
 end)
 
 tmr.register(0, 100, tmr.ALARM_AUTO, function ()
+    if ( position ~= targetPosition ) then
+        setSpeedByPosition();
+    else
+        setSpeed(0);
+    end
+
     if ( position > targetPosition ) then
         position = position - 1
     end
