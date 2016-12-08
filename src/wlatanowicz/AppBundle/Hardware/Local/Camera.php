@@ -41,6 +41,8 @@ class Camera implements CameraInterface
     public function exposure(int $time)
     {
         $tempfile = $this->filesystem->tempName($this->temp);
+        $this->filesystem->unlink($tempfile);
+
         $cmd = "sudo {$this->bin}"
             . " --quiet"
             . " --set-config capture=on"
