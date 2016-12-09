@@ -38,7 +38,7 @@ class Camera implements CameraInterface
         $this->temp = $temp;
     }
 
-    public function exposure(int $time)
+    public function exposure(int $time): BinaryImage
     {
         $tempfile = $this->filesystem->tempName($this->temp);
         $this->filesystem->unlink($tempfile);
