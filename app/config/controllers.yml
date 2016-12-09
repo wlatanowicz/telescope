@@ -7,3 +7,4 @@ services:
     class: wlatanowicz\AppBundle\Api\Controller\Camera\Image
     arguments:
       - '@camera-provider'
+      - '@jms_serializer'

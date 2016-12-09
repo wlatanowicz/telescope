@@ -22,6 +22,9 @@ services:
       - '/usr/local/bin/gphoto2'
       - '/tmp'
 
+  camera-dummy:
+    class: wlatanowicz\AppBundle\Hardware\Dummy\Camera
+
   radio-local:
     class: wlatanowicz\AppBundle\Hardware\Local\Radio
     arguments:
@@ -44,6 +47,7 @@ services:
     arguments:
       -
         local: '@camera-local'
+        dummy: '@camera-dummy'
 
   radio-provider:
     class: wlatanowicz\AppBundle\Hardware\Provider\RadioProvider
