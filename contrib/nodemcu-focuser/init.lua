@@ -169,10 +169,12 @@ function processRequest(client, request)
             error("body.position has to be number")
         end
         position = signedtonumber(body.position, 10);
+        targetPosition = position;
     end
 
     if (method == "DELETE")then
         position = 0;
+        targetPosition = 0;
     end
 
     client:send(cjson.encode({
@@ -200,7 +202,7 @@ srv:listen(80,function(conn)
     end);
 end);
 
---init main loop
+--main loop
 tmr.register(0, 100, tmr.ALARM_AUTO, function ()
     
     if ( position ~= targetPosition ) then
