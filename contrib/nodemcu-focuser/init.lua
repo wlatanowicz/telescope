@@ -1,7 +1,13 @@
 wifi.setmode(wifi.STATION)
 wifi.sta.config("flux2g","1qazxsw23edc")
 
-print(wifi.sta.getip())
+print("Server init");
+if ( wifi.sta.getip() ~= nil ) then
+    print("IP: " .. wifi.sta.getip())
+else
+    print("IP: not yet")
+end
+
 pin1 = 0
 pin2 = 1
 pin3 = 2
@@ -94,41 +100,74 @@ function setSpeedByPosition()
     setSpeed(speed)
 end
 
+function processRequest(client, request)
+    local _, _, method, path, vars = string.find(request, "([A-Z]+) (.+)?(.+) HTTP");
+    if(method == nil)then
+        _, _, method, path = string.find(request, "([A-Z]+) (.+) HTTP");
+    end
+
+    local _, _, headers, bodyStr = string.find(request, "(.+)\n\r(.*)");
+
+    local body = {}
+    
+    if ( bodyStr ~= nil ) then
+        if (string.len(bodyStr) > 4 ) then
+            body = (cjson.decode(bodyStr));
+        end
+    end
+
+
+    local get = {}
+    if (vars ~= nil)then
+        for k, v in string.gmatch(vars, "(%w+)=([-%w]+)&*") do
+            _GET[k] = v
+        end
+    end
+
+
+    print( "METHOD: " .. method )
+    print( "JSON: " .. cjson.encode(body) )
+    print( "GET: " .. cjson.encode(get) )
+
+    if (method == "POST")then
+        if (body.targetPosition == nil) then
+            error("body.targetPosition has to be number")
+        end
+        startPosition = position;
+        targetPosition = signedtonumber(body.targetPosition, 10);
+    end
+
+    if (method == "PATCH")then
+        if (body.position == nil) then
+            error("body.position has to be number")
+        end
+        position = signedtonumber(body.position, 10);
+    end
+
+    if (method == "DELETE")then
+        position = 0;
+    end
+
+    client:send(cjson.encode({
+        position = position,
+        target = targetPosition,
+        result = "OK"
+    }));
+    client:close();
+end
+
 srv=net.createServer(net.TCP)
 srv:listen(80,function(conn)
     conn:on("receive", function(client,request)
-        local buf = "";
-        local _, _, method, path, vars = string.find(request, "([A-Z]+) (.+)?(.+) HTTP");
-        if(method == nil)then
-            _, _, method, path = string.find(request, "([A-Z]+) (.+) HTTP");
+        local status, err = pcall(processRequest, client, request);
+        if ( not status ) then
+            print( "ERROR" );
+            client:send(cjson.encode({
+                code = err,
+                result = "ERROR"
+            }));
+            client:close();
         end
-        local _GET = {}
-        if (vars ~= nil)then
-            for k, v in string.gmatch(vars, "(%w+)=([-%w]+)&*") do
-                _GET[k] = v
-            end
-        end
-
-        if (method == "POST" and _GET.position ~= nil)then
-            startPosition = position;
-            targetPosition = signedtonumber(_GET.position, 10);
-        end
-
-        if (method == "PATCH" and _GET.position ~= nil)then
-            position = signedtonumber(_GET.position, 10);
-        end
-
-        if (method == "DELETE" and _GET.position ~= nil)then
-            position = 0;
-        end
-
-        buf = cjson.encode({
-            position = position,
-            target = targetPosition
-        })
-
-        client:send(buf);
-        client:close();
         collectgarbage();
     end)
 end)
