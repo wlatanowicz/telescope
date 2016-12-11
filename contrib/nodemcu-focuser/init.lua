@@ -1,32 +1,63 @@
-wifi.setmode(wifi.STATION)
-wifi.sta.config("flux2g","1qazxsw23edc")
+--configuration: BEGIN
 
-print("Server init");
+--wifi
+wifiSSID = "flux2g";
+wifiPassword = "1qazxsw23edc";
+
+--motor pins
+pin1 = 0;
+pin2 = 1;
+pin3 = 2;
+pin4 = 3;
+
+--set -1 for reverse direction
+inverter = -1;
+
+-- num of powered cycles before rotating shaft
+motorWarmUp = 5;
+
+-- cycle speed in miliseconds
+idleDelay = 500;
+runDelay = 105;
+
+-- this value is substracted from runDelay
+maxSpeed = 100;
+
+-- maxSpeed is reached after this many cycles
+flatOutDistance = 20;
+
+steps = {0x03,0x06,0x0c,0x09}
+
+--configuration:END
+
+--status variables:
+motorOn = 0;
+position = 0;
+targetPosition = 0;
+startPosition = 0;
+
+--init network:
+
+wifi.setmode(wifi.STATION);
+wifi.sta.config(wifiSSID, wifiPassword);
+
 if ( wifi.sta.getip() ~= nil ) then
     print("IP: " .. wifi.sta.getip())
 else
-    print("IP: not yet")
+    print("IP: not set yet")
 end
 
-pin1 = 0
-pin2 = 1
-pin3 = 2
-pin4 = 3
-
-position = 0
-targetPosition = 0
-startPosition = 0
-
+--init outputs:
 gpio.mode(pin1, gpio.OUTPUT)
 gpio.mode(pin2, gpio.OUTPUT)
 gpio.mode(pin3, gpio.OUTPUT)
 gpio.mode(pin4, gpio.OUTPUT)
 
+--close server if there is already a one
 if srv~=nil then
   srv:close()
 end
 
-steps = {0x03,0x06,0x0c,0x09}
 
 function signedtonumber(value, base)
   local result=tonumber(value, base)
@@ -39,65 +70,61 @@ function signedtonumber(value, base)
   return result
 end
 
-function driveMotor(pos, motoOn)
-  local step=steps[(pos%4)+1];
+function driveMotor()
+  local step=steps[((inverter * position) % 4) + 1];
 
-  if ( motoOn > 0 and bit.band(step, 0x01) > 0 ) then
-    gpio.write(pin1, gpio.HIGH)
+  if ( motorOn > 0 and bit.band(step, 0x01) > 0 ) then
+    gpio.write(pin1, gpio.HIGH);
   else
-    gpio.write(pin1, gpio.LOW)
+    gpio.write(pin1, gpio.LOW);
   end
 
-  if ( motoOn > 0 and bit.band(step, 0x02) > 0 ) then
-    gpio.write(pin2, gpio.HIGH)
+  if ( motorOn > 0 and bit.band(step, 0x02) > 0 ) then
+    gpio.write(pin2, gpio.HIGH);
   else
-    gpio.write(pin2, gpio.LOW)
+    gpio.write(pin2, gpio.LOW);
   end
 
-  if ( motoOn > 0 and bit.band(step, 0x04) > 0 ) then
-    gpio.write(pin3, gpio.HIGH)
+  if ( motorOn > 0 and bit.band(step, 0x04) > 0 ) then
+    gpio.write(pin3, gpio.HIGH);
   else
-    gpio.write(pin3, gpio.LOW)
+    gpio.write(pin3, gpio.LOW);
   end
 
-  if ( motoOn > 0 and bit.band(step, 0x08) > 0 ) then
-    gpio.write(pin4, gpio.HIGH)
+  if ( motorOn > 0 and bit.band(step, 0x08) > 0 ) then
+    gpio.write(pin4, gpio.HIGH);
   else
-    gpio.write(pin4, gpio.LOW)
+    gpio.write(pin4, gpio.LOW);
   end
 end
 
 function setSpeed(speed)
-    if (speed > 100) then
-        speed = 100;
+    if (speed > maxSpeed) then
+        speed = maxSpeed;
     end
     if (speed < 0) then
         speed = 0;
     end
     if (speed == 0) then
-        tmr.interval(0, 500);
+        tmr.interval(0, idleDelay);
     else
-        tmr.interval(0, 105 - speed);
+        tmr.interval(0, runDelay - speed);
     end
 end
 
 function setSpeedByPosition()
-
-    local maxSpeed = 100
-    local flatOutDistance = 20
-
     local distance = math.min( math.abs(startPosition - position), math.abs(targetPosition - position) )
 
-    local speed = maxSpeed
+    local speed = maxSpeed;
 
     if (distance < flatOutDistance )
     then
         speed = ( maxSpeed * distance ) / flatOutDistance;
     end
 
-    speed = math.floor(speed)
+    speed = math.floor(speed);
        
-    setSpeed(speed)
+    setSpeed(speed);
 end
 
 function processRequest(client, request)
@@ -108,15 +135,15 @@ function processRequest(client, request)
 
     local _, _, headers, bodyStr = string.find(request, "(.+)\n\r(.*)");
 
+    --read json from POST/PATCH body
     local body = {}
-    
     if ( bodyStr ~= nil ) then
         if (string.len(bodyStr) > 4 ) then
             body = (cjson.decode(bodyStr));
         end
     end
 
-
+    --read GET params (not used at the moment)
     local get = {}
     if (vars ~= nil)then
         for k, v in string.gmatch(vars, "(%w+)=([-%w]+)&*") do
@@ -124,7 +151,7 @@ function processRequest(client, request)
         end
     end
 
-
+    print( "Request:" )
     print( "METHOD: " .. method )
     print( "JSON: " .. cjson.encode(body) )
     print( "GET: " .. cjson.encode(get) )
@@ -156,12 +183,13 @@ function processRequest(client, request)
     client:close();
 end
 
-srv=net.createServer(net.TCP)
+--init server
+srv = net.createServer(net.TCP);
 srv:listen(80,function(conn)
     conn:on("receive", function(client,request)
         local status, err = pcall(processRequest, client, request);
         if ( not status ) then
-            print( "ERROR" );
+            print( "ERROR processing request" );
             client:send(cjson.encode({
                 code = err,
                 result = "ERROR"
@@ -169,29 +197,35 @@ srv:listen(80,function(conn)
             client:close();
         end
         collectgarbage();
-    end)
-end)
+    end);
+end);
 
+--init main loop
 tmr.register(0, 100, tmr.ALARM_AUTO, function ()
-    local motorOn
     
     if ( position ~= targetPosition ) then
         setSpeedByPosition();
-        motorOn = 1
+        if ( motorOn < motorWarmUp ) then
+          motorOn = motorOn + 1;
+        end
     else
+        if ( motorOn > 0 ) then
+          motorOn = motorOn - 1;
+        end
         setSpeed(0);
-        motorOn = 0
     end
 
-    if ( position > targetPosition ) then
-        position = position - 1
+    if (motorOn >= motorWarmUp) then
+      if ( position > targetPosition ) then
+          position = position - 1;
+      end
+      if ( position < targetPosition ) then
+          position = position + 1;
+      end
     end
-    if ( position < targetPosition ) then
-        position = position + 1
-    end
+    
+    driveMotor();
 
-    driveMotor(position, motorOn)
-
-end)
-tmr.start(0)
+end);
+tmr.start(0);
 
