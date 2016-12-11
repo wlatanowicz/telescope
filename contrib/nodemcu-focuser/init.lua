@@ -33,28 +33,28 @@ function signedtonumber(value, base)
   return result
 end
 
-function driveMotor(pos)
+function driveMotor(pos, motoOn)
   local step=steps[(pos%4)+1];
 
-  if bit.band(step, 0x01) > 0 then
+  if ( motoOn > 0 and bit.band(step, 0x01) > 0 ) then
     gpio.write(pin1, gpio.HIGH)
   else
     gpio.write(pin1, gpio.LOW)
   end
 
-  if bit.band(step, 0x02) > 0 then
+  if ( motoOn > 0 and bit.band(step, 0x02) > 0 ) then
     gpio.write(pin2, gpio.HIGH)
   else
     gpio.write(pin2, gpio.LOW)
   end
 
-  if bit.band(step, 0x04) > 0 then
+  if ( motoOn > 0 and bit.band(step, 0x04) > 0 ) then
     gpio.write(pin3, gpio.HIGH)
   else
     gpio.write(pin3, gpio.LOW)
   end
 
-  if bit.band(step, 0x08) > 0 then
+  if ( motoOn > 0 and bit.band(step, 0x08) > 0 ) then
     gpio.write(pin4, gpio.HIGH)
   else
     gpio.write(pin4, gpio.LOW)
@@ -68,13 +68,17 @@ function setSpeed(speed)
     if (speed < 0) then
         speed = 0;
     end
-    tmr.interval(0, 110 - speed);
+    if (speed == 0) then
+        tmr.interval(0, 500);
+    else
+        tmr.interval(0, 105 - speed);
+    end
 end
 
 function setSpeedByPosition()
 
     local maxSpeed = 100
-    local flatOutDistance = 200
+    local flatOutDistance = 20
 
     local distance = math.min( math.abs(startPosition - position), math.abs(targetPosition - position) )
 
@@ -85,7 +89,9 @@ function setSpeedByPosition()
         speed = ( maxSpeed * distance ) / flatOutDistance;
     end
 
-    setSpeed(math.floor(maxSpeed))
+    speed = math.floor(speed)
+       
+    setSpeed(speed)
 end
 
 srv=net.createServer(net.TCP)
@@ -103,9 +109,17 @@ srv:listen(80,function(conn)
             end
         end
 
-        if (_GET.position ~= nil)then
+        if (method == "POST" and _GET.position ~= nil)then
             startPosition = position;
             targetPosition = signedtonumber(_GET.position, 10);
+        end
+
+        if (method == "PATCH" and _GET.position ~= nil)then
+            position = signedtonumber(_GET.position, 10);
+        end
+
+        if (method == "DELETE" and _GET.position ~= nil)then
+            position = 0;
         end
 
         buf = cjson.encode({
@@ -120,10 +134,14 @@ srv:listen(80,function(conn)
 end)
 
 tmr.register(0, 100, tmr.ALARM_AUTO, function ()
+    local motorOn
+    
     if ( position ~= targetPosition ) then
         setSpeedByPosition();
+        motorOn = 1
     else
         setSpeed(0);
+        motorOn = 0
     end
 
     if ( position > targetPosition ) then
@@ -133,7 +151,8 @@ tmr.register(0, 100, tmr.ALARM_AUTO, function ()
         position = position + 1
     end
 
-    driveMotor(position)
+    driveMotor(position, motorOn)
+
 end)
 tmr.start(0)
 
