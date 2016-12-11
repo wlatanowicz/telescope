@@ -4,6 +4,11 @@
 wifiSSID = "flux2g";
 wifiPassword = "1qazxsw23edc";
 
+wifiDHCP = false;
+wifiIP = "192.168.0.51";
+wifiMask = "255.255.255.0"
+wifiGateway = "192.168.0.1"
+
 --motor pins
 pin1 = 0;
 pin2 = 1;
@@ -40,6 +45,14 @@ startPosition = 0;
 
 wifi.setmode(wifi.STATION);
 wifi.sta.config(wifiSSID, wifiPassword);
+
+if (not wifiDHCP) then
+    wifi.sta.setip({
+        ip = wifiIP,
+        netmask = wifiMask,
+        gateway = wifiGateway
+    });
+end
 
 if ( wifi.sta.getip() ~= nil ) then
     print("IP: " .. wifi.sta.getip())
