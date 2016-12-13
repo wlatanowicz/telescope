@@ -45,7 +45,7 @@ class Telescope implements TelescopeInterface
             );
         }
 
-        $positionAsString = TelescopeCoordinatesConverter::coordinatesToString($coordinates);
+        $positionAsString = $coordinates->toString();
 
         $this->mount->sendCommand(self::SET_POSITION_COMMAND . $positionAsString);
 
@@ -71,6 +71,6 @@ class Telescope implements TelescopeInterface
     public function getPosition(): Coordinates
     {
         $response = $this->mount->sendCommand(self::GET_POSITION_COMMAND);
-        return TelescopeCoordinatesConverter::stringToCoordinates($response);
+        return Coordinates::fromString($response);
     }
 }

@@ -6,7 +6,7 @@ namespace Unit\wlatanowicz\AppBundle\Factory;
 use wlatanowicz\AppBundle\Data\Coordinates;
 use wlatanowicz\AppBundle\Factory\TelescopeCoordinatesConverter;
 
-class TelescopeCoordinatesConverterTest extends \PHPUnit_Framework_TestCase
+class CoordinatesTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @param string $string
@@ -16,7 +16,7 @@ class TelescopeCoordinatesConverterTest extends \PHPUnit_Framework_TestCase
      */
     public function itShouldConvertStringToCoordinates(string $string, Coordinates $expectedCoordinates)
     {
-        $result = TelescopeCoordinatesConverter::stringToCoordinates($string);
+        $result = Coordinates::fromString($string);
         $this->assertEquals($expectedCoordinates, $result);
     }
 
@@ -28,7 +28,7 @@ class TelescopeCoordinatesConverterTest extends \PHPUnit_Framework_TestCase
      */
     public function itShouldConvertCoordinatesToString(string $expectedString, Coordinates $coordinates)
     {
-        $result = TelescopeCoordinatesConverter::coordinatesToString($coordinates);
+        $result = $coordinates->toString();
         $this->assertEquals($expectedString, $result);
     }
 

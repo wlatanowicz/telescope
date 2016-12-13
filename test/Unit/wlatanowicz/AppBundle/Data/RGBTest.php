@@ -1,12 +1,11 @@
 <?php
 
-namespace Test\Unit\wlatanowicz\AppBundle\Factory;
+namespace Test\Unit\wlatanowicz\AppBundle\Data;
 
 use wlatanowicz\AppBundle\Data\HSV;
 use wlatanowicz\AppBundle\Data\Range;
 use wlatanowicz\AppBundle\Data\RangedValue;
 use wlatanowicz\AppBundle\Data\RGB;
-use wlatanowicz\AppBundle\Factory\RGB as RGBFactory;
 
 class RGBTest extends \PHPUnit_Framework_TestCase
 {
@@ -17,7 +16,7 @@ class RGBTest extends \PHPUnit_Framework_TestCase
     public function itShouldConvertHSVtoRGB(RGB $rgb, HSV $hsv)
     {
         $expected = $rgb;
-        $result = RGBFactory::fromHSV($hsv);
+        $result = RGB::fromHSV($hsv);
 
         $this->assertEquals($expected, $result);
     }
@@ -31,7 +30,7 @@ class RGBTest extends \PHPUnit_Framework_TestCase
     public function itShouldSummarizeColors(array $collection, RGB $rgb)
     {
         $expected = $rgb;
-        $result = RGBFactory::fromCollection($collection);
+        $result = RGB::fromCollection($collection);
 
         $this->assertEquals($expected, $result);
     }

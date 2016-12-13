@@ -3,8 +3,6 @@ declare(strict_types = 1);
 
 namespace wlatanowicz\AppBundle\Data;
 
-use wlatanowicz\AppBundle\Factory\Range as RangeFactory;
-
 class Spectrum
 {
     /**
@@ -46,7 +44,7 @@ class Spectrum
         if ($this->frequencyRange === null) {
             $range = null;
             foreach ($this->dataPoints as $dataPoint) {
-                $range = RangeFactory::extend(
+                $range = Range::fromRanges(
                     $range,
                     new Range(
                         $dataPoint->getFrequency(),
@@ -64,7 +62,7 @@ class Spectrum
         if ($this->powerRange === null) {
             $range = null;
             foreach ($this->dataPoints as $dataPoint) {
-                $range = RangeFactory::extend(
+                $range = Range::fromRanges(
                     $range,
                     new Range(
                         $dataPoint->getPower(),

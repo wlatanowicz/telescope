@@ -56,4 +56,19 @@ class Range
     {
         return new self(0, 359.99999999);
     }
+
+    public static function fromRanges(self $range1 = null, self $range2 = null): self
+    {
+        if ($range1 == null && $range2 !== null) {
+            return clone $range2;
+        }
+        if ($range2 == null && $range1 !== null) {
+            return clone $range1;
+        }
+
+        return new self(
+            min($range1->getMin(), $range2->getMin()),
+            max($range1->getMax(), $range2->getMax())
+        );
+    }
 }
