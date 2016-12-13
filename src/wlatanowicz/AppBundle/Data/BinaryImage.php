@@ -14,4 +14,12 @@ class BinaryImage
     {
         $this->data = $data;
     }
+
+    /**
+     * @return string
+     */
+    public function getData(): string
+    {
+        return $this->data;
+    }
 }

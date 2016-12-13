@@ -42,6 +42,15 @@ class RangedValue
         return $this->range;
     }
 
+    public function inRange(Range $targetRange): self
+    {
+        $scale = ($targetRange->getMax() - $targetRange->getMin()) / ($this->getRange()->getMax() - $this->getRange()->getMin());
+        $zeroed = $this->getValue() - $this->getRange()->getMin();
+        $scaled = $zeroed * $scale;
+        $convertedValue = $scaled + $targetRange->getMin();
+        return new self($convertedValue, $targetRange);
+    }
+
     public static function ONE(): self
     {
         return new self(1, new Range(0, 1));

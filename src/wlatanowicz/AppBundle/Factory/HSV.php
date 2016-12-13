@@ -7,7 +7,6 @@ use wlatanowicz\AppBundle\Data\Range;
 use wlatanowicz\AppBundle\Data\RangedValue;
 use wlatanowicz\AppBundle\Data\HSV as HSVData;
 use wlatanowicz\AppBundle\Data\SpectrumPoint;
-use wlatanowicz\AppBundle\Factory\RangedValue as RangedValueFactory;
 
 class HSV
 {
@@ -29,10 +28,10 @@ class HSV
 
     public function fromSpectrumPoint(SpectrumPoint $spectrumPoint): HSVData
     {
-        $factory = new RangedValueFactory(new Range(0, 280));
+        $targetRange = new Range(0, 280);
         $frequency = new RangedValue($spectrumPoint->getFrequency(), $this->frequencyRange);
 
-        $hValue = $factory->convert($frequency)->getValue();
+        $hValue = $frequency->inRange($targetRange)->getValue();
 
         $h = new RangedValue($hValue, Range::DEGREE());
         $s = RangedValue::ONE();

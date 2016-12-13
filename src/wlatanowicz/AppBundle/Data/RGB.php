@@ -56,4 +56,19 @@ class RGB
     {
         return $this->b;
     }
+
+    /**
+     * @return RangedValue
+     */
+    public function getBrightness(): RangedValue
+    {
+        $range = Range::ONE();
+        return new RangedValue(
+            ( $this->getR()->inRange($range)->getValue()
+                + $this->getG()->inRange($range)->getValue()
+                + $this->getB()->inRange($range)->getValue()
+            ) / 3.0,
+            $range
+        );
+    }
 }

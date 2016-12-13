@@ -1,11 +1,10 @@
 <?php
 declare(strict_types=1);
 
-namespace Unit\wlatanowicz\AppBundle\Factory;
+namespace Unit\wlatanowicz\AppBundle\Data;
 
 use wlatanowicz\AppBundle\Data\Range;
 use wlatanowicz\AppBundle\Data\RangedValue;
-use wlatanowicz\AppBundle\Factory\RangedValue as RangedValueFactory;
 
 class RangedValueTest extends \PHPUnit_Framework_TestCase
 {
@@ -18,8 +17,7 @@ class RangedValueTest extends \PHPUnit_Framework_TestCase
     public function itShouldConvertRangedValue(RangedValue $input, RangedValue $expected)
     {
         $targetRange = $expected->getRange();
-        $factory = new RangedValueFactory($targetRange);
-        $result = $factory->convert($input);
+        $result = $input->inRange($targetRange);
 
         $this->assertEquals($expected, $result);
     }

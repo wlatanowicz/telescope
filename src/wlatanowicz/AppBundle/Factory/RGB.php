@@ -8,7 +8,6 @@ use wlatanowicz\AppBundle\Data\Range as RangeData;
 use wlatanowicz\AppBundle\Data\RangedValue;
 use wlatanowicz\AppBundle\Data\RGB as RGBData;
 use wlatanowicz\AppBundle\Data\Spectrum;
-use wlatanowicz\AppBundle\Factory\RangedValue as RangedValueFactory;
 use wlatanowicz\AppBundle\Factory\HSV as HSVFactory;
 
 class RGB
@@ -18,11 +17,9 @@ class RGB
     public static function fromHSV(HSV $hsv): RGBData
     {
         $range = RangeData::ONE();
-        $factory = new RangedValueFactory($range);
-
-        $H = $factory->convert($hsv->getH())->getValue();
-        $S = $factory->convert($hsv->getS())->getValue();
-        $V = $factory->convert($hsv->getV())->getValue();
+        $H = $hsv->getH()->inRange($range)->getValue();
+        $S = $hsv->getS()->inRange($range)->getValue();
+        $V = $hsv->getV()->inRange($range)->getValue();
 
         //1
         $H *= 6;
@@ -69,15 +66,14 @@ class RGB
     public static function fromCollection(array $colors): RGBData
     {
         $range = RangeData::ONE();
-        $factory = new RangedValueFactory($range);
         $r = 0;
         $g = 0;
         $b = 0;
 
         foreach ($colors as $color) {
-            $r += pow($factory->convert($color->getR())->getValue(), 2);
-            $g += pow($factory->convert($color->getG())->getValue(), 2);
-            $b += pow($factory->convert($color->getB())->getValue(), 2);
+            $r += pow($color->getR()->inRange($range)->getValue(), 2);
+            $g += pow($color->getG()->inRange($range)->getValue(), 2);
+            $b += pow($color->getB()->inRange($range)->getValue(), 2);
         }
 
         $r = pow(3.0 * $r / count($colors), 0.5);
