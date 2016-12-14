@@ -190,11 +190,20 @@ function processRequest(client, request)
         targetPosition = 0;
     end
 
-    client:send(cjson.encode({
-        position = position,
-        target = targetPosition,
-        result = "OK"
-    }));
+    local response = cjson.encode({
+                             position = position,
+                             target = targetPosition,
+                             result = "OK"
+                         });
+
+    local headers = "HTTP/1.1 200 OK\r\n"
+                     .. "Server: WiFiFocuser\r\n"
+                     .. "Content-Type: application/json\r\n"
+                     .. "Content-Length: " .. string.len(response) .. "\r\n"
+                     .. "Connection: close\r\n"
+                     .. "\r\n";
+
+    client:send(headers..response);
     client:close();
 end
 
@@ -205,10 +214,17 @@ srv:listen(80,function(conn)
         local status, err = pcall(processRequest, client, request);
         if ( not status ) then
             print( "ERROR processing request" );
-            client:send(cjson.encode({
+            local response = cjson.encode({
                 code = err,
                 result = "ERROR"
-            }));
+            });
+            local headers = "HTTP/1.1 500 Internal Server Error\r\n"
+                     .. "Server: WiFiFocuser\r\n"
+                     .. "Content-Type: application/json\r\n"
+                     .. "Content-Length: " .. string.len(response) .. "\r\n"
+                     .. "Connection: close\r\n"
+                     .. "\r\n";
+            client:send(headers .. response);
             client:close();
         end
         collectgarbage();
