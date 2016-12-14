@@ -24,6 +24,14 @@ class GdImage
         return new self(imagecreatefromstring($binaryImage->getData()));
     }
 
+    /**
+     * @return resource
+     */
+    public function getResource()
+    {
+        return $this->resource;
+    }
+
     public function getWidth(): int
     {
         return imagesx($this->resource);
@@ -50,5 +58,21 @@ class GdImage
     public function getBrightness(int $x, int $y): RangedValue
     {
         return $this->getColor($x, $y)->getBrightness();
+    }
+
+    public function imageByCropping(int $x, int $y, int $width, int $height): self
+    {
+        $cropped = imagecreatetruecolor($width, $height);
+        imagecopy(
+            $cropped,
+            $this->resource,
+            0,
+            0,
+            $x,
+            $y,
+            $width,
+            $height
+        );
+        return new self($cropped);
     }
 }

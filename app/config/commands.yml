@@ -5,3 +5,10 @@ services:
       - '@telescope-local'
     tags:
         - { name: console.command }
+
+  command-focuser:
+    class: wlatanowicz\AppBundle\Command\FocuserCommand
+    arguments:
+      - '@focuser-provider'
+    tags:
+        - { name: console.command }

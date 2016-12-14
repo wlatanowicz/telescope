@@ -8,3 +8,9 @@ services:
     arguments:
       - '@camera-provider'
       - '@jms_serializer'
+
+  ctrl-camera-focus:
+    class: wlatanowicz\AppBundle\Api\Controller\Camera\Focus
+    arguments:
+      - '@camera-provider'
+      - '@jms_serializer'

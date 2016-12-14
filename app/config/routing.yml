@@ -11,3 +11,10 @@ camera-image:
     _controller: ctrl-camera-image:getImage
     _format: json
   methods: [GET]
+
+camera-focus
+  path: /camera/{name}/focus
+  defaults:
+    _controller: ctrl-camera-focus:getFocus
+    _format: json
+  methods: [GET]

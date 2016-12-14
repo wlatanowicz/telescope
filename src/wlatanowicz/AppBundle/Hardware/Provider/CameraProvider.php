@@ -21,7 +21,7 @@ class CameraProvider
         $this->cameras = $camera;
     }
 
-    public function getCameras(string $name): CameraInterface
+    public function getCamera(string $name): CameraInterface
     {
         return $this->cameras[$name];
     }

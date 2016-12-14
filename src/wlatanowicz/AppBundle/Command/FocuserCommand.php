@@ -6,27 +6,23 @@ namespace wlatanowicz\AppBundle\Command;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use wlatanowicz\AppBundle\Data\Coordinates;
-use wlatanowicz\AppBundle\Hardware\TelescopeInterface;
+use wlatanowicz\AppBundle\Hardware\Provider\FocuserProvider;
 
-class TelescopeCommand extends Command
+class FocuserCommand extends Command
 {
-    /**
-     * @var TelescopeInterface
-     */
-    private $telescope;
+    private $provider;
 
-    public function __construct(TelescopeInterface $provider)
+    public function __construct(FocuserProvider $provider)
     {
         parent::__construct(null);
 
-        $this->telescope = $provider;
+        $this->provider = $provider;
     }
 
     protected function configure()
     {
         $this
-            ->setName('telescope:goto')
+            ->setName('focuser:goto')
             ->setDescription('Creates new users.')
             ->setHelp("This command allows you to create users...")
         ;
@@ -34,7 +30,6 @@ class TelescopeCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $coordinates = new Coordinates(12, 40);
-        $this->telescope->setPosition($coordinates);
+        $this->provider->getFocuser('node')->setPosition(5000);
     }
 }

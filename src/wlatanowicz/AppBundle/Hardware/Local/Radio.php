@@ -5,7 +5,6 @@ namespace wlatanowicz\AppBundle\Hardware\Local;
 
 use wlatanowicz\AppBundle\Data\Spectrum;
 use wlatanowicz\AppBundle\Hardware\RadioInterface;
-use wlatanowicz\AppBundle\Factory\Spectrum as SpectrumFactory;
 
 class Radio implements RadioInterface
 {
@@ -36,6 +35,6 @@ class Radio implements RadioInterface
             $binSize,
             $integrationTime
         );
-        return SpectrumFactory::fromReceiverOutput($dataArray);
+        return Spectrum::fromReceiverOutput($dataArray);
     }
 }

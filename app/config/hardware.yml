@@ -37,10 +37,25 @@ services:
       - '/opt/local/bin/rtl_power'
       - 1
 
+  focuser-node:
+    class: wlatanowicz\AppBundle\Hardware\Local\Focuser
+    arguments:
+      - '@focuser-node-http-client'
+
+  focuser-node-http-client:
+    class: GuzzleHttp\Client
+    arguments:
+      -
+        base_uri: 'http://192.168.0.51/'
+
+  focuser-dummy:
+    class: wlatanowicz\AppBundle\Hardware\Dummy\Focuser
+
   telesope-provider:
     class: wlatanowicz\AppBundle\Hardware\Provider\TelescopeProvider
     arguments:
-      local: '@telescope-local'
+      -
+        local: '@telescope-local'
 
   camera-provider:
     class: wlatanowicz\AppBundle\Hardware\Provider\CameraProvider
@@ -54,3 +69,10 @@ services:
     arguments:
       -
         local: '@radio-local'
+
+  focuser-provider:
+    class: wlatanowicz\AppBundle\Hardware\Provider\FocuserProvider
+    arguments:
+      -
+        node: '@focuser-node'
+        dummy: '@focuser-dummy'
