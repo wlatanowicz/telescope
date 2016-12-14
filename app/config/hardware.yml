@@ -51,7 +51,7 @@ services:
   focuser-dummy:
     class: wlatanowicz\AppBundle\Hardware\Dummy\Focuser
 
-  telesope-provider:
+  telescope-provider:
     class: wlatanowicz\AppBundle\Hardware\Provider\TelescopeProvider
     arguments:
       -

@@ -1,13 +1,13 @@
 services:
   command-goto:
-    class: wlatanowicz\AppBundle\Command\TelescopeCommand
+    class: wlatanowicz\AppBundle\Command\Telescope\GotoCommand
     arguments:
-      - '@telescope-local'
+      - '@telescope-provider'
     tags:
         - { name: console.command }
 
   command-focuser:
-    class: wlatanowicz\AppBundle\Command\FocuserCommand
+    class: wlatanowicz\AppBundle\Command\Focuser\GotoCommand
     arguments:
       - '@focuser-provider'
     tags:
