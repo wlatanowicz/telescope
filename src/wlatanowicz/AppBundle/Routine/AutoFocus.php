@@ -3,8 +3,7 @@ declare(strict_types = 1);
 
 namespace wlatanowicz\AppBundle\Routine;
 
-use wlatanowicz\AppBundle\Data\GdImage;
-use wlatanowicz\AppBundle\Hardware\CameraInterface;
+use wlatanowicz\AppBundle\Hardware\GdCameraInterface;
 use wlatanowicz\AppBundle\Hardware\FocuserInterface;
 
 class AutoFocus
@@ -15,7 +14,7 @@ class AutoFocus
     private $measure;
 
     /**
-     * @var CameraInterface
+     * @var GdCameraInterface
      */
     private $camera;
 
@@ -36,7 +35,7 @@ class AutoFocus
 
     public function __construct(
         MeasureInterface $measure,
-        CameraInterface $camera,
+        GdCameraInterface $camera,
         FocuserInterface $focuser,
         int $minPosition,
         int $maxPosition,
@@ -72,8 +71,6 @@ class AutoFocus
                 return $a['measure'] - $b['measure'];
             }
         );
-
-        print_r($results);
 
         return $results[0]['position'];
     }
@@ -121,7 +118,7 @@ class AutoFocus
 
         $result = $measures;
 
-        if ($iteration < $this->iterations) {
+        if (($iteration + 1) < $this->iterations) {
             $nextResult = $this->recursiveAutoFocus(
                 $newMin,
                 $newMax,
@@ -165,10 +162,7 @@ class AutoFocus
             $this->focuser->setPosition($position);
 
             $image = $this->camera->exposure($time);
-            $gdimage = GdImage::fromBinaryImage($image);
-            $cropped = $gdimage->imageByCropping($x, $y, $width, $height);
-
-            $this->measureCache[$position] = $this->measure->measure($cropped);
+            $this->measureCache[$position] = $this->measure->measure($image);
         }
         return $this->measureCache[$position];
     }

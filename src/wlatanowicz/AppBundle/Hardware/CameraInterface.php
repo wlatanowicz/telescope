@@ -9,7 +9,7 @@ interface CameraInterface
 {
     /**
      * @param int $time in seconds
-     * @return mixed
+     * @return BinaryImage
      */
     public function exposure(int $time): BinaryImage;
 }

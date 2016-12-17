@@ -5,8 +5,8 @@ namespace Unit\wlatanowicz\AppBundle\Routine;
 
 use wlatanowicz\AppBundle\Data\BinaryImage;
 use wlatanowicz\AppBundle\Data\GdImage;
-use wlatanowicz\AppBundle\Hardware\CameraInterface;
 use wlatanowicz\AppBundle\Hardware\FocuserInterface;
+use wlatanowicz\AppBundle\Hardware\GdCameraInterface;
 use wlatanowicz\AppBundle\Routine\AutoFocus;
 use wlatanowicz\AppBundle\Routine\MeasureInterface;
 
@@ -19,7 +19,7 @@ class AutoFocusTest extends \PHPUnit_Framework_TestCase
     private $focuser;
 
     /**
-     * @var CameraInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @var GdCameraInterface|\PHPUnit_Framework_MockObject_MockObject
      */
     private $camera;
 
@@ -84,22 +84,21 @@ class AutoFocusTest extends \PHPUnit_Framework_TestCase
                 "focusingSlope1" => 1.5,
                 "focusingSlope2" => 1.5,
                 "partials" => 5,
-                "iterations" => 5
+                "iterations" => 6
             ],
         ];
     }
 
-    private function cameraMock(): CameraInterface
+    private function cameraMock(): GdCameraInterface
     {
         $imageRes = imagecreatetruecolor(100, 100);
         $gdImage = new GdImage($imageRes);
-        $image = BinaryImage::fromGdImage($gdImage, "image/jpeg");
 
-        $camera = $this->createMock(CameraInterface::class);
+        $camera = $this->createMock(GdCameraInterface::class);
         $camera
             ->expects($this->any())
             ->method('exposure')
-            ->willReturn($image);
+            ->willReturn($gdImage);
 
         return $camera;
     }
