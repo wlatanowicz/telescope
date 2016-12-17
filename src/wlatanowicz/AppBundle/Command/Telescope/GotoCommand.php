@@ -17,11 +17,11 @@ class GotoCommand extends Command
      */
     private $provider;
 
-    public function __construct(TelescopeProvider $provider)
+    public function __construct(TelescopeProvider $cameraProvider)
     {
         parent::__construct(null);
 
-        $this->provider = $provider;
+        $this->provider = $cameraProvider;
     }
 
     protected function configure()

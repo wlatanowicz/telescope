@@ -11,16 +11,16 @@ class BinaryImageWithFocusMeasure
     private $binaryImage;
 
     /**
-     * @var FocusMeasure
+     * @var Focus
      */
     private $focusMeasure;
 
     /**
      * BinaryImageWithFocusMeasure constructor.
      * @param BinaryImage $binaryImage
-     * @param FocusMeasure $focusMeasure
+     * @param Focus $focusMeasure
      */
-    public function __construct(BinaryImage $binaryImage, FocusMeasure $focusMeasure)
+    public function __construct(BinaryImage $binaryImage, Focus $focusMeasure)
     {
         $this->binaryImage = $binaryImage;
         $this->focusMeasure = $focusMeasure;

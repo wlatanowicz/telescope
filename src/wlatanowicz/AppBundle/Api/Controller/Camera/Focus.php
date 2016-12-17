@@ -7,7 +7,7 @@ use JMS\Serializer\SerializerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use wlatanowicz\AppBundle\Data\BinaryImage;
 use wlatanowicz\AppBundle\Data\BinaryImageWithFocusMeasure;
-use wlatanowicz\AppBundle\Data\FocusMeasure;
+use wlatanowicz\AppBundle\Data\Focus;
 use wlatanowicz\AppBundle\Data\GdImage;
 use wlatanowicz\AppBundle\Hardware\Provider\CameraProvider;
 
@@ -51,7 +51,7 @@ class Focus
 
         $result = new BinaryImageWithFocusMeasure(
             BinaryImage::fromGdImage($croppedImage, 'image/jpeg'),
-            FocusMeasure::fromGdImage($croppedImage)
+            Focus::fromGdImage($croppedImage)
         );
 
         $json = $this->serializer->serialize($result, 'json');
