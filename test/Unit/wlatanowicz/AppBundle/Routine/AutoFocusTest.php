@@ -86,6 +86,16 @@ class AutoFocusTest extends \PHPUnit_Framework_TestCase
                 "partials" => 5,
                 "iterations" => 6
             ],
+            [
+                "tolerance" => 5,
+                "minPosition" => 1000,
+                "maxPosition" => 5000,
+                "focusPoint" => 1345,
+                "focusingSlope1" => 2,
+                "focusingSlope2" => 0.5,
+                "partials" => 7,
+                "iterations" => 7
+            ],
         ];
     }
 
