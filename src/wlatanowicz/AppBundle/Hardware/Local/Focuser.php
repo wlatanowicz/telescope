@@ -26,12 +26,12 @@ class Focuser implements FocuserInterface
     }
 
     public function setPosition(
-        float $position,
+        int $position,
         bool $wait = true,
-        float $tolerance = 5
+        int $tolerance = 5
     ) {
         $options = [
-            "body" => \json_encode(["targetPosition" => round($position)])
+            "body" => \json_encode(["targetPosition" => $position])
         ];
         $responseRaw = $this->client->request("POST", "/", $options);
         $response = \json_decode($responseRaw->getBody()->getContents(), true);
@@ -55,7 +55,7 @@ class Focuser implements FocuserInterface
         }
     }
 
-    public function getPosition(): float
+    public function getPosition(): int
     {
         $responseRaw = $this->client->request("GET", "/");
         $response = \json_decode($responseRaw->getBody()->getContents(), true);

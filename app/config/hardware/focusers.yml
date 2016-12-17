@@ -1,0 +1,27 @@
+services:
+
+  focuser-node:
+    class: wlatanowicz\AppBundle\Hardware\Local\Focuser
+    arguments:
+      - '@focuser-node-http-client'
+
+  focuser-node-http-client:
+    class: GuzzleHttp\Client
+    arguments:
+      -
+        base_uri: 'http://192.168.0.51/'
+
+  focuser-dummy:
+    class: wlatanowicz\AppBundle\Hardware\Dummy\Focuser
+
+  focuser-sim:
+    class: wlatanowicz\AppBundle\Hardware\Simulator\Focuser
+
+
+  focuser-provider:
+    class: wlatanowicz\AppBundle\Hardware\Provider\FocuserProvider
+    arguments:
+      -
+        node: '@focuser-node'
+        dummy: '@focuser-dummy'
+        sim: '@focuser-sim'

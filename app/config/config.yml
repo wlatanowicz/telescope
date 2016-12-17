@@ -3,7 +3,11 @@ imports:
     - { resource: services.yml }
     - { resource: commands.yml }
     - { resource: controllers.yml }
-    - { resource: hardware.yml }
+    - { resource: hardware/cameras.yml }
+    - { resource: hardware/focusers.yml }
+    - { resource: hardware/gd-cameras.yml }
+    - { resource: hardware/radios.yml }
+    - { resource: hardware/telescopes.yml }
 
 framework:
     router:

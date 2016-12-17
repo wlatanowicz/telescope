@@ -1,0 +1,20 @@
+services:
+
+  radio-local:
+    class: wlatanowicz\AppBundle\Hardware\Local\Radio
+    arguments:
+      - '@radio-local-receiver'
+
+  radio-local-receiver:
+    class: wlatanowicz\AppBundle\Hardware\Local\RadioReceiver
+    arguments:
+      - '@sys-process'
+      - '/opt/local/bin/rtl_power'
+      - 1
+
+
+  radio-provider:
+    class: wlatanowicz\AppBundle\Hardware\Provider\RadioProvider
+    arguments:
+      -
+        local: '@radio-local'

@@ -1,7 +1,7 @@
 <?php
 declare(strict_types = 1);
 
-namespace wlatanowicz\AppBundle\Hardware\Dummy;
+namespace wlatanowicz\AppBundle\Hardware\Simulator;
 
 use wlatanowicz\AppBundle\Hardware\FocuserInterface;
 
@@ -17,7 +17,7 @@ class Focuser implements FocuserInterface
         bool $wait = true,
         int $tolerance = 5
     ) {
-        $this->position = round($position);
+        $this->position = $position;
     }
 
     public function getPosition(): int

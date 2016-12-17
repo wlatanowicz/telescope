@@ -1,0 +1,22 @@
+services:
+  telescope-local:
+    class: wlatanowicz\AppBundle\Hardware\Local\Telescope
+    arguments:
+      - '@telescope-local-mount'
+
+  telescope-local-mount:
+    class: wlatanowicz\AppBundle\Hardware\Local\TelescopeMount
+    arguments:
+      - '@telescope-local-mount-serial'
+
+  telescope-local-mount-serial:
+    class: wlatanowicz\AppBundle\Hardware\Helper\SerialPort
+    arguments:
+      - '/dev/ttyUSB0'
+
+
+  telescope-provider:
+    class: wlatanowicz\AppBundle\Hardware\Provider\TelescopeProvider
+    arguments:
+      -
+        local: '@telescope-local'

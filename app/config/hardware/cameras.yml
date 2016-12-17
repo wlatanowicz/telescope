@@ -1,0 +1,20 @@
+services:
+
+  camera-local:
+    class: wlatanowicz\AppBundle\Hardware\Local\Camera
+    arguments:
+      - '@sys-process'
+      - '@sys-filesystem'
+      - '/usr/local/bin/gphoto2'
+      - '/tmp'
+
+  camera-dummy:
+    class: wlatanowicz\AppBundle\Hardware\Dummy\Camera
+
+
+  camera-provider:
+    class: wlatanowicz\AppBundle\Hardware\Provider\CameraProvider
+    arguments:
+      -
+        local: '@camera-local'
+        dummy: '@camera-dummy'

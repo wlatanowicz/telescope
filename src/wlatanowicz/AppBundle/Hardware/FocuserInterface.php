@@ -6,10 +6,10 @@ namespace wlatanowicz\AppBundle\Hardware;
 interface FocuserInterface
 {
     public function setPosition(
-        float $position,
+        int $position,
         bool $wait = true,
-        float $tolerance = 5
+        int $tolerance = 5
     );
 
-    public function getPosition(): float;
+    public function getPosition(): int;
 }
