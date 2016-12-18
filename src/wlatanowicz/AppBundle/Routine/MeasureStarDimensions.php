@@ -3,7 +3,7 @@ declare(strict_types = 1);
 
 namespace wlatanowicz\AppBundle\Routine;
 
-use wlatanowicz\AppBundle\Data\GdImage;
+use wlatanowicz\AppBundle\Data\ImagickImage;
 use wlatanowicz\AppBundle\Data\Range;
 use wlatanowicz\AppBundle\Data\StarDimensions;
 
@@ -23,7 +23,7 @@ class MeasureStarDimensions
         $this->threshold = $threshold;
     }
 
-    public function measure(GdImage $image): StarDimensions
+    public function measure(ImagickImage $image): StarDimensions
     {
         return new StarDimensions(
             $this->measureStarWidth($image),
@@ -31,7 +31,7 @@ class MeasureStarDimensions
         );
     }
 
-    private function measureStarWidth(GdImage $image): float
+    private function measureStarWidth(ImagickImage $image): float
     {
         $width = $image->getWidth();
         $height = $image->getHeight();
@@ -66,7 +66,7 @@ class MeasureStarDimensions
         return $starWidth ?? $width;
     }
 
-    private function measureStarHeight(GdImage $image): float
+    private function measureStarHeight(ImagickImage $image): float
     {
         $width = $image->getWidth();
         $height = $image->getHeight();

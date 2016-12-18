@@ -20,3 +20,11 @@ services:
       - '@sys-filesystem'
     tags:
         - { name: console.command }
+
+  command-autofocus-autofocus:
+    class: wlatanowicz\AppBundle\Command\Autofocus\AutofocusCommand
+    arguments:
+      - '@imagick-camera-provider'
+      - '@focuser-provider'
+    tags:
+        - { name: console.command }

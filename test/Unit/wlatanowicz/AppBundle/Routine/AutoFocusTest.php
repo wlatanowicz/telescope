@@ -4,9 +4,9 @@ declare(strict_types=1);
 namespace Unit\wlatanowicz\AppBundle\Routine;
 
 use wlatanowicz\AppBundle\Data\BinaryImage;
-use wlatanowicz\AppBundle\Data\GdImage;
+use wlatanowicz\AppBundle\Data\ImagickImage;
 use wlatanowicz\AppBundle\Hardware\FocuserInterface;
-use wlatanowicz\AppBundle\Hardware\GdCameraInterface;
+use wlatanowicz\AppBundle\Hardware\ImagickCameraInterface;
 use wlatanowicz\AppBundle\Routine\AutoFocus;
 use wlatanowicz\AppBundle\Routine\MeasureInterface;
 
@@ -19,7 +19,7 @@ class AutoFocusTest extends \PHPUnit_Framework_TestCase
     private $focuser;
 
     /**
-     * @var GdCameraInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @var ImagickCameraInterface|\PHPUnit_Framework_MockObject_MockObject
      */
     private $camera;
 
@@ -58,13 +58,11 @@ class AutoFocusTest extends \PHPUnit_Framework_TestCase
             $measure,
             $this->camera,
             $this->focuser,
-            $minPosition,
-            $maxPosition,
             $partials,
             $iterations
         );
 
-        $result = $autofocus->autofocus(1, 0, 0, 10, 10);
+        $result = $autofocus->autofocus($minPosition, $maxPosition, 1);
 
         $minExpected = $focusPoint - abs($tolerance);
         $maxExpected = $focusPoint + abs($tolerance);
@@ -99,16 +97,15 @@ class AutoFocusTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
-    private function cameraMock(): GdCameraInterface
+    private function cameraMock(): ImagickCameraInterface
     {
-        $imageRes = imagecreatetruecolor(100, 100);
-        $gdImage = new GdImage($imageRes);
+        $imagickImage = new ImagickImage(new \Imagick());
 
-        $camera = $this->createMock(GdCameraInterface::class);
+        $camera = $this->createMock(ImagickCameraInterface::class);
         $camera
             ->expects($this->any())
             ->method('exposure')
-            ->willReturn($gdImage);
+            ->willReturn($imagickImage);
 
         return $camera;
     }
@@ -142,7 +139,7 @@ class AutoFocusTest extends \PHPUnit_Framework_TestCase
             ->expects($this->any())
             ->method('measure')
             ->willReturnCallback(
-                function (GdImage $image) use ($focusPosition, $slope1, $slope2) {
+                function (ImagickImage $image) use ($focusPosition, $slope1, $slope2) {
                     $val = $this->currentFocuserPosition <= $focusPosition
                         ? $slope1 * $this->currentFocuserPosition - $slope1 * $focusPosition
                         : (-$slope2) * $this->currentFocuserPosition + $slope2 * $focusPosition;

@@ -3,11 +3,11 @@ declare(strict_types = 1);
 
 namespace wlatanowicz\AppBundle\Hardware\Wrapper;
 
-use wlatanowicz\AppBundle\Data\GdImage;
+use wlatanowicz\AppBundle\Data\ImagickImage;
 use wlatanowicz\AppBundle\Hardware\CameraInterface;
-use wlatanowicz\AppBundle\Hardware\GdCameraInterface;
+use wlatanowicz\AppBundle\Hardware\ImagickCameraInterface;
 
-class GdCamera implements GdCameraInterface
+class ImagickCamera implements ImagickCameraInterface
 {
     /**
      * @var CameraInterface
@@ -24,9 +24,9 @@ class GdCamera implements GdCameraInterface
     }
 
 
-    public function exposure(int $time): GdImage
+    public function exposure(int $time): ImagickImage
     {
         $image = $this->camera->exposure($time);
-        return GdImage::fromBinaryImage($image);
+        return ImagickImage::fromBinaryImage($image);
     }
 }

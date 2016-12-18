@@ -3,11 +3,11 @@ declare(strict_types = 1);
 
 namespace wlatanowicz\AppBundle\Routine;
 
-use wlatanowicz\AppBundle\Data\GdImage;
+use wlatanowicz\AppBundle\Data\ImagickImage;
 use wlatanowicz\AppBundle\Data\Range;
 use wlatanowicz\AppBundle\Data\StarDimensions;
 
-class MeasureStarDiameter
+class MeasureStarDiameter implements MeasureInterface
 {
     /**
      * @var float
@@ -23,7 +23,7 @@ class MeasureStarDiameter
         $this->threshold = $threshold;
     }
 
-    public function measure(GdImage $image): float
+    public function measure(ImagickImage $image): float
     {
         $width = $image->getWidth();
         $height = $image->getHeight();

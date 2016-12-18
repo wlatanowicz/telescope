@@ -1,0 +1,40 @@
+services:
+
+  imagick-camera-dummy:
+    class: wlatanowicz\AppBundle\Hardware\Wrapper\ImagickCamera
+    arguments:
+      - '@camera-dummy'
+
+  imagick-camera-local:
+    class: wlatanowicz\AppBundle\Hardware\Wrapper\ImagickCamera
+    arguments:
+      - '@camera-local'
+
+  imagick-camera-sim:
+    class: wlatanowicz\AppBundle\Hardware\Wrapper\ImagickCamera
+    arguments:
+      - '@camera-sim'
+
+  imagick-cropped-dummy:
+    class: wlatanowicz\AppBundle\Hardware\Wrapper\ImagickCircleCroppingCamera
+    arguments:
+      - '@imagick-camera-dummy'
+
+  imagick-cropped-local:
+    class: wlatanowicz\AppBundle\Hardware\Wrapper\ImagickCircleCroppingCamera
+    arguments:
+      - '@imagick-camera-local'
+
+  imagick-cropped-sim:
+    class: wlatanowicz\AppBundle\Hardware\Wrapper\ImagickCircleCroppingCamera
+    arguments:
+      - '@imagick-camera-sim'
+
+
+  imagick-camera-provider:
+    class: wlatanowicz\AppBundle\Hardware\Provider\ImagickCameraProvider
+    arguments:
+      -
+        dummy: '@imagick-cropped-dummy'
+        local: '@imagick-cropped-local'
+        sim: '@imagick-cropped-sim'

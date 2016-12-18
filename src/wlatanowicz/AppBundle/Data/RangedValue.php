@@ -20,7 +20,7 @@ class RangedValue
      * @param float $value
      * @param Range $range
      */
-    public function __construct($value, Range $range)
+    public function __construct(float $value, Range $range)
     {
         $this->value = $value;
         $this->range = $range;

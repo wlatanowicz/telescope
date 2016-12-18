@@ -5,7 +5,7 @@ imports:
     - { resource: controllers.yml }
     - { resource: hardware/cameras.yml }
     - { resource: hardware/focusers.yml }
-    - { resource: hardware/gd-cameras.yml }
+    - { resource: hardware/imagick-cameras.yml }
     - { resource: hardware/radios.yml }
     - { resource: hardware/telescopes.yml }
 

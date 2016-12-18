@@ -4,7 +4,7 @@ declare(strict_types = 1);
 namespace wlatanowicz\AppBundle\Hardware\Simulator;
 
 use wlatanowicz\AppBundle\Data\BinaryImage;
-use wlatanowicz\AppBundle\Data\GdImage;
+use wlatanowicz\AppBundle\Data\ImagickImage;
 use wlatanowicz\AppBundle\Hardware\CameraInterface;
 use wlatanowicz\AppBundle\Hardware\FocuserInterface;
 use wlatanowicz\AppBundle\Hardware\Helper\FileSystem;
@@ -62,12 +62,11 @@ class Camera implements CameraInterface
     {
         $image = $this->getImage();
 
-        $imagick = new \Imagick();
-        $imagick->readImageBlob($image->getData());
+        $imagickImage = ImagickImage::fromBinaryImage($image);
 
-        $this->blurImage($imagick);
+        $this->blurImage($imagickImage);
 
-        return new BinaryImage($imagick->getImageBlob(), "application/jpeg");
+        return new BinaryImage($imagickImage->getImageBlob(), "application/jpeg");
     }
 
     private function getImage(): BinaryImage
@@ -80,12 +79,12 @@ class Camera implements CameraInterface
         );
     }
 
-    private function blurImage(\Imagick $imagick)
+    private function blurImage(ImagickImage $imagickImage)
     {
-        $level = $this->getBlurLevel() / 3;
+        $level = $this->getBlurLevel() / 6;
         echo "Level: {$level}\n";
         if ($level > 0.01) {
-            $imagick->blurImage($level, 10);
+            $imagickImage->blur($level, 20);
         }
     }
 

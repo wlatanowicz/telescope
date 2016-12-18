@@ -4,7 +4,7 @@ declare(strict_types = 1);
 namespace wlatanowicz\AppBundle\Routine;
 
 use wlatanowicz\AppBundle\Data\Focus;
-use wlatanowicz\AppBundle\Data\GdImage;
+use wlatanowicz\AppBundle\Data\ImagickImage;
 
 class MeasureFocus
 {
@@ -22,7 +22,7 @@ class MeasureFocus
         $this->measureStarDimensions = $measureStarDimensions;
     }
 
-    public function measure(GdImage $image): Focus
+    public function measure(ImagickImage $image): Focus
     {
         return new Focus(
             $this->measureStarDimensions->measure($image)

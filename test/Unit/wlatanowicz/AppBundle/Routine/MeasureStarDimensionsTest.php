@@ -5,7 +5,7 @@ namespace Unit\wlatanowicz\AppBundle\Routine;
 
 
 use wlatanowicz\AppBundle\Data\BinaryImage;
-use wlatanowicz\AppBundle\Data\GdImage;
+use wlatanowicz\AppBundle\Data\ImagickImage;
 use wlatanowicz\AppBundle\Data\StarDimensions;
 use wlatanowicz\AppBundle\Routine\MeasureStarDimensions;
 
@@ -19,7 +19,7 @@ class MeasureStarDimensionsTest extends \PHPUnit_Framework_TestCase
     {
         $data = file_get_contents($file);
         $image = new BinaryImage($data);
-        $gdimage = GdImage::fromBinaryImage($image);
+        $gdimage = ImagickImage::fromBinaryImage($image);
         $measure = new MeasureStarDimensions($threshold);
         $result = $measure->measure($gdimage);
 

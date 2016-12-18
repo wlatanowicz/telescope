@@ -28,16 +28,4 @@ class BinaryImage
     {
         return $this->data;
     }
-
-    public static function fromGdImage(GdImage $image, string $mimetype): self
-    {
-        ob_start();
-        imagejpeg($image->getResource());
-        $imageData = ob_get_clean();
-
-        return new self(
-            $imageData,
-            $mimetype
-        );
-    }
 }
