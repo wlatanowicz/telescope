@@ -12,3 +12,11 @@ services:
       - '@focuser-provider'
     tags:
         - { name: console.command }
+
+  command-camera-expose:
+    class: wlatanowicz\AppBundle\Command\Camera\ExposeCommand
+    arguments:
+      - '@camera-provider'
+      - '@sys-filesystem'
+    tags:
+        - { name: console.command }

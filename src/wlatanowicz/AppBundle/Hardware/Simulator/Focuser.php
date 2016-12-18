@@ -12,6 +12,15 @@ class Focuser implements FocuserInterface
      */
     private $position;
 
+    /**
+     * Focuser constructor.
+     */
+    public function __construct()
+    {
+        $this->position = 3000;
+    }
+
+
     public function setPosition(
         int $position,
         bool $wait = true,

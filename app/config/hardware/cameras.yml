@@ -11,6 +11,13 @@ services:
   camera-dummy:
     class: wlatanowicz\AppBundle\Hardware\Dummy\Camera
 
+  camera-sim:
+    class: wlatanowicz\AppBundle\Hardware\Simulator\Camera
+    arguments:
+      - '@focuser-sim'
+      - '@sys-filesystem'
+      - 'star.jpg'
+
 
   camera-provider:
     class: wlatanowicz\AppBundle\Hardware\Provider\CameraProvider
@@ -18,3 +25,4 @@ services:
       -
         local: '@camera-local'
         dummy: '@camera-dummy'
+        sim: '@camera-sim'

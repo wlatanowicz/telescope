@@ -11,9 +11,9 @@ services:
       - '@camera-local'
 
   gd-camera-sim:
-    class: wlatanowicz\AppBundle\Hardware\Simulator\GdCamera
+    class: wlatanowicz\AppBundle\Hardware\Wrapper\GdCamera
     arguments:
-      - '@focuser-sim'
+      - '@camera-sim'
 
   gd-cropped-dummy:
     class: wlatanowicz\AppBundle\Hardware\Wrapper\GdCircleCroppingCamera
@@ -31,7 +31,7 @@ services:
       - '@gd-camera-sim'
 
 
-  camera-provider:
+  gd-camera-provider:
     class: wlatanowicz\AppBundle\Hardware\Provider\GdCameraProvider
     arguments:
       -
