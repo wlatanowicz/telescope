@@ -5,9 +5,10 @@ namespace wlatanowicz\AppBundle\Api\Controller\Camera;
 
 use JMS\Serializer\SerializerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use wlatanowicz\AppBundle\Hardware\Provider\CameraProvider;
 
-class Focus
+class Settings
 {
     /**
      * @var CameraProvider
@@ -31,11 +32,19 @@ class Focus
         $this->serializer = $serializer;
     }
 
-    public function getFocus(string $name)
+    public function setFormat(string $camera, Request $request)
     {
-        //@TODO
+        $format = $request->getContent();
+        $this->cameraProvider->getCamera($camera)->setFormat($format);
+        $json = json_encode($format);
+        return new JsonResponse($json, 200, [], true);
+    }
 
-        $json = $this->serializer->serialize([], 'json');
+    public function setIso(string $camera, Request $request)
+    {
+        $iso = intval($request->getContent(), 10);
+        $this->cameraProvider->getCamera($camera)->setIso($iso);
+        $json = json_encode($iso);
         return new JsonResponse($json, 200, [], true);
     }
 }

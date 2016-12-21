@@ -13,4 +13,8 @@ class Camera implements CameraInterface
         $bin = 'some bin data';
         return new BinaryImage($bin);
     }
+
+    public function setIso(int $iso) {}
+
+    public function setFormat(string $format) {}
 }

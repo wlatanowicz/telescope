@@ -66,7 +66,7 @@ class ImagickImage
 
     public function blur(float $radius, float $sigma)
     {
-        $this->imagick->blurImage(
+        $this->imagick->gaussianBlurImage(
             $radius,
             $sigma
         );

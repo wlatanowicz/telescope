@@ -7,9 +7,16 @@ use wlatanowicz\AppBundle\Data\BinaryImage;
 
 interface CameraInterface
 {
+    const FORMAT_RAW = 'raw';
+    const FORMAT_JPEG = 'jpeg';
+
     /**
      * @param int $time in seconds
      * @return BinaryImage
      */
     public function exposure(int $time): BinaryImage;
+
+    public function setIso(int $iso);
+
+    public function setFormat(string $format);
 }

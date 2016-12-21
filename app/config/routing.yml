@@ -5,16 +5,51 @@ info:
     _format: json
   methods: [GET]
 
-camera-image:
+camera-image-expose:
   path: /camera/{name}/image
   defaults:
     _controller: ctrl-camera-image:getImage
     _format: json
   methods: [GET]
 
-camera-focus:
-  path: /camera/{name}/focus
+camera-settings-iso:
+  path: /camera/{name}/iso
   defaults:
-    _controller: ctrl-camera-focus:getFocus
+    _controller: ctrl-camera-settings:setIso
+    _format: json
+  methods: [POST]
+
+camera-settings-format:
+  path: /camera/{name}/format
+  defaults:
+    _controller: ctrl-camera-settings:setFormat
+    _format: json
+  methods: [POST]
+
+focuser-position-get:
+  path: /focuser/{name}/position
+  defaults:
+    _controller: ctrl-focuser-position:getPosition
     _format: json
   methods: [GET]
+
+focuser-position-set:
+  path: /focuser/{name}/position
+  defaults:
+    _controller: ctrl-focuser-position:setPosition
+    _format: json
+  methods: [POST]
+
+telescope-position-get:
+  path: /telescope/{name}/position
+  defaults:
+    _controller: ctrl-telescope-position:getPosition
+    _format: json
+  methods: [GET]
+
+telescope-position-set:
+  path: /telescope/{name}/position
+  defaults:
+    _controller: ctrl-telescope-position:setPosition
+    _format: json
+  methods: [POST]

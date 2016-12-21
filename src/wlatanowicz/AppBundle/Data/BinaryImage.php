@@ -5,6 +5,9 @@ namespace wlatanowicz\AppBundle\Data;
 
 class BinaryImage
 {
+    const MIMETYPE_JPEG = 'image/jpeg';
+    const MIMETYPE_RAW = 'image/x-sony-arw';
+
     /**
      * @var string
      */

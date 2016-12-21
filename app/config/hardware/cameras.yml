@@ -8,6 +8,18 @@ services:
       - '/usr/local/bin/gphoto2'
       - '/tmp'
 
+  camera-remote:
+    class: wlatanowicz\AppBundle\Hardware\Remote\Camera
+    arguments:
+      - '@camera-remote-client'
+      - '@jms_serializer'
+
+  camera-remote-client:
+    class: GuzzleHttp\Client
+    arguments:
+      -
+        base_uri: 'http://192.168.0.50/camera/sony/'
+
   camera-dummy:
     class: wlatanowicz\AppBundle\Hardware\Dummy\Camera
 
@@ -24,5 +36,7 @@ services:
     arguments:
       -
         local: '@camera-local'
+        sony: '@camera-local'
+        remote: '@camera-remote'
         dummy: '@camera-dummy'
         sim: '@camera-sim'

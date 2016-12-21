@@ -93,8 +93,6 @@ class AutoFocus
             }
         }
 
-        print_r($measures);
-
         $newMin = $points[$bestIndex-1];
         $newMax = $points[$bestIndex+1];
 

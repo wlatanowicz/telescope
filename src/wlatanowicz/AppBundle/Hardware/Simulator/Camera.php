@@ -69,6 +69,10 @@ class Camera implements CameraInterface
         return new BinaryImage($imagickImage->getImageBlob(), "application/jpeg");
     }
 
+    public function setIso(int $iso) {}
+
+    public function setFormat(string $format) {}
+
     private function getImage(): BinaryImage
     {
         $path = __DIR__ . "/Resources/" . $this->imageName;
@@ -82,7 +86,6 @@ class Camera implements CameraInterface
     private function blurImage(ImagickImage $imagickImage)
     {
         $level = $this->getBlurLevel() / 6;
-        echo "Level: {$level}\n";
         if ($level > 0.01) {
             $imagickImage->blur($level, 20);
         }
