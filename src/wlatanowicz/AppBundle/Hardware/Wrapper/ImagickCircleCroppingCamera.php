@@ -37,14 +37,14 @@ class ImagickCircleCroppingCamera implements ImagickCameraInterface
     {
         $this->camera = $camera;
 
-        $this->x = 281;//null;
-        $this->y = 261;//null;
+        $this->x = null;
+        $this->y = null;
         $this->radius = 40;
     }
 
-
     public function exposure(int $time): ImagickImage
     {
+        echo ".";
         $imagickImage = $this->camera->exposure($time);
 
         $x = $this->x ?? (int)round($imagickImage->getWidth() / 2);
@@ -57,7 +57,13 @@ class ImagickCircleCroppingCamera implements ImagickCameraInterface
             $this->radius
         );
 
-        file_put_contents( time()."-".rand(100,999).".jpg", $imagickImage->getImageBlob());
         return $imagickImage;
+    }
+
+    public function setCroping(int $radius, int $x = null, int $y = null)
+    {
+        $this->x = $x;
+        $this->y = $y;
+        $this->radius = $radius;
     }
 }

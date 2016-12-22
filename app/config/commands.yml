@@ -21,8 +21,8 @@ services:
     tags:
         - { name: console.command }
 
-  command-autofocus-autofocus:
-    class: wlatanowicz\AppBundle\Command\Autofocus\AutofocusCommand
+  command-focuser-autofocus:
+    class: wlatanowicz\AppBundle\Command\Focuser\AutofocusCommand
     arguments:
       - '@imagick-camera-provider'
       - '@focuser-provider'

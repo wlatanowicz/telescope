@@ -3,25 +3,25 @@ declare(strict_types = 1);
 
 namespace wlatanowicz\AppBundle\Hardware\Provider;
 
-use wlatanowicz\AppBundle\Hardware\ImagickCameraInterface;
+use wlatanowicz\AppBundle\Hardware\Wrapper\ImagickCircleCroppingCamera;
 
-class ImagickCameraProvider
+class ImagickCroppedCameraProvider
 {
     /**
-     * @var ImagickCameraInterface[]
+     * @var ImagickCircleCroppingCamera[]
      */
     private $cameras;
 
     /**
      * ImagickCameraProvider constructor.
-     * @param ImagickCameraInterface[] $cameras
+     * @param ImagickCircleCroppingCamera[] $cameras
      */
     public function __construct(array $cameras)
     {
         $this->cameras = $cameras;
     }
 
-    public function getCamera(string $name): ImagickCameraInterface
+    public function getCamera(string $name): ImagickCircleCroppingCamera
     {
         return $this->cameras[$name];
     }

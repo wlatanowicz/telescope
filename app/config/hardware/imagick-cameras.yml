@@ -10,6 +10,11 @@ services:
     arguments:
       - '@camera-local'
 
+  imagick-camera-remote:
+    class: wlatanowicz\AppBundle\Hardware\Wrapper\ImagickCamera
+    arguments:
+      - '@camera-remote'
+
   imagick-camera-sim:
     class: wlatanowicz\AppBundle\Hardware\Wrapper\ImagickCamera
     arguments:
@@ -25,6 +30,11 @@ services:
     arguments:
       - '@imagick-camera-local'
 
+  imagick-cropped-remote:
+    class: wlatanowicz\AppBundle\Hardware\Wrapper\ImagickCircleCroppingCamera
+    arguments:
+      - '@imagick-camera-remote'
+
   imagick-cropped-sim:
     class: wlatanowicz\AppBundle\Hardware\Wrapper\ImagickCircleCroppingCamera
     arguments:
@@ -32,9 +42,10 @@ services:
 
 
   imagick-camera-provider:
-    class: wlatanowicz\AppBundle\Hardware\Provider\ImagickCameraProvider
+    class: wlatanowicz\AppBundle\Hardware\Provider\ImagickCroppedCameraProvider
     arguments:
       -
         dummy: '@imagick-cropped-dummy'
         local: '@imagick-cropped-local'
+        remote: '@imagick-cropped-remote'
         sim: '@imagick-cropped-sim'

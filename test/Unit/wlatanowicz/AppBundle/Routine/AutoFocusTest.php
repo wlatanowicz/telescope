@@ -67,8 +67,8 @@ class AutoFocusTest extends \PHPUnit_Framework_TestCase
         $minExpected = $focusPoint - abs($tolerance);
         $maxExpected = $focusPoint + abs($tolerance);
 
-        $this->assertGreaterThanOrEqual($minExpected, $result);
-        $this->assertLessThanOrEqual($maxExpected, $result);
+        $this->assertGreaterThanOrEqual($minExpected, $result->getMaximum()->getPosition());
+        $this->assertLessThanOrEqual($maxExpected, $result->getMaximum()->getPosition());
     }
 
     public function dataProvider(): array

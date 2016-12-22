@@ -3,6 +3,8 @@ declare(strict_types = 1);
 
 namespace wlatanowicz\AppBundle\Routine;
 
+use wlatanowicz\AppBundle\Data\AutofocusPoint;
+use wlatanowicz\AppBundle\Data\AutofocusResult;
 use wlatanowicz\AppBundle\Hardware\ImagickCameraInterface;
 use wlatanowicz\AppBundle\Hardware\FocuserInterface;
 
@@ -23,10 +25,19 @@ class AutoFocus
      */
     private $focuser;
 
+    /**
+     * @var int
+     */
     private $partials;
 
+    /**
+     * @var int
+     */
     private $iterations;
 
+    /**
+     * @var AutofocusPoint[]
+     */
     private $measureCache;
 
     public function __construct(
@@ -45,7 +56,7 @@ class AutoFocus
         $this->measureCache = [];
     }
 
-    public function autofocus(int $minPosition, int $maxPosition, int $time): int
+    public function autofocus(int $minPosition, int $maxPosition, int $time): AutofocusResult
     {
         $results = $this->recursiveAutoFocus(
             $minPosition,
@@ -55,12 +66,17 @@ class AutoFocus
 
         usort(
             $results,
-            function ($a, $b) {
-                return $a['measure'] - $b['measure'];
+            function (AutofocusPoint $a, AutofocusPoint $b) {
+                return $a->getMeasure() - $b->getMeasure();
             }
         );
 
-        return $results[0]['position'];
+        //@TODO if multiple are equaly max, find center one
+
+        return new AutofocusResult(
+            $results[0],
+            $results
+        );
     }
 
     private function recursiveAutoFocus(
@@ -74,21 +90,21 @@ class AutoFocus
         $measures = [];
 
         foreach ($points as $index=>$position) {
-            $measures[] = [
-                "position" => $position,
-                "measure" => $this->getMeasureForPosition(
-                    $position,
-                    $time
-                ),
-            ];
+            $measures[] = $this->getMeasureForPosition(
+                $position,
+                $time
+            );
         }
 
         $bestMeasure = null;
         $bestIndex = null;
-        foreach ($measures as $index=>$measure) {
+        foreach ($measures as $index => $measure) {
+            /**
+             * @var $measure AutofocusPoint
+             */
             if ($bestMeasure === null
-                || $measure['measure'] < $bestMeasure) {
-                $bestMeasure = $measure['measure'];
+                || $measure->getMeasure() < $bestMeasure) {
+                $bestMeasure = $measure->getMeasure();
                 $bestIndex = $index;
             }
         }
@@ -132,13 +148,18 @@ class AutoFocus
         return $points;
     }
 
-    private function getMeasureForPosition(int $position, int $time): float
+    private function getMeasureForPosition(int $position, int $time): AutofocusPoint
     {
         if ( !isset($this->measureCache[$position])) {
             $this->focuser->setPosition($position);
 
             $image = $this->camera->exposure($time);
-            $this->measureCache[$position] = $this->measure->measure($image);
+            $measure = $this->measure->measure($image);
+            $this->measureCache[$position] = new AutofocusPoint(
+                $position,
+                $measure,
+                $image
+            );
         }
         return $this->measureCache[$position];
     }
