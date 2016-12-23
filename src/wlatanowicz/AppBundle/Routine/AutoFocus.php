@@ -64,19 +64,68 @@ class AutoFocus
             $time
         );
 
+        return $this->prepareResult($results);
+    }
+
+    /**
+     * @param AutofocusPoint[] $points
+     * @return AutofocusResult
+     */
+    private function prepareResult(array $points): AutofocusResult
+    {
+        /**
+         * @var $uniquePoints AutofocusPoint[]
+         */
+        $uniquePoints = [];
+
+        foreach ($points as $point) {
+            if (!$this->pointInArrayByPosition($uniquePoints, $point)) {
+                $uniquePoints[] = $point;
+            }
+        }
+
+        $bestIndices = [];
+        $bestMeasure = null;
+
+        foreach ($uniquePoints as $index => $point) {
+            if ($bestMeasure === null
+                || $point->getMeasure() < $bestMeasure) {
+                $bestIndices = [$index];
+                $bestMeasure = $point->getMeasure();
+            } elseif ($point->getMeasure() === $bestMeasure) {
+                $bestIndices[] = $index;
+            }
+        }
+
+        $bestIndexIndex = (int)floor((count($bestIndices)-1) / 2);
+
+        $best = $uniquePoints[$bestIndices[$bestIndexIndex]];
+
         usort(
-            $results,
+            $uniquePoints,
             function (AutofocusPoint $a, AutofocusPoint $b) {
-                return $a->getMeasure() - $b->getMeasure();
+                return $a->getPosition() - $b->getPosition();
             }
         );
 
-        //@TODO if multiple are equaly max, find center one
-
         return new AutofocusResult(
-            $results[0],
-            $results
+            $best,
+            $uniquePoints
         );
+    }
+
+    /**
+     * @param AutofocusPoint[] $points
+     * @param AutofocusPoint $searchPoint
+     */
+    private function pointInArrayByPosition(array $points, AutofocusPoint $searchPoint): bool
+    {
+        foreach ($points as $point) {
+            if ($point->getPosition() === $searchPoint->getPosition()) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private function recursiveAutoFocus(

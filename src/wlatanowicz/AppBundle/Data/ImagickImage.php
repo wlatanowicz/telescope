@@ -77,6 +77,11 @@ class ImagickImage
         return $this->imagick->getImageBlob();
     }
 
+    public function getImagick(): \Imagick
+    {
+        return $this->imagick;
+    }
+
     function __clone()
     {
         return new self(

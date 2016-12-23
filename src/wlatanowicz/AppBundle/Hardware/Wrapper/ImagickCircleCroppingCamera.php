@@ -53,8 +53,8 @@ class ImagickCircleCroppingCamera implements ImagickCameraInterface
         $imagickImage->crop(
             $x - ($this->radius),
             $y - ($this->radius),
-            $this->radius,
-            $this->radius
+            $this->radius * 2,
+            $this->radius * 2
         );
 
         return $imagickImage;

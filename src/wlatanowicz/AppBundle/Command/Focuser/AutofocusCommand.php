@@ -7,9 +7,11 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use wlatanowicz\AppBundle\Data\BinaryImage;
 use wlatanowicz\AppBundle\Hardware\Provider\FocuserProvider;
 use wlatanowicz\AppBundle\Hardware\Provider\ImagickCroppedCameraProvider;
 use wlatanowicz\AppBundle\Routine\AutoFocus;
+use wlatanowicz\AppBundle\Routine\AutoFocusReport;
 use wlatanowicz\AppBundle\Routine\MeasureStarDiameter;
 use wlatanowicz\AppBundle\Routine\MeasureStarFWHM;
 
@@ -73,7 +75,7 @@ class AutofocusCommand extends Command
             ? intval($input->getOption('y'), 10)
             : null;
 
-        $radius = intval($input->getOption('y'), 10);
+        $radius = intval($input->getOption('radius'), 10);
 
         $min = intval($input->getOption('min'), 10);
         $max = intval($input->getOption('max'), 10);
@@ -107,5 +109,9 @@ class AutofocusCommand extends Command
         );
 
         $focuser->setPosition($result->getMaximum()->getPosition());
+
+        $reporter = new AutoFocusReport();
+        $report = $reporter->generateReport($result);
+        file_put_contents('report.png', $report->getImageBlob());
     }
 }
