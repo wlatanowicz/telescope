@@ -14,9 +14,22 @@ services:
     arguments:
       - '/dev/ttyUSB0'
 
+  telescope-remote:
+    class: wlatanowicz\AppBundle\Hardware\Remote\Camera
+    arguments:
+      - '@camera-remote-client'
+      - '@jms_serializer'
+
+  telescope-remote-client:
+    class: GuzzleHttp\Client
+    arguments:
+      -
+        base_uri: 'http://192.168.0.50/telescope/sw/'
 
   telescope-provider:
     class: wlatanowicz\AppBundle\Hardware\Provider\TelescopeProvider
     arguments:
       -
         local: '@telescope-local'
+        sw: '@telescope-local'
+        remote: '@telescope-remote'
