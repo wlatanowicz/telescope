@@ -44,7 +44,6 @@ class ImagickCircleCroppingCamera implements ImagickCameraInterface
 
     public function exposure(int $time): ImagickImage
     {
-        echo ".";
         $imagickImage = $this->camera->exposure($time);
 
         $x = $this->x ?? (int)round($imagickImage->getWidth() / 2);

@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace wlatanowicz\AppBundle\Hardware\Simulator;
 
+use Psr\Log\LoggerInterface;
 use wlatanowicz\AppBundle\Data\BinaryImage;
 use wlatanowicz\AppBundle\Data\ImagickImage;
 use wlatanowicz\AppBundle\Hardware\CameraInterface;
@@ -27,6 +28,16 @@ class Camera implements CameraInterface
     private $imageName;
 
     /**
+     * @var string
+     */
+    private $logPrefix;
+
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
+    /**
      * @var int
      */
     private $focusPoint;
@@ -47,11 +58,19 @@ class Camera implements CameraInterface
      * @param FileSystem $fileSystem
      * @param string $imageName
      */
-    public function __construct(FocuserInterface $focuser, FileSystem $fileSystem, string $imageName)
-    {
+    public function __construct(
+        FocuserInterface $focuser,
+        FileSystem $fileSystem,
+        string $imageName,
+        LoggerInterface $logger,
+        string $logPrefix
+    ) {
         $this->focuser = $focuser;
         $this->fileSystem = $fileSystem;
         $this->imageName = $imageName;
+
+        $this->logger = $logger;
+        $this->logPrefix = $logPrefix;
 
         $this->focusPoint = 3421;
         $this->focusSlope1 = 0.5;
@@ -60,11 +79,15 @@ class Camera implements CameraInterface
 
     public function exposure(int $time): BinaryImage
     {
+        $this->logger->info("[$this->logPrefix] Starting exposure (time={$time}s)");
+
         $image = $this->getImage();
 
         $imagickImage = ImagickImage::fromBinaryImage($image);
 
         $this->blurImage($imagickImage);
+
+        $this->logger->info("[$this->logPrefix] Finished exposure");
 
         return new BinaryImage($imagickImage->getImageBlob(), "application/jpeg");
     }

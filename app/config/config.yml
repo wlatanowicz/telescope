@@ -14,3 +14,10 @@ framework:
         resource: "%kernel.root_dir%/config/routing.yml"
         strict_requirements: true
     profiler: { only_exceptions: false }
+
+monolog:
+    handlers:
+        console:
+            type:   console
+            verbosity_levels:
+                VERBOSITY_NORMAL: INFO

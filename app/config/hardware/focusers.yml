@@ -16,6 +16,9 @@ services:
 
   focuser-sim:
     class: wlatanowicz\AppBundle\Hardware\Simulator\Focuser
+    arguments:
+      - '@logger'
+      - 'Focuser Simulator'
 
 
   focuser-provider:

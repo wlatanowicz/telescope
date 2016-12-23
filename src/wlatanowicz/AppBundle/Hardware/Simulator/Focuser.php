@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace wlatanowicz\AppBundle\Hardware\Simulator;
 
+use Psr\Log\LoggerInterface;
 use wlatanowicz\AppBundle\Hardware\FocuserInterface;
 
 class Focuser implements FocuserInterface
@@ -13,10 +14,26 @@ class Focuser implements FocuserInterface
     private $position;
 
     /**
+     * @var string
+     */
+    private $logPrefix;
+
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
+    /**
      * Focuser constructor.
      */
-    public function __construct()
+    public function __construct(
+        LoggerInterface $logger,
+        string $logPrefix
+    )
     {
+        $this->logger = $logger;
+        $this->logPrefix = $logPrefix;
+
         $this->position = 3000;
     }
 
@@ -26,6 +43,7 @@ class Focuser implements FocuserInterface
         bool $wait = true,
         int $tolerance = 5
     ) {
+        $this->logger->info("[$this->logPrefix] Setting position (position={$position})");
         $this->position = $position;
     }
 

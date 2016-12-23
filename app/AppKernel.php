@@ -11,6 +11,7 @@ class AppKernel extends Kernel
             new Symfony\Bundle\FrameworkBundle\FrameworkBundle(),
             new wlatanowicz\AppBundle\wlatanowiczAppBundle(),
             new JMS\SerializerBundle\JMSSerializerBundle(),
+            new \Symfony\Bundle\MonologBundle\MonologBundle(),
         ];
 
         if (in_array($this->getEnvironment(), ['dev', 'test'], true)) {
