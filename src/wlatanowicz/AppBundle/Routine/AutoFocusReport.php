@@ -42,7 +42,9 @@ class AutoFocusReport
                     );
 
                     $draw = new \ImagickDraw();
-                    $draw->setStrokeColor(new \ImagickPixel("white"));
+                    $draw->setFillColor(new \ImagickPixel("white"));
+                    $draw->setFontWeight(100);
+                    $draw->setStrokeWidth(0);
 
                     $imagick->annotateImage(
                         $draw,
