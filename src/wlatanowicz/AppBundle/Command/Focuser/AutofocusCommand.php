@@ -58,6 +58,7 @@ class AutofocusCommand extends Command
             ->addOption('partials', null, InputOption::VALUE_REQUIRED, 'Target position', 5)
             ->addOption('iterations', null, InputOption::VALUE_REQUIRED, 'Target position', 5)
             ->addOption('threshold', null, InputOption::VALUE_REQUIRED, 'Target position', 0.1)
+            ->addOption('save-report', null, InputOption::VALUE_REQUIRED, 'Target position', null)
         ;
     }
 
@@ -85,6 +86,8 @@ class AutofocusCommand extends Command
 
         $threshold = floatval($input->getOption('threshold'));
 
+        $reportFile = $input->getOption('save-report');
+
         $camera = $this->cameraProvider->getCamera($cameraName);
         $focuser = $this->focuserProvider->getFocuser($focuserName);
 
@@ -110,8 +113,10 @@ class AutofocusCommand extends Command
 
         $focuser->setPosition($result->getMaximum()->getPosition());
 
-        $reporter = new AutoFocusReport();
-        $report = $reporter->generateReport($result);
-        file_put_contents('report.png', $report->getImageBlob());
+        if ($reportFile !== null) {
+            $reporter = new AutoFocusReport();
+            $report = $reporter->generateReport($result);
+            file_put_contents($reportFile, $report->getImageBlob());
+        }
     }
 }

@@ -48,7 +48,7 @@ class AutoFocusReport
 
                     $imagick->annotateImage(
                         $draw,
-                        $posX + 2,
+                        $posX + 4,
                         $posY + ($annotationHeight / 2),
                         0,
                         "M: "
@@ -66,8 +66,8 @@ class AutoFocusReport
                         $draw->setStrokeWidth(1);
 
                         $draw->rectangle(
-                            $posX + 1,
-                            $posY + 1,
+                            $posX,
+                            $posY,
                             $posX + $tileWidth - 1,
                             $posY + $tileHeight + $annotationHeight - 1
                         );
