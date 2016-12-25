@@ -12,6 +12,8 @@ use wlatanowicz\AppBundle\Hardware\Helper\FileSystem;
 
 class Camera implements CameraInterface
 {
+    const SIM_DOWNLOAD_AND_PREPARE_TIME = 4;
+
     /**
      * @var FocuserInterface
      */
@@ -79,6 +81,8 @@ class Camera implements CameraInterface
 
     public function exposure(int $time): BinaryImage
     {
+        $start = time();
+
         $this->logger->info("[$this->logPrefix] Starting exposure (time={$time}s)");
 
         $image = $this->getImage();
@@ -86,6 +90,15 @@ class Camera implements CameraInterface
         $imagickImage = ImagickImage::fromBinaryImage($image);
 
         $this->blurImage($imagickImage);
+
+        if ($time > 0) {
+            $willLast = $time + self::SIM_DOWNLOAD_AND_PREPARE_TIME;
+            $finish = time();
+            $lasted = $finish - $start;
+            if ($lasted < $willLast) {
+                sleep($willLast - $lasted);
+            }
+        }
 
         $this->logger->info("[$this->logPrefix] Finished exposure");
 
