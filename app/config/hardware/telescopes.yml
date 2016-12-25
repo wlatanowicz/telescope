@@ -15,7 +15,7 @@ services:
       - '/dev/ttyUSB0'
 
   telescope-remote:
-    class: wlatanowicz\AppBundle\Hardware\Remote\Camera
+    class: wlatanowicz\AppBundle\Hardware\Remote\Telescope
     arguments:
       - '@camera-remote-client'
       - '@jms_serializer'
