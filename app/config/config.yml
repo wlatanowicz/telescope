@@ -15,9 +15,27 @@ framework:
         strict_requirements: true
     profiler: { only_exceptions: false }
 
+services:
+    monolog.formatter.session_request:
+        class: Monolog\Formatter\LineFormatter
+        arguments:
+            - "[%%datetime%%] [%%context.prefix%%]: %%message%%\n"
+
+    monolog.processor.psr:
+        class: Monolog\Processor\PsrLogMessageProcessor
+        tags:
+            - { name: monolog.processor }
+
+    monolog.processor.tag:
+        class: Monolog\Processor\TagProcessor
+        tags:
+            - { name: monolog.processor }
+
+
 monolog:
     handlers:
         console:
             type:   console
             verbosity_levels:
                 VERBOSITY_NORMAL: INFO
+            formatter: monolog.formatter.session_request

@@ -7,12 +7,16 @@ services:
       - '@sys-filesystem'
       - '/usr/local/bin/gphoto2'
       - '/tmp'
+      - '@logger'
+      - 'Sony Camera'
 
   camera-remote:
     class: wlatanowicz\AppBundle\Hardware\Remote\Camera
     arguments:
       - '@camera-remote-client'
       - '@jms_serializer'
+      - '@logger'
+      - 'Remote Camera'
 
   camera-remote-client:
     class: GuzzleHttp\Client

@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace wlatanowicz\AppBundle\Hardware\Local;
 
+use Psr\Log\LoggerInterface;
 use wlatanowicz\AppBundle\Data\BinaryImage;
 use wlatanowicz\AppBundle\Hardware\CameraInterface;
 use wlatanowicz\AppBundle\Hardware\Helper\FileSystem;
@@ -30,17 +31,40 @@ class Camera implements CameraInterface
      */
     private $temp;
 
-    public function __construct(Process $process, FileSystem $filesystem, string $bin, string $temp)
-    {
+    /**
+     * @var string
+     */
+    private $logPrefix;
+
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
+    public function __construct(
+        Process $process,
+        FileSystem $filesystem,
+        string $bin,
+        string $temp,
+        LoggerInterface $logger,
+        string $logPrefix
+    ) {
         $this->process = $process;
         $this->filesystem = $filesystem;
         $this->bin = $bin;
         $this->temp = $temp;
+
+        $this->logger = $logger;
+        $this->logPrefix = $logPrefix;
     }
 
     public function exposure(int $time): BinaryImage
     {
+        $this->logger->info("[$this->logPrefix] Setting bulb mode");
+
         $this->setBulb();
+
+        $this->logger->info("[$this->logPrefix] Starting exposure (time={$time}s)");
 
         $tempfile = $this->filesystem->tempName($this->temp);
         $this->filesystem->unlink($tempfile);
@@ -58,6 +82,8 @@ class Camera implements CameraInterface
 
         $data = $this->filesystem->fileGetContents($tempfile);
         $this->filesystem->unlink($tempfile);
+
+        $this->logger->info("[$this->logPrefix] Finished exposure");
 
         $mimetype = null;
         return new BinaryImage($data, $mimetype);

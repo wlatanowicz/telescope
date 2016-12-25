@@ -51,7 +51,14 @@ class Focuser implements FocuserInterface
         bool $wait = true,
         int $tolerance = 5
     ) {
-        $this->logger->info("[$this->logPrefix] Setting position (target={$position}, current={$this->position})");
+        $this->logger->info(
+            "Setting position (position={position})",
+            [
+                "prefix" => $this->logPrefix,
+                "position" => $position,
+                "target" => $position
+            ]
+        );
 
         if ($this->speed > 0) {
             $time = (int)ceil(abs($this->position - $position) / $this->speed);
@@ -60,7 +67,13 @@ class Focuser implements FocuserInterface
 
         $this->position = $position;
 
-        $this->logger->info("[$this->logPrefix] Position set (position={$position})");
+        $this->logger->info(
+            "Position set (position={position})",
+            [
+                "prefix" => $this->logPrefix,
+                "position" => $position,
+            ]
+        );
     }
 
     public function getPosition(): int

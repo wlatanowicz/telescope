@@ -83,7 +83,13 @@ class Camera implements CameraInterface
     {
         $start = time();
 
-        $this->logger->info("[$this->logPrefix] Starting exposure (time={$time}s)");
+        $this->logger->info(
+            "Starting exposure (time={time}s)",
+            [
+                "prefix" => $this->logPrefix,
+                "time" => $time,
+            ]
+        );
 
         $image = $this->getImage();
 
@@ -100,7 +106,12 @@ class Camera implements CameraInterface
             }
         }
 
-        $this->logger->info("[$this->logPrefix] Finished exposure");
+        $this->logger->info(
+            "Finished exposure",
+            [
+                "prefix" => $this->logPrefix,
+            ]
+        );
 
         return new BinaryImage($imagickImage->getImageBlob(), "application/jpeg");
     }

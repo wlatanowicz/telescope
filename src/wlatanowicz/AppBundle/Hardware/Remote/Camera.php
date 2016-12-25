@@ -5,6 +5,7 @@ namespace wlatanowicz\AppBundle\Hardware\Remote;
 
 use GuzzleHttp\ClientInterface;
 use JMS\Serializer\SerializerInterface;
+use Psr\Log\LoggerInterface;
 use wlatanowicz\AppBundle\Data\BinaryImage;
 use wlatanowicz\AppBundle\Hardware\CameraInterface;
 
@@ -21,18 +22,43 @@ class Camera implements CameraInterface
     private $serializer;
 
     /**
+     * @var string
+     */
+    private $logPrefix;
+
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
+    /**
      * Camera constructor.
      * @param ClientInterface $client
      * @param SerializerInterface $serializer
      */
-    public function __construct(ClientInterface $client, SerializerInterface $serializer)
-    {
+    public function __construct(
+        ClientInterface $client,
+        SerializerInterface $serializer,
+        LoggerInterface $logger,
+        string $logPrefix
+    ) {
         $this->client = $client;
         $this->serializer = $serializer;
+
+        $this->logger = $logger;
+        $this->logPrefix = $logPrefix;
     }
 
     public function exposure(int $time): BinaryImage
     {
+        $this->logger->info(
+            "Starting exposure (time={time}s)",
+            [
+                "prefix" => $this->logPrefix,
+                "time" => $time,
+            ]
+        );
+
         $query = [
             'time' => $time,
         ];
@@ -45,6 +71,13 @@ class Camera implements CameraInterface
             $json,
             BinaryImage::class,
             'json'
+        );
+
+        $this->logger->info(
+            "Finished exposure",
+            [
+                "prefix" => $this->logPrefix,
+            ]
         );
 
         return $object;
