@@ -43,7 +43,6 @@ class LogFormatter extends LineFormatter
         $formattedRecord = $this->nestedFormatter->format($record);
 
         $color = SGR::COLOR_BG_BLACK;
-        $otherColor = SGR::COLOR_BG_BLACK;
 
         if (isset($record['context']['color'])) {
             switch ($record['context']['color']) {
@@ -60,7 +59,7 @@ class LogFormatter extends LineFormatter
                 . $this->ansi->reset()->get();
         } else {
             $record['context']['display'] =
-                $this->ansi->color($otherColor)->get()
+                $this->ansi->color(SGR::COLOR_BG_WHITE)->color(SGR::COLOR_FG_BLACK)->get()
                 . self::OTHER_DEVICE_DISPLAY
                 . $this->ansi->reset()->get();
         }
