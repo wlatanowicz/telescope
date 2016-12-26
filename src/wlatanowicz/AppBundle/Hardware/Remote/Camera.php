@@ -22,11 +22,6 @@ class Camera implements CameraInterface
     private $serializer;
 
     /**
-     * @var string
-     */
-    private $logPrefix;
-
-    /**
      * @var LoggerInterface
      */
     private $logger;
@@ -39,14 +34,12 @@ class Camera implements CameraInterface
     public function __construct(
         ClientInterface $client,
         SerializerInterface $serializer,
-        LoggerInterface $logger,
-        string $logPrefix
+        LoggerInterface $logger
     ) {
         $this->client = $client;
         $this->serializer = $serializer;
 
         $this->logger = $logger;
-        $this->logPrefix = $logPrefix;
     }
 
     public function exposure(int $time): BinaryImage
@@ -54,7 +47,6 @@ class Camera implements CameraInterface
         $this->logger->info(
             "Starting exposure (time={time}s)",
             [
-                "prefix" => $this->logPrefix,
                 "time" => $time,
             ]
         );
@@ -73,12 +65,7 @@ class Camera implements CameraInterface
             'json'
         );
 
-        $this->logger->info(
-            "Finished exposure",
-            [
-                "prefix" => $this->logPrefix,
-            ]
-        );
+        $this->logger->info("Finished exposure");
 
         return $object;
     }

@@ -16,10 +16,32 @@ framework:
     profiler: { only_exceptions: false }
 
 services:
-    monolog.formatter.session_request:
-        class: Monolog\Formatter\LineFormatter
+    logger-with-context.prototype:
+        class: wlatanowicz\AppBundle\Helper\LoggerWithContext
         arguments:
-            - "[%%datetime%%] [%%context.prefix%%]: %%message%%\n"
+            - '@logger'
+            - {}
+
+    monolog.ansi:
+        class: Bramus\Ansi\Ansi
+        arguments:
+            - "@monolog.ansi.writer"
+
+    monolog.ansi.writer:
+        class: Bramus\Ansi\Writers\BufferWriter
+
+    monolog.formatter.inner:
+        class: Bramus\Monolog\Formatter\ColoredLineFormatter
+        arguments:
+            - ~
+            - "%%message%%\n"
+
+    monolog.formatter.custom:
+        class: wlatanowicz\AppBundle\Helper\LogFormatter
+        arguments:
+            - "[%%datetime%%] [%%context.display%%]: "
+            - '@monolog.ansi'
+            - '@monolog.formatter.inner'
 
     monolog.processor.psr:
         class: Monolog\Processor\PsrLogMessageProcessor
@@ -38,4 +60,4 @@ monolog:
             type:   console
             verbosity_levels:
                 VERBOSITY_NORMAL: INFO
-            formatter: monolog.formatter.session_request
+            formatter: monolog.formatter.custom

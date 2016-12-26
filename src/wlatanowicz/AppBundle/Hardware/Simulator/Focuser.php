@@ -19,11 +19,6 @@ class Focuser implements FocuserInterface
     private $speed;
 
     /**
-     * @var string
-     */
-    private $logPrefix;
-
-    /**
      * @var LoggerInterface
      */
     private $logger;
@@ -33,14 +28,12 @@ class Focuser implements FocuserInterface
      */
     public function __construct(
         float $speed,
-        LoggerInterface $logger,
-        string $logPrefix
+        LoggerInterface $logger
     )
     {
         $this->speed = $speed;
 
         $this->logger = $logger;
-        $this->logPrefix = $logPrefix;
 
         $this->position = 0;
     }
@@ -52,10 +45,9 @@ class Focuser implements FocuserInterface
         int $tolerance = 5
     ) {
         $this->logger->info(
-            "Setting position (position={position})",
+            "Setting position (current={position}, target={target})",
             [
-                "prefix" => $this->logPrefix,
-                "position" => $position,
+                "current" => $this->position,
                 "target" => $position
             ]
         );
@@ -70,7 +62,6 @@ class Focuser implements FocuserInterface
         $this->logger->info(
             "Position set (position={position})",
             [
-                "prefix" => $this->logPrefix,
                 "position" => $position,
             ]
         );

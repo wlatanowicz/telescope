@@ -32,11 +32,6 @@ class Camera implements CameraInterface
     private $temp;
 
     /**
-     * @var string
-     */
-    private $logPrefix;
-
-    /**
      * @var LoggerInterface
      */
     private $logger;
@@ -46,8 +41,7 @@ class Camera implements CameraInterface
         FileSystem $filesystem,
         string $bin,
         string $temp,
-        LoggerInterface $logger,
-        string $logPrefix
+        LoggerInterface $logger
     ) {
         $this->process = $process;
         $this->filesystem = $filesystem;
@@ -55,16 +49,20 @@ class Camera implements CameraInterface
         $this->temp = $temp;
 
         $this->logger = $logger;
-        $this->logPrefix = $logPrefix;
     }
 
     public function exposure(int $time): BinaryImage
     {
-        $this->logger->info("[$this->logPrefix] Setting bulb mode");
+        $this->logger->info("Setting bulb mode");
 
         $this->setBulb();
 
-        $this->logger->info("[$this->logPrefix] Starting exposure (time={$time}s)");
+        $this->logger->info(
+            "Starting exposure (time={time}s)",
+            [
+                "time" => $time,
+            ]
+        );
 
         $tempfile = $this->filesystem->tempName($this->temp);
         $this->filesystem->unlink($tempfile);
@@ -83,7 +81,7 @@ class Camera implements CameraInterface
         $data = $this->filesystem->fileGetContents($tempfile);
         $this->filesystem->unlink($tempfile);
 
-        $this->logger->info("[$this->logPrefix] Finished exposure");
+        $this->logger->info("Finished exposure");
 
         $mimetype = null;
         return new BinaryImage($data, $mimetype);

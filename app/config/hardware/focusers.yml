@@ -19,7 +19,8 @@ services:
     arguments:
       - 500
       - '@logger'
-      - 'Focuser Simulator'
+    tags:
+      - { name: logger.metadata, color: red, display: 'Focuser Simulator' }
 
 
   focuser-provider:

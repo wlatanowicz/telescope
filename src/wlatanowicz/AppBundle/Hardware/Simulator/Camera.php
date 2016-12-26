@@ -30,11 +30,6 @@ class Camera implements CameraInterface
     private $imageName;
 
     /**
-     * @var string
-     */
-    private $logPrefix;
-
-    /**
      * @var LoggerInterface
      */
     private $logger;
@@ -64,15 +59,13 @@ class Camera implements CameraInterface
         FocuserInterface $focuser,
         FileSystem $fileSystem,
         string $imageName,
-        LoggerInterface $logger,
-        string $logPrefix
+        LoggerInterface $logger
     ) {
         $this->focuser = $focuser;
         $this->fileSystem = $fileSystem;
         $this->imageName = $imageName;
 
         $this->logger = $logger;
-        $this->logPrefix = $logPrefix;
 
         $this->focusPoint = 3421;
         $this->focusSlope1 = 0.5;
@@ -86,7 +79,6 @@ class Camera implements CameraInterface
         $this->logger->info(
             "Starting exposure (time={time}s)",
             [
-                "prefix" => $this->logPrefix,
                 "time" => $time,
             ]
         );
@@ -106,12 +98,7 @@ class Camera implements CameraInterface
             }
         }
 
-        $this->logger->info(
-            "Finished exposure",
-            [
-                "prefix" => $this->logPrefix,
-            ]
-        );
+        $this->logger->info("Finished exposure");
 
         return new BinaryImage($imagickImage->getImageBlob(), "application/jpeg");
     }

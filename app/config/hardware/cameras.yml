@@ -8,7 +8,8 @@ services:
       - '/usr/local/bin/gphoto2'
       - '/tmp'
       - '@logger'
-      - 'Sony Camera'
+    tags:
+      - { name: logger.metadata, color: green, display: 'Sony Camera' }
 
   camera-remote:
     class: wlatanowicz\AppBundle\Hardware\Remote\Camera
@@ -16,7 +17,8 @@ services:
       - '@camera-remote-client'
       - '@jms_serializer'
       - '@logger'
-      - 'Remote Camera'
+    tags:
+      - { name: logger.metadata, color: green, display: 'Remote Camera' }
 
   camera-remote-client:
     class: GuzzleHttp\Client
@@ -34,7 +36,8 @@ services:
       - '@sys-filesystem'
       - 'star.jpg'
       - '@logger'
-      - 'Camera Simulator'
+    tags:
+      - { name: logger.metadata, color: green, display: 'Camera Simulator' }
 
 
   camera-provider:
