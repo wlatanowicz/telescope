@@ -11,7 +11,7 @@ class Binary64Image
     private $data;
 
     /**
-     * @var string
+     * @var string|null
      */
     private $mimetype;
 
@@ -32,7 +32,7 @@ class Binary64Image
     /**
      * @return string
      */
-    public function getMimetype(): string
+    public function getMimetype()
     {
         return $this->mimetype;
     }
