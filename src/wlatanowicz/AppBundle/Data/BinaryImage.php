@@ -4,17 +4,20 @@ declare(strict_types = 1);
 namespace wlatanowicz\AppBundle\Data;
 
 use JMS\Serializer\Annotation\Accessor;
+use JMS\Serializer\Annotation\Type;
 
 class BinaryImage
 {
     /**
      * @var string
      * @Accessor(getter="getDataBase64",setter="setDataBase64")
+     * @Type("string")
      */
     private $data;
 
     /**
      * @var string|null
+     * @Type("string")
      */
     private $mimetype;
 
