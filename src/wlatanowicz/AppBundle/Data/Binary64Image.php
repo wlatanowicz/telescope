@@ -3,7 +3,7 @@ declare(strict_types = 1);
 
 namespace wlatanowicz\AppBundle\Data;
 
-class BinaryImage
+class Binary64Image
 {
     /**
      * @var string
@@ -37,11 +37,11 @@ class BinaryImage
         return $this->mimetype;
     }
 
-    public static function fromBinary64Image(Binary64Image $binary64Image): self
+    public static function fromBinaryImage(BinaryImage $binaryImage): self
     {
         return new self(
-            base64_decode($binary64Image->getData()),
-            $binary64Image->getMimetype()
+            base64_encode($binaryImage->getData()),
+            $binaryImage->getMimetype()
         );
     }
 }

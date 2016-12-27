@@ -7,6 +7,7 @@ use JMS\Serializer\SerializerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use wlatanowicz\AppBundle\Data\Binary64Image;
 use wlatanowicz\AppBundle\Hardware\Provider\CameraProvider;
 
 class Image
@@ -41,8 +42,9 @@ class Image
 
         $camera = $this->cameraProvider->getCamera($name);
         $image = $camera->exposure($time, $iso, $format);
+        $image64 = Binary64Image::fromBinaryImage($image);
 
-        $json = $this->serializer->serialize($image, 'json');
+        $json = $this->serializer->serialize($image64, 'json');
         return new JsonResponse($json, 200, [], true);
     }
 }

@@ -6,6 +6,7 @@ namespace wlatanowicz\AppBundle\Hardware\Remote;
 use GuzzleHttp\ClientInterface;
 use JMS\Serializer\SerializerInterface;
 use Psr\Log\LoggerInterface;
+use wlatanowicz\AppBundle\Data\Binary64Image;
 use wlatanowicz\AppBundle\Data\BinaryImage;
 use wlatanowicz\AppBundle\Hardware\CameraInterface;
 
@@ -57,13 +58,15 @@ class Camera implements CameraInterface
         $json = $this->client->request('GET', 'image?' . http_build_query($query) );
 
         /**
-         * @var $object BinaryImage
+         * @var $object64 Binary64Image
          */
-        $object = $this->serializer->deserialize(
+        $object64 = $this->serializer->deserialize(
             $json,
-            BinaryImage::class,
+            Binary64Image::class,
             'json'
         );
+
+        $object = BinaryImage::fromBinary64Image($object64);
 
         $this->logger->info("Finished exposure");
 
