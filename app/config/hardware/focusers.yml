@@ -4,6 +4,9 @@ services:
     class: wlatanowicz\AppBundle\Hardware\Local\Focuser
     arguments:
       - '@focuser-node-http-client'
+      - '@logger'
+    tags:
+      - { name: logger.metadata, color: red, display: 'Node Focuser' }
 
   focuser-node-http-client:
     class: GuzzleHttp\Client
