@@ -3,6 +3,8 @@ declare(strict_types = 1);
 
 namespace wlatanowicz\AppBundle\Data;
 
+use JMS\Serializer\Annotation\Accessor;
+
 class BinaryImage
 {
     /**
