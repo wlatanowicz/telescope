@@ -24,7 +24,7 @@ services:
     class: GuzzleHttp\Client
     arguments:
       -
-        base_uri: 'http://192.168.0.50/telescope/sw/'
+        base_uri: 'http://192.168.0.50/index.php/telescope/sw/'
 
   telescope-provider:
     class: wlatanowicz\AppBundle\Hardware\Provider\TelescopeProvider

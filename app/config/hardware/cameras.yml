@@ -5,7 +5,7 @@ services:
     arguments:
       - '@sys-process'
       - '@sys-filesystem'
-      - '/usr/local/bin/gphoto2'
+      - 'umask 0000 && sudo /usr/local/bin/gphoto2'
       - '/tmp'
       - '@logger'
     tags:
@@ -24,7 +24,7 @@ services:
     class: GuzzleHttp\Client
     arguments:
       -
-        base_uri: 'http://192.168.0.50/camera/sony/'
+        base_uri: 'http://192.168.0.50/index.php/camera/sony/'
 
   camera-dummy:
     class: wlatanowicz\AppBundle\Hardware\Dummy\Camera
