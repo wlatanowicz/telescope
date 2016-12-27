@@ -7,6 +7,7 @@ class BinaryImage
 {
     /**
      * @var string
+     * @Accessor(getter="getDataBase64",setter="setDataBase64")
      */
     private $data;
 
@@ -37,11 +38,13 @@ class BinaryImage
         return $this->mimetype;
     }
 
-    public static function fromBinary64Image(Binary64Image $binary64Image): self
+    public function getDataBase64(): string
     {
-        return new self(
-            base64_decode($binary64Image->getData()),
-            $binary64Image->getMimetype()
-        );
+        return base64_encode($this->data);
+    }
+
+    public function setDataBase64(string $base64)
+    {
+        $this->data = base64_decode($base64);
     }
 }

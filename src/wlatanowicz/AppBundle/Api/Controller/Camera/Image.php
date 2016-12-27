@@ -42,9 +42,8 @@ class Image
 
         $camera = $this->cameraProvider->getCamera($name);
         $image = $camera->exposure($time, $iso, $format);
-        $image64 = Binary64Image::fromBinaryImage($image);
 
-        $json = $this->serializer->serialize($image64, 'json');
+        $json = $this->serializer->serialize($image, 'json');
         return new JsonResponse($json, 200, [], true);
     }
 }
