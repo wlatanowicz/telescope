@@ -36,8 +36,6 @@ class ExposeCommand extends Command
             ->setHelp("This command allows you to create users...")
             ->addOption('camera', null, InputOption::VALUE_REQUIRED, 'Camera name', 'local')
             ->addOption('time', null, InputOption::VALUE_REQUIRED, 'Target position', 1)
-            ->addOption('iso', null, InputOption::VALUE_REQUIRED, 'Target position', 400)
-            ->addOption('format', null, InputOption::VALUE_REQUIRED, 'Target position', CameraInterface::FORMAT_JPEG)
             ->addOption('filename', null, InputOption::VALUE_REQUIRED, 'Target position', "capture.jpg")
         ;
     }
@@ -46,10 +44,8 @@ class ExposeCommand extends Command
     {
         $camera = $input->getOption('camera');
         $time = intval($input->getOption('time'), 10);
-        $iso = intval($input->getOption('iso'), 10);
-        $format = $input->getOption('format');
 
-        $image = $this->provider->getCamera($camera)->exposure($time, $iso, $format);
+        $image = $this->provider->getCamera($camera)->exposure($time);
         $fileName = $input->getOption('filename');
         $this->fileSystem->filePutContents($fileName, $image->getData());
     }
