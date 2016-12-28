@@ -28,3 +28,12 @@ services:
       - '@focuser-provider'
     tags:
         - { name: console.command }
+
+  command-focuser-measure:
+    class: wlatanowicz\AppBundle\Command\Focuser\MeasureCommand
+    arguments:
+      - '@imagick-camera-provider'
+      - '@focuser-provider'
+      - '@logger'
+    tags:
+        - { name: console.command }
