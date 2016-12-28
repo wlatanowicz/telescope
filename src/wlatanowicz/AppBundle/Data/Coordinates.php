@@ -3,15 +3,19 @@ declare(strict_types = 1);
 
 namespace wlatanowicz\AppBundle\Data;
 
+use JMS\Serializer\Annotation\Type;
+
 class Coordinates
 {
     /**
      * @var float
+     * @Type("double")
      */
     private $rightAscension;
 
     /**
      * @var float;
+     * @Type("double")
      */
     private $declination;
 

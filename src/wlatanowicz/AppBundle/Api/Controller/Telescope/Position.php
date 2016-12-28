@@ -50,8 +50,22 @@ class Position
             Coordinates::class,
             'json'
         );
+
+        $tolerance = null;
+        if ($request->query->has("decTolerance")
+            && $request->query->has("raTolerance")){
+            $tolerance = new Coordinates(
+                floatval($request->query->get("raTolerance")),
+                floatval($request->query->has("decTolerance"))
+            );
+        }
+
         $telescope = $this->telescopeProvider->getTelescope($name);
-        $telescope->setPosition($position);
+        $telescope->setPosition(
+            $position,
+            true,
+            $tolerance
+        );
 
         $json = $this->serializer->serialize($position, 'json');
         return new JsonResponse($json, 200, [], true);
