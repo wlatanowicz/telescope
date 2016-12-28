@@ -22,8 +22,7 @@ class TelescopeMount
     {
         $connection = $this->serialPort->connect();
         $this->writeCommand($connection, $command);
-        $response = $this->readResponse($fd);
-        fclose($fd);
+        $response = $this->readResponse($connection);
         return $response;
     }
 
