@@ -12,6 +12,7 @@ services:
   telescope-local-mount-serial:
     class: wlatanowicz\AppBundle\Hardware\Helper\SerialPort
     arguments:
+      - '@sys-process'
       - '/dev/ttyUSB0'
 
   telescope-remote:
