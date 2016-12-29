@@ -1,7 +1,7 @@
 --configuration: BEGIN
 
 --wifi
-wifiSSID = "flux2g";
+wifiSSID = "astrohub";
 wifiPassword = "1qazxsw23edc";
 
 wifiDHCP = false;
