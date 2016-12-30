@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Unit\wlatanowicz\AppBundle\Routine;
 
-use wlatanowicz\AppBundle\Data\BinaryImage;
+use Psr\Log\LoggerInterface;
 use wlatanowicz\AppBundle\Data\ImagickImage;
 use wlatanowicz\AppBundle\Hardware\FocuserInterface;
 use wlatanowicz\AppBundle\Hardware\ImagickCameraInterface;
@@ -23,6 +23,11 @@ class AutoFocusTest extends \PHPUnit_Framework_TestCase
      */
     private $camera;
 
+    /**
+     * @var LoggerInterface|\PHPUnit_Framework_MockObject_MockObject
+     */
+    private $logger;
+
     private $currentFocuserPosition;
 
     /**
@@ -32,6 +37,7 @@ class AutoFocusTest extends \PHPUnit_Framework_TestCase
     {
         $this->focuser = $this->focuserMock();
         $this->camera = $this->cameraMock();
+        $this->logger = $this->createMock(LoggerInterface::class);
     }
 
     /**
@@ -59,7 +65,8 @@ class AutoFocusTest extends \PHPUnit_Framework_TestCase
             $this->camera,
             $this->focuser,
             $partials,
-            $iterations
+            $iterations,
+            $this->logger
         );
 
         $result = $autofocus->autofocus($minPosition, $maxPosition, 1);

@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace wlatanowicz\AppBundle\Command\Focuser;
 
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -28,16 +29,25 @@ class AutofocusCommand extends Command
     private $focuserProvider;
 
     /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
+    /**
      * MeasureCommand constructor.
      * @param ImagickCroppedCameraProvider $cameraProvider
      * @param FocuserProvider $focuserProvider
      */
-    public function __construct(ImagickCroppedCameraProvider $cameraProvider, FocuserProvider $focuserProvider)
-    {
+    public function __construct(
+        ImagickCroppedCameraProvider $cameraProvider,
+        FocuserProvider $focuserProvider,
+        LoggerInterface $logger
+    ) {
         parent::__construct(null);
 
         $this->cameraProvider = $cameraProvider;
         $this->focuserProvider = $focuserProvider;
+        $this->logger = $logger;
     }
 
 
@@ -47,9 +57,9 @@ class AutofocusCommand extends Command
             ->setName('focuser:autofocus')
             ->setDescription('Creates new users.')
             ->setHelp("This command allows you to create users...")
-            ->addOption('camera', null, InputOption::VALUE_REQUIRED, 'Camera name', 'sim')
+            ->addOption('camera', null, InputOption::VALUE_REQUIRED, 'Camera name', 'remote')
             ->addOption('time', null, InputOption::VALUE_REQUIRED, 'Target position', 4)
-            ->addOption('focuser', null, InputOption::VALUE_REQUIRED, 'Target position', 'sim')
+            ->addOption('focuser', null, InputOption::VALUE_REQUIRED, 'Target position', 'node')
             ->addOption('x', null, InputOption::VALUE_REQUIRED, 'Target position', null)
             ->addOption('y', null, InputOption::VALUE_REQUIRED, 'Target position', null)
             ->addOption('radius', 'r', InputOption::VALUE_REQUIRED, 'Target position', 40)
@@ -102,7 +112,8 @@ class AutofocusCommand extends Command
             $camera,
             $focuser,
             $partials,
-            $iterations
+            $iterations,
+            $this->logger
         );
 
         $result = $autofocus->autofocus(

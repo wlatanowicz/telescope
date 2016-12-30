@@ -30,7 +30,7 @@ class GotoCommand extends Command
             ->setName('telescope:goto')
             ->setDescription('Creates new users.')
             ->setHelp("This command allows you to create users...")
-            ->addOption('telescope', null, InputOption::VALUE_REQUIRED, 'Focuser name', 'local')
+            ->addOption('telescope', null, InputOption::VALUE_REQUIRED, 'Focuser name', 'remote')
             ->addOption('right-ascension', 'ra', InputOption::VALUE_REQUIRED, 'Target position', 0)
             ->addOption('declination', 'dec', InputOption::VALUE_REQUIRED, 'Target position', 0)
             ->addOption('wait', null, InputOption::VALUE_REQUIRED, 'Target position', false)

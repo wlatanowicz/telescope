@@ -34,9 +34,9 @@ class ExposeCommand extends Command
             ->setName('camera:expose')
             ->setDescription('Creates new users.')
             ->setHelp("This command allows you to create users...")
-            ->addOption('camera', null, InputOption::VALUE_REQUIRED, 'Camera name', 'local')
+            ->addOption('camera', null, InputOption::VALUE_REQUIRED, 'Camera name', 'remote')
             ->addOption('time', null, InputOption::VALUE_REQUIRED, 'Target position', 1)
-            ->addOption('filename', null, InputOption::VALUE_REQUIRED, 'Target position', "capture.jpg")
+            ->addOption('filename', null, InputOption::VALUE_REQUIRED, 'Target position', "capture-".date("Y-m-d-H-i-s").".jpg")
         ;
     }
 

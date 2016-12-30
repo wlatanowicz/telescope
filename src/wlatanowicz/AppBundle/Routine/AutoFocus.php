@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace wlatanowicz\AppBundle\Routine;
 
+use Psr\Log\LoggerInterface;
 use wlatanowicz\AppBundle\Data\AutofocusPoint;
 use wlatanowicz\AppBundle\Data\AutofocusResult;
 use wlatanowicz\AppBundle\Hardware\ImagickCameraInterface;
@@ -40,18 +41,26 @@ class AutoFocus
      */
     private $measureCache;
 
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
     public function __construct(
         MeasureInterface $measure,
         ImagickCameraInterface $camera,
         FocuserInterface $focuser,
         int $partials,
-        int $iterations
+        int $iterations,
+        LoggerInterface $logger
     ) {
         $this->measure = $measure;
         $this->camera = $camera;
         $this->focuser = $focuser;
         $this->partials = $partials;
         $this->iterations = $iterations;
+
+        $this->logger = $logger;
 
         $this->measureCache = [];
     }
