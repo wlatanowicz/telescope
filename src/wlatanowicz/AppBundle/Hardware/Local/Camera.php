@@ -128,4 +128,14 @@ class Camera implements CameraInterface
 
         $this->process->exec($cmd);
     }
+
+    public function getIso(): int
+    {
+        // TODO: Implement getIso() method.
+    }
+
+    public function getFormat(): string
+    {
+        // TODO: Implement getFormat() method.
+    }
 }

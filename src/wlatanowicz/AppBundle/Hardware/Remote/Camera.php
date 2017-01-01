@@ -86,4 +86,15 @@ class Camera implements CameraInterface
         $this->client->request('POST', 'format', $options );
     }
 
+    public function getIso(): int
+    {
+        $response = $this->client->request('GET', 'iso' )->getBody()->getContents();
+        return intval(\json_decode($response), 10);
+    }
+
+    public function getFormat(): string
+    {
+        $response = $this->client->request('GET', 'format' )->getBody()->getContents();
+        return \json_decode($response);
+    }
 }
