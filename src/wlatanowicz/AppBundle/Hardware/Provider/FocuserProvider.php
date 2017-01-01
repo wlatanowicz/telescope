@@ -13,16 +13,27 @@ class FocuserProvider
     private $focusers;
 
     /**
+     * @var string|null
+     */
+    private $default;
+
+    /**
      * FocuserProvider constructor.
      * @param \wlatanowicz\AppBundle\Hardware\FocuserInterface[] $focusers
+     * @param string|null $default
      */
-    public function __construct(array $focusers)
+    public function __construct(array $focusers, string $default = null)
     {
         $this->focusers = $focusers;
+        $this->default = $default;
     }
 
-    public function getFocuser(string $name): FocuserInterface
+    /**
+     * @param string|null $name
+     * @return FocuserInterface
+     */
+    public function getFocuser(string $name = null): FocuserInterface
     {
-        return $this->focusers[$name];
+        return $this->focusers[$name ?? $this->default];
     }
 }

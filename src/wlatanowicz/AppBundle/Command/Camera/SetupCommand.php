@@ -31,9 +31,9 @@ class SetupCommand extends Command
             ->setName('camera:setup')
             ->setDescription('Creates new users.')
             ->setHelp("This command allows you to create users...")
-            ->addOption('camera', null, InputOption::VALUE_REQUIRED, 'Camera name', 'remote')
-            ->addOption('iso', null, InputOption::VALUE_REQUIRED, 'Target position', null)
-            ->addOption('format', null, InputOption::VALUE_REQUIRED, 'Target position', null)
+            ->addOption('camera', null, InputOption::VALUE_REQUIRED, 'Camera name', null)
+            ->addOption('iso', null, InputOption::VALUE_REQUIRED, 'ISO to set', null)
+            ->addOption('format', null, InputOption::VALUE_REQUIRED, 'Format to set (jpeg|raw)', null)
         ;
     }
 

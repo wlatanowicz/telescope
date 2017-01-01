@@ -13,16 +13,27 @@ class TelescopeProvider
     private $telescopes;
 
     /**
+     * @var string|null
+     */
+    private $default;
+
+    /**
      * TelescopeProvider constructor.
      * @param \wlatanowicz\AppBundle\Hardware\TelescopeInterface[] $telescopes
+     * @param string|null $default
      */
-    public function __construct(array $telescopes)
+    public function __construct(array $telescopes, string $default = null)
     {
         $this->telescopes = $telescopes;
+        $this->default = $default;
     }
 
-    public function getTelescope(string $name): TelescopeInterface
+    /**
+     * @param string|null $name
+     * @return TelescopeInterface
+     */
+    public function getTelescope(string $name = null): TelescopeInterface
     {
-        return $this->telescopes[$name];
+        return $this->telescopes[$name ?? $this->default];
     }
 }

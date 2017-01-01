@@ -1,2 +1,7 @@
 parameters:
-    kernel.secret: ThisIsVerySecret
+  kernel.secret: ThisIsVerySecret
+  default_camera: 'remote'
+  default_iamgick_camera: 'remote'
+  default_focuser: 'node'
+  default_telescope: 'remote'
+  default_radio: 'local'

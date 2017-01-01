@@ -49,3 +49,4 @@ services:
         local: '@imagick-cropped-local'
         remote: '@imagick-cropped-remote'
         sim: '@imagick-cropped-sim'
+      - "%default_camera%"

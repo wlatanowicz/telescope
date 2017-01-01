@@ -56,15 +56,14 @@ class MeasureCommand extends Command
             ->setName('focuser:measure')
             ->setDescription('Creates new users.')
             ->setHelp("This command allows you to create users...")
-            ->addOption('camera', null, InputOption::VALUE_REQUIRED, 'Camera name', 'remote')
-            ->addOption('time', null, InputOption::VALUE_REQUIRED, 'Target position', 4)
-            ->addOption('focuser', null, InputOption::VALUE_REQUIRED, 'Target position', 'node')
-            ->addOption('x', null, InputOption::VALUE_REQUIRED, 'Target position', null)
-            ->addOption('y', null, InputOption::VALUE_REQUIRED, 'Target position', null)
-            ->addOption('radius', 'r', InputOption::VALUE_REQUIRED, 'Target position', 40)
-            ->addOption('threshold', null, InputOption::VALUE_REQUIRED, 'Target position', 0.1)
-            ->addOption('save-report', null, InputOption::VALUE_REQUIRED, 'Target position', null)
-        ;
+            ->addOption('camera', null, InputOption::VALUE_REQUIRED, 'Camera name', null)
+            ->addOption('time', null, InputOption::VALUE_REQUIRED, 'Exposure time (seconds)', 4)
+            ->addOption('focuser', null, InputOption::VALUE_REQUIRED, 'Focuser name', null)
+            ->addOption('x', null, InputOption::VALUE_REQUIRED, 'Star position x coordinate', null)
+            ->addOption('y', null, InputOption::VALUE_REQUIRED, 'Star position y coordinate', null)
+            ->addOption('radius', 'r', InputOption::VALUE_REQUIRED, 'Measure area radius', 40)
+            ->addOption('threshold', null, InputOption::VALUE_REQUIRED, 'Measurement noise level threshold', 0.1)
+            ->addOption('save-report', null, InputOption::VALUE_REQUIRED, 'Report file', "af-report-" . date('Y-m-d-H-i-s') . ".jpg");
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)

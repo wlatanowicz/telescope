@@ -13,16 +13,27 @@ class CameraProvider
     private $cameras;
 
     /**
+     * @var string|null
+     */
+    private $default;
+
+    /**
      * CameraProvider constructor.
      * @param \wlatanowicz\AppBundle\Hardware\CameraInterface[] $camera
+     * @param string|null $default
      */
-    public function __construct(array $camera)
+    public function __construct(array $camera, string $default = null)
     {
         $this->cameras = $camera;
+        $this->default = $default;
     }
 
-    public function getCamera(string $name): CameraInterface
+    /**
+     * @param string|null $name
+     * @return CameraInterface
+     */
+    public function getCamera(string $name = null): CameraInterface
     {
-        return $this->cameras[$name];
+        return $this->cameras[$name ?? $this->default];
     }
 }

@@ -49,3 +49,4 @@ services:
         remote: '@camera-remote'
         dummy: '@camera-dummy'
         sim: '@camera-sim'
+      - "%default_camera%"

@@ -18,7 +18,7 @@ services:
   telescope-remote:
     class: wlatanowicz\AppBundle\Hardware\Remote\Telescope
     arguments:
-      - '@camera-remote-client'
+      - '@telescope-remote-client'
       - '@jms_serializer'
 
   telescope-remote-client:
@@ -34,3 +34,4 @@ services:
         local: '@telescope-local'
         sw: '@telescope-local'
         remote: '@telescope-remote'
+      - "%default_telescope%"

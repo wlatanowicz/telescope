@@ -28,7 +28,7 @@ class GotoCommand extends Command
             ->setHelp("This command allows you to create users...")
             ->addOption('focuser', null, InputOption::VALUE_REQUIRED, 'Focuser name', 'node')
             ->addOption('position', null, InputOption::VALUE_REQUIRED, 'Target position', 0)
-            ->addOption('wait', null, InputOption::VALUE_REQUIRED, 'Target position', false)
+            ->addOption('wait', null, InputOption::VALUE_REQUIRED, 'Wait for finish', true)
         ;
     }
 

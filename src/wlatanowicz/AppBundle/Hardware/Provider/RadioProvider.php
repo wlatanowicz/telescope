@@ -13,16 +13,27 @@ class RadioProvider
     private $radios;
 
     /**
+     * @var string|null
+     */
+    private $default;
+
+    /**
      * RadioProvider constructor.
      * @param \wlatanowicz\AppBundle\Hardware\RadioInterface[] $radios
+     * @param string|null $default
      */
-    public function __construct(array $radios)
+    public function __construct(array $radios, string $default = null)
     {
         $this->radios = $radios;
+        $this->default = $default;
     }
 
-    public function getRadio(string $name): RadioInterface
+    /**
+     * @param string|null $name
+     * @return RadioInterface
+     */
+    public function getRadio(string $name = null): RadioInterface
     {
-        return $this->radios[$name];
+        return $this->radios[$name ?? $this->default];
     }
 }

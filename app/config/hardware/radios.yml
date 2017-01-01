@@ -18,3 +18,4 @@ services:
     arguments:
       -
         local: '@radio-local'
+      - "%default_radio%"

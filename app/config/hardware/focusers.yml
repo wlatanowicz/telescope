@@ -33,3 +33,4 @@ services:
         node: '@focuser-node'
         dummy: '@focuser-dummy'
         sim: '@focuser-sim'
+      - "%default_focuser%"
