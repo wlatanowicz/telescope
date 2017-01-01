@@ -45,7 +45,7 @@ class Focuser implements FocuserInterface
         int $tolerance = 5
     ) {
         $this->logger->info(
-            "Setting position (current={position}, target={target})",
+            "Setting position (current={current}, target={target})",
             [
                 "current" => $this->position,
                 "target" => $position
