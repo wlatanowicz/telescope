@@ -83,8 +83,7 @@ class Camera implements CameraInterface
 
         $this->logger->info("Finished exposure");
 
-        $mimetype = null;
-        return new BinaryImage($data, $mimetype);
+        return new BinaryImage($data);
     }
 
     public function setIso(int $iso)

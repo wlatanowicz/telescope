@@ -63,7 +63,7 @@ class MeasureCommand extends Command
             ->addOption('y', null, InputOption::VALUE_REQUIRED, 'Star position y coordinate', null)
             ->addOption('radius', 'r', InputOption::VALUE_REQUIRED, 'Measure area radius', 40)
             ->addOption('threshold', null, InputOption::VALUE_REQUIRED, 'Measurement noise level threshold', 0.1)
-            ->addOption('save-report', null, InputOption::VALUE_REQUIRED, 'Report file', "af-report-" . date('Y-m-d-H-i-s') . ".jpg");
+            ->addOption('save-report', null, InputOption::VALUE_REQUIRED, 'Report file', "m-report-" . date('Y-m-d-H-i-s') . ".jpeg");
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)

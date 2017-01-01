@@ -85,7 +85,7 @@ class AutofocusCommand extends Command
             ->addOption('iterations', null, InputOption::VALUE_REQUIRED, 'Number of autofocus iterations', 6)
             ->addOption('tries', null, InputOption::VALUE_REQUIRED, 'Number of exposures on each position', 1)
             ->addOption('threshold', null, InputOption::VALUE_REQUIRED, 'Measurement noise level threshold', 0.1)
-            ->addOption('save-report', null, InputOption::VALUE_REQUIRED, 'Report file', "af-report-" . date('Y-m-d-H-i-s') . ".jpg");
+            ->addOption('save-report', null, InputOption::VALUE_REQUIRED, 'Report file', "af-report-" . date('Y-m-d-H-i-s') . ".jpeg");
         ;
     }
 

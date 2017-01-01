@@ -100,7 +100,7 @@ class Camera implements CameraInterface
 
         $this->logger->info("Finished exposure");
 
-        return new BinaryImage($imagickImage->getImageBlob(), "application/jpeg");
+        return new BinaryImage($imagickImage->getImageBlob(), BinaryImage::MIMETYPE_JPEG);
     }
 
     public function setIso(int $iso) {}
@@ -123,7 +123,7 @@ class Camera implements CameraInterface
         $binary = $this->fileSystem->fileGetContents($path);
         return new BinaryImage(
             $binary,
-            "image/jpeg"
+            BinaryImage::MIMETYPE_JPEG
         );
     }
 

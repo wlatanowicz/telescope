@@ -8,6 +8,16 @@ use JMS\Serializer\Annotation\Type;
 
 class BinaryImage
 {
+    const MIMETYPE_BIN = 'application/octet-stream';
+    const MIMETYPE_JPEG = 'image/jpeg';
+    const MIMETYPE_SONY_RAW = 'image/x-sony-arw';
+
+    private static $EXTENSIONS = [
+        self::MIMETYPE_BIN => 'bin',
+        self::MIMETYPE_JPEG => 'jpeg',
+        self::MIMETYPE_SONY_RAW => 'arw',
+    ];
+
     /**
      * @var string
      * @Accessor(getter="getDataBase64",setter="setDataBase64")
@@ -38,9 +48,18 @@ class BinaryImage
     /**
      * @return string
      */
-    public function getMimetype()
+    public function getMimetype(): string
     {
+        if ($this->mimetype === null)
+        {
+            $this->mimetype = $this->autodetectMimeType();
+        }
         return $this->mimetype;
+    }
+
+    public function getFileExtension(): string
+    {
+        return self::$EXTENSIONS[$this->getMimetype()];
     }
 
     public function getDataBase64(): string
@@ -51,5 +70,20 @@ class BinaryImage
     public function setDataBase64(string $base64)
     {
         $this->data = base64_decode($base64);
+    }
+
+    private function autodetectMimeType()
+    {
+        if (substr($this->data, 6, 4) === 'JFIF')
+        {
+            return self::MIMETYPE_JPEG;
+        }
+
+        if (substr($this->data, 0, 3) === 'II*')
+        {
+            return self::MIMETYPE_SONY_RAW;
+        }
+
+        return self::MIMETYPE_BIN;
     }
 }
