@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace wlatanowicz\AppBundle\Command\Camera;
 
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -18,11 +19,19 @@ class SetupCommand extends Command
      */
     private $provider;
 
-    public function __construct(CameraProvider $cameraProvider)
-    {
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
+    public function __construct(
+        CameraProvider $cameraProvider,
+        LoggerInterface $logger
+    ) {
         parent::__construct(null);
 
         $this->provider = $cameraProvider;
+        $this->logger = $logger;
     }
 
     protected function configure()
@@ -52,5 +61,20 @@ class SetupCommand extends Command
         if ($format !== null) {
             $camera->setFormat($format);
         }
+
+        $this->logger->info(
+            'Current ISO setting: {iso}',
+            [
+                "iso" => $camera->getIso(),
+            ]
+        );
+
+        $this->logger->info(
+            'Current Format setting: {format}',
+            [
+                "format" => $camera->getFormat(),
+            ]
+        );
+
     }
 }
