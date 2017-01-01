@@ -25,6 +25,7 @@ services:
     class: wlatanowicz\AppBundle\Command\Camera\SetupCommand
     arguments:
       - '@camera-provider'
+      - '@logger'
     tags:
         - { name: console.command }
 
