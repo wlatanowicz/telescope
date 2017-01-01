@@ -23,19 +23,46 @@ class SimpleRecursive implements AutoFocusInterface
      */
     private $logger;
 
+    /**
+     * @var int
+     */
+    private $partials;
+
+    /**
+     * @var int
+     */
+    private $iterations;
+
     public function __construct(
         LoggerInterface $logger
     ) {
         $this->logger = $logger;
         $this->measureCache = [];
+
+        $this->partials = 5;
+        $this->iterations = 5;
+    }
+
+    /**
+     * @param int $partials
+     */
+    public function setPartials(int $partials)
+    {
+        $this->partials = $partials;
+    }
+
+    /**
+     * @param int $iterations
+     */
+    public function setIterations(int $iterations)
+    {
+        $this->iterations = $iterations;
     }
 
     public function autofocus(
         MeasureInterface $measure,
         ImagickCameraInterface $camera,
         FocuserInterface $focuser,
-        int $partials,
-        int $iterations,
         int $minPosition,
         int $maxPosition,
         int $time
@@ -45,8 +72,6 @@ class SimpleRecursive implements AutoFocusInterface
             $measure,
             $camera,
             $focuser,
-            $partials,
-            $iterations,
             $minPosition,
             $maxPosition,
             $time
@@ -120,15 +145,13 @@ class SimpleRecursive implements AutoFocusInterface
         MeasureInterface $measure,
         ImagickCameraInterface $camera,
         FocuserInterface $focuser,
-        int $partials,
-        int $iterations,
         int $min,
         int $max,
         int $time,
         int $iteration = 0
     ): array {
         $reverse = $iteration % 2 === 1;
-        $points = $this->generatePoints($partials, $min, $max, $reverse);
+        $points = $this->generatePoints($min, $max, $reverse);
         $measurements = [];
 
         foreach ($points as $index=>$position) {
@@ -159,13 +182,11 @@ class SimpleRecursive implements AutoFocusInterface
 
         $result = $measurements;
 
-        if (($iteration + 1) < $iterations) {
+        if (($iteration + 1) < $this->iterations) {
             $nextResult = $this->recursiveAutoFocus(
                 $measure,
                 $camera,
                 $focuser,
-                $partials,
-                $iterations,
                 $newMin,
                 $newMax,
                 $time,
@@ -182,11 +203,11 @@ class SimpleRecursive implements AutoFocusInterface
      * @param int $max
      * @return int[]
      */
-    private function generatePoints(int $partials, int $min, int $max, bool $reverse): array
+    private function generatePoints(int $min, int $max, bool $reverse): array
     {
-        $separation = ($max - $min) / ($partials - 1);
+        $separation = ($max - $min) / ($this->partials - 1);
 
-        for ($i=0; $i < ($partials - 1); $i++) {
+        for ($i=0; $i < ($this->partials - 1); $i++) {
             $points[] = (int)round($min + $i * $separation);
         }
         $points[] = $max;

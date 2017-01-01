@@ -64,12 +64,13 @@ class AutoFocusTest extends \PHPUnit_Framework_TestCase
             $this->logger
         );
 
+        $autofocus->setPartials($partials);
+        $autofocus->setIterations($iterations);
+
         $result = $autofocus->autofocus(
             $measure,
             $this->camera,
             $this->focuser,
-            $partials,
-            $iterations,
             $minPosition,
             $maxPosition,
             1

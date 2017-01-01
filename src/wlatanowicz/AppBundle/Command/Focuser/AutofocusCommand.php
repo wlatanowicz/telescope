@@ -35,7 +35,7 @@ class AutofocusCommand extends Command
     private $measureProvider;
 
     /**
-     * @var SimpleRecursive
+     * @var AutoFocusInterface
      */
     private $autofocus;
 
@@ -53,7 +53,7 @@ class AutofocusCommand extends Command
         ImagickCroppedCameraProvider $cameraProvider,
         FocuserProvider $focuserProvider,
         MeasureProvider $measureProvider,
-        SimpleRecursive $autofocus,
+        AutoFocusInterface $autofocus,
         LoggerInterface $logger
     ) {
         parent::__construct(null);
@@ -111,8 +111,6 @@ class AutofocusCommand extends Command
         $partials = intval($input->getOption('partials'), 10);
         $iterations = intval($input->getOption('iterations'), 10);
 
-        $threshold = floatval($input->getOption('threshold'));
-
         $reportFile = $input->getOption('save-report');
 
         $camera = $this->cameraProvider->getCamera($cameraName);
@@ -125,12 +123,17 @@ class AutofocusCommand extends Command
             $y
         );
 
+        /**
+         * @var $autofocus SimpleRecursive
+         */
+        $autofocus = $this->autofocus;
+        $autofocus->setPartials($partials);
+        $autofocus->setIterations($iterations);
+
         $result = $this->autofocus->autofocus(
             $measure,
             $camera,
             $focuser,
-            $partials,
-            $iterations,
             $min,
             $max,
             $time
