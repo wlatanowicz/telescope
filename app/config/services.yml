@@ -4,3 +4,10 @@ services:
 
   sys-filesystem:
     class: wlatanowicz\AppBundle\Hardware\Helper\FileSystem
+
+  exception.listener:
+    class: wlatanowicz\AppBundle\Helper\LoggingExceptionListener
+    arguments:
+      - '@logger'
+    tags:
+      - { name: kernel.event_listener, event: kernel.exception }
