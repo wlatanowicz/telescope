@@ -1,0 +1,18 @@
+services:
+  autofocus-default:
+    class: wlatanowicz\AppBundle\Routine\AutoFocus\SimpleRecursive
+    arguments:
+      - '@logger'
+
+  measure-star-fwhm:
+    class: wlatanowicz\AppBundle\Routine\Measure\StarFWHM
+    arguments:
+      - 0.1
+      - 0.5
+
+  measure-provider:
+    class: wlatanowicz\AppBundle\Routine\Provider\MeasureProvider
+    arguments:
+      -
+        fwhm: '@measure-star-fwhm'
+      - '%default_measure%'
