@@ -1,41 +1,18 @@
 <?php
 declare(strict_types = 1);
 
-namespace wlatanowicz\AppBundle\Routine;
+namespace wlatanowicz\AppBundle\Routine\AutoFocus;
 
 use Psr\Log\LoggerInterface;
 use wlatanowicz\AppBundle\Data\AutofocusPoint;
 use wlatanowicz\AppBundle\Data\AutofocusResult;
 use wlatanowicz\AppBundle\Hardware\ImagickCameraInterface;
 use wlatanowicz\AppBundle\Hardware\FocuserInterface;
+use wlatanowicz\AppBundle\Routine\AutoFocusInterface;
+use wlatanowicz\AppBundle\Routine\MeasureInterface;
 
-class AutoFocus
+class SimpleRecursive implements AutoFocusInterface
 {
-    /**
-     * @var MeasureInterface
-     */
-    private $measure;
-
-    /**
-     * @var ImagickCameraInterface
-     */
-    private $camera;
-
-    /**
-     * @var FocuserInterface
-     */
-    private $focuser;
-
-    /**
-     * @var int
-     */
-    private $partials;
-
-    /**
-     * @var int
-     */
-    private $iterations;
-
     /**
      * @var AutofocusPoint[]
      */
@@ -47,27 +24,29 @@ class AutoFocus
     private $logger;
 
     public function __construct(
+        LoggerInterface $logger
+    ) {
+        $this->logger = $logger;
+        $this->measureCache = [];
+    }
+
+    public function autofocus(
         MeasureInterface $measure,
         ImagickCameraInterface $camera,
         FocuserInterface $focuser,
         int $partials,
         int $iterations,
-        LoggerInterface $logger
-    ) {
-        $this->measure = $measure;
-        $this->camera = $camera;
-        $this->focuser = $focuser;
-        $this->partials = $partials;
-        $this->iterations = $iterations;
-
-        $this->logger = $logger;
-
+        int $minPosition,
+        int $maxPosition,
+        int $time
+    ): AutofocusResult {
         $this->measureCache = [];
-    }
-
-    public function autofocus(int $minPosition, int $maxPosition, int $time): AutofocusResult
-    {
         $results = $this->recursiveAutoFocus(
+            $measure,
+            $camera,
+            $focuser,
+            $partials,
+            $iterations,
             $minPosition,
             $maxPosition,
             $time
@@ -138,31 +117,39 @@ class AutoFocus
     }
 
     private function recursiveAutoFocus(
+        MeasureInterface $measure,
+        ImagickCameraInterface $camera,
+        FocuserInterface $focuser,
+        int $partials,
+        int $iterations,
         int $min,
         int $max,
         int $time,
         int $iteration = 0
     ): array {
         $reverse = $iteration % 2 === 1;
-        $points = $this->generatePoints($min, $max, $reverse);
-        $measures = [];
+        $points = $this->generatePoints($partials, $min, $max, $reverse);
+        $measurements = [];
 
         foreach ($points as $index=>$position) {
-            $measures[] = $this->getMeasureForPosition(
+            $measurements[] = $this->getMeasureForPosition(
+                $measure,
+                $camera,
+                $focuser,
                 $position,
                 $time
             );
         }
 
-        $bestMeasure = null;
+        $bestMeasurement = null;
         $bestIndex = null;
-        foreach ($measures as $index => $measure) {
+        foreach ($measurements as $index => $measurement) {
             /**
              * @var $measure AutofocusPoint
              */
-            if ($bestMeasure === null
-                || $measure->getMeasure() < $bestMeasure) {
-                $bestMeasure = $measure->getMeasure();
+            if ($bestMeasurement === null
+                || $measurement->getMeasure() < $bestMeasurement) {
+                $bestMeasurement = $measurement->getMeasure();
                 $bestIndex = $index;
             }
         }
@@ -170,10 +157,15 @@ class AutoFocus
         $newMin = $points[$bestIndex-1];
         $newMax = $points[$bestIndex+1];
 
-        $result = $measures;
+        $result = $measurements;
 
-        if (($iteration + 1) < $this->iterations) {
+        if (($iteration + 1) < $iterations) {
             $nextResult = $this->recursiveAutoFocus(
+                $measure,
+                $camera,
+                $focuser,
+                $partials,
+                $iterations,
                 $newMin,
                 $newMax,
                 $time,
@@ -190,11 +182,11 @@ class AutoFocus
      * @param int $max
      * @return int[]
      */
-    private function generatePoints(int $min, int $max, bool $reverse): array
+    private function generatePoints(int $partials, int $min, int $max, bool $reverse): array
     {
-        $separation = ($max - $min) / ($this->partials - 1);
+        $separation = ($max - $min) / ($partials - 1);
 
-        for ($i=0; $i < ($this->partials - 1); $i++) {
+        for ($i=0; $i < ($partials - 1); $i++) {
             $points[] = (int)round($min + $i * $separation);
         }
         $points[] = $max;
@@ -206,13 +198,18 @@ class AutoFocus
         return $points;
     }
 
-    private function getMeasureForPosition(int $position, int $time): AutofocusPoint
-    {
+    private function getMeasureForPosition(
+        MeasureInterface $measure,
+        ImagickCameraInterface $camera,
+        FocuserInterface $focuser,
+        int $position,
+        int $time
+    ): AutofocusPoint {
         if ( !isset($this->measureCache[$position])) {
-            $this->focuser->setPosition($position);
+            $focuser->setPosition($position);
 
-            $image = $this->camera->exposure($time);
-            $measure = $this->measure->measure($image);
+            $image = $camera->exposure($time);
+            $measure = $measure->measure($image);
             $this->measureCache[$position] = new AutofocusPoint(
                 $position,
                 $measure,

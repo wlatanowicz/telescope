@@ -11,10 +11,11 @@ use Symfony\Component\Console\Output\OutputInterface;
 use wlatanowicz\AppBundle\Data\BinaryImage;
 use wlatanowicz\AppBundle\Hardware\Provider\FocuserProvider;
 use wlatanowicz\AppBundle\Hardware\Provider\ImagickCroppedCameraProvider;
-use wlatanowicz\AppBundle\Routine\AutoFocus;
+use wlatanowicz\AppBundle\Routine\AutoFocus\SimpleRecursive;
+use wlatanowicz\AppBundle\Routine\AutoFocusInterface;
 use wlatanowicz\AppBundle\Routine\AutoFocusReport;
-use wlatanowicz\AppBundle\Routine\MeasureStarDiameter;
-use wlatanowicz\AppBundle\Routine\MeasureStarFWHM;
+use wlatanowicz\AppBundle\Routine\Measure\StarFWHM;
+use wlatanowicz\AppBundle\Routine\Provider\MeasureProvider;
 
 class AutofocusCommand extends Command
 {
@@ -29,6 +30,16 @@ class AutofocusCommand extends Command
     private $focuserProvider;
 
     /**
+     * @var MeasureProvider
+     */
+    private $measureProvider;
+
+    /**
+     * @var SimpleRecursive
+     */
+    private $autofocus;
+
+    /**
      * @var LoggerInterface
      */
     private $logger;
@@ -41,12 +52,16 @@ class AutofocusCommand extends Command
     public function __construct(
         ImagickCroppedCameraProvider $cameraProvider,
         FocuserProvider $focuserProvider,
+        MeasureProvider $measureProvider,
+        SimpleRecursive $autofocus,
         LoggerInterface $logger
     ) {
         parent::__construct(null);
 
         $this->cameraProvider = $cameraProvider;
         $this->focuserProvider = $focuserProvider;
+        $this->measureProvider = $measureProvider;
+        $this->autofocus = $autofocus;
         $this->logger = $logger;
     }
 
@@ -60,6 +75,7 @@ class AutofocusCommand extends Command
             ->addOption('camera', null, InputOption::VALUE_REQUIRED, 'Camera name', null)
             ->addOption('time', null, InputOption::VALUE_REQUIRED, 'Exposure time (seconds)', 4)
             ->addOption('focuser', null, InputOption::VALUE_REQUIRED, 'Focuser name', null)
+            ->addOption('measure', null, InputOption::VALUE_REQUIRED, 'Measure name', null)
             ->addOption('x', null, InputOption::VALUE_REQUIRED, 'Star position x coordinate', null)
             ->addOption('y', null, InputOption::VALUE_REQUIRED, 'Star position y coordinate', null)
             ->addOption('radius', 'r', InputOption::VALUE_REQUIRED, 'Measure area radius', 40)
@@ -76,6 +92,7 @@ class AutofocusCommand extends Command
     {
         $cameraName = $input->getOption('camera');
         $focuserName = $input->getOption('focuser');
+        $measureName = $input->getOption('measure');
 
         $time = intval($input->getOption('time'), 10);
 
@@ -100,6 +117,7 @@ class AutofocusCommand extends Command
 
         $camera = $this->cameraProvider->getCamera($cameraName);
         $focuser = $this->focuserProvider->getFocuser($focuserName);
+        $measure = $this->measureProvider->getMeasure($measureName);
 
         $camera->setCroping(
             $radius,
@@ -107,16 +125,12 @@ class AutofocusCommand extends Command
             $y
         );
 
-        $autofocus = new AutoFocus(
-            new MeasureStarFWHM($threshold),
+        $result = $this->autofocus->autofocus(
+            $measure,
             $camera,
             $focuser,
             $partials,
             $iterations,
-            $this->logger
-        );
-
-        $result = $autofocus->autofocus(
             $min,
             $max,
             $time

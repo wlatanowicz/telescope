@@ -7,7 +7,7 @@ use Psr\Log\LoggerInterface;
 use wlatanowicz\AppBundle\Data\ImagickImage;
 use wlatanowicz\AppBundle\Hardware\FocuserInterface;
 use wlatanowicz\AppBundle\Hardware\ImagickCameraInterface;
-use wlatanowicz\AppBundle\Routine\AutoFocus;
+use wlatanowicz\AppBundle\Routine\AutoFocus\SimpleRecursive;
 use wlatanowicz\AppBundle\Routine\MeasureInterface;
 
 class AutoFocusTest extends \PHPUnit_Framework_TestCase
@@ -60,16 +60,20 @@ class AutoFocusTest extends \PHPUnit_Framework_TestCase
             $focusingSlope2
         );
 
-        $autofocus = new AutoFocus(
+        $autofocus = new SimpleRecursive(
+            $this->logger
+        );
+
+        $result = $autofocus->autofocus(
             $measure,
             $this->camera,
             $this->focuser,
             $partials,
             $iterations,
-            $this->logger
+            $minPosition,
+            $maxPosition,
+            1
         );
-
-        $result = $autofocus->autofocus($minPosition, $maxPosition, 1);
 
         $minExpected = $focusPoint - abs($tolerance);
         $maxExpected = $focusPoint + abs($tolerance);

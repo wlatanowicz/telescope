@@ -13,7 +13,7 @@ use wlatanowicz\AppBundle\Data\AutofocusResult;
 use wlatanowicz\AppBundle\Hardware\Provider\FocuserProvider;
 use wlatanowicz\AppBundle\Hardware\Provider\ImagickCroppedCameraProvider;
 use wlatanowicz\AppBundle\Routine\AutoFocusReport;
-use wlatanowicz\AppBundle\Routine\MeasureStarFWHM;
+use wlatanowicz\AppBundle\Routine\Measure\StarFWHM;
 
 class MeasureCommand extends Command
 {
@@ -95,7 +95,7 @@ class MeasureCommand extends Command
             $y
         );
 
-        $measure = new MeasureStarFWHM($threshold);
+        $measure = new StarFWHM($threshold);
 
         $image = $camera->exposure($time);
 

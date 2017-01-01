@@ -5,3 +5,4 @@ parameters:
   default_focuser: 'node'
   default_telescope: 'remote'
   default_radio: 'local'
+  default_measure: 'fwhm'

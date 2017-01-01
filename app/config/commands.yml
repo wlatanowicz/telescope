@@ -6,7 +6,7 @@ services:
     tags:
         - { name: console.command }
 
-  command-focuser:
+  command-focuser-goto:
     class: wlatanowicz\AppBundle\Command\Focuser\GotoCommand
     arguments:
       - '@focuser-provider'
@@ -21,11 +21,21 @@ services:
     tags:
         - { name: console.command }
 
+  command-camera-setup:
+    class: wlatanowicz\AppBundle\Command\Camera\SetupCommand
+    arguments:
+      - '@camera-provider'
+    tags:
+        - { name: console.command }
+
   command-focuser-autofocus:
     class: wlatanowicz\AppBundle\Command\Focuser\AutofocusCommand
     arguments:
       - '@imagick-camera-provider'
       - '@focuser-provider'
+      - '@measure-provider'
+      - '@autofocus-default'
+      - '@logger'
     tags:
         - { name: console.command }
 
