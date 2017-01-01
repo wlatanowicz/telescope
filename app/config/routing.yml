@@ -12,19 +12,33 @@ camera-image-expose:
     _format: json
   methods: [GET]
 
-camera-settings-iso:
+camera-settings-set-iso:
   path: /camera/{name}/iso
   defaults:
     _controller: ctrl-camera-settings:setIso
     _format: json
   methods: [POST]
 
-camera-settings-format:
+camera-settings-set-format:
   path: /camera/{name}/format
   defaults:
     _controller: ctrl-camera-settings:setFormat
     _format: json
   methods: [POST]
+
+camera-settings-get-iso:
+  path: /camera/{name}/iso
+  defaults:
+    _controller: ctrl-camera-settings:getIso
+    _format: json
+  methods: [GET]
+
+camera-settings-get-format:
+  path: /camera/{name}/format
+  defaults:
+    _controller: ctrl-camera-settings:getFormat
+    _format: json
+  methods: [GET]
 
 focuser-position-get:
   path: /focuser/{name}/position

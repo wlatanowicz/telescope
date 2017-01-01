@@ -32,18 +32,32 @@ class Settings
         $this->serializer = $serializer;
     }
 
-    public function setFormat(string $camera, Request $request)
+    public function setFormat(string $name, Request $request)
     {
-        $format = $request->getContent();
-        $this->cameraProvider->getCamera($camera)->setFormat($format);
+        $format = json_decode($request->getContent());
+        $this->cameraProvider->getCamera($name)->setFormat($format);
         $json = json_encode($format);
         return new JsonResponse($json, 200, [], true);
     }
 
-    public function setIso(string $camera, Request $request)
+    public function setIso(string $name, Request $request)
     {
-        $iso = intval($request->getContent(), 10);
-        $this->cameraProvider->getCamera($camera)->setIso($iso);
+        $iso = intval(json_decode($request->getContent()), 10);
+        $this->cameraProvider->getCamera($name)->setIso($iso);
+        $json = json_encode($iso);
+        return new JsonResponse($json, 200, [], true);
+    }
+
+    public function getFormat(string $name)
+    {
+        $format = $this->cameraProvider->getCamera($name)->getFormat();
+        $json = json_encode($format);
+        return new JsonResponse($json, 200, [], true);
+    }
+
+    public function getIso(string $name)
+    {
+        $iso = $this->cameraProvider->getCamera($name)->getIso();
         $json = json_encode($iso);
         return new JsonResponse($json, 200, [], true);
     }

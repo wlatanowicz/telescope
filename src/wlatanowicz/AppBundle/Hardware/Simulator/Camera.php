@@ -107,6 +107,16 @@ class Camera implements CameraInterface
 
     public function setFormat(string $format) {}
 
+    public function getIso(): int
+    {
+        return 100;
+    }
+
+    public function getFormat(): string
+    {
+        return self::FORMAT_JPEG;
+    }
+
     private function getImage(): BinaryImage
     {
         $path = __DIR__ . "/Resources/" . $this->imageName;

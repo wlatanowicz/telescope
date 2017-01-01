@@ -19,4 +19,8 @@ interface CameraInterface
     public function setIso(int $iso);
 
     public function setFormat(string $format);
+
+    public function getIso(): int;
+
+    public function getFormat(): string;
 }
