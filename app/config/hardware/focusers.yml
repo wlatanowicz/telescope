@@ -14,9 +14,6 @@ services:
       -
         base_uri: 'http://192.168.0.51/'
 
-  focuser-dummy:
-    class: wlatanowicz\AppBundle\Hardware\Dummy\Focuser
-
   focuser-sim:
     class: wlatanowicz\AppBundle\Hardware\Simulator\Focuser
     arguments:
@@ -31,6 +28,5 @@ services:
     arguments:
       -
         node: '@focuser-node'
-        dummy: '@focuser-dummy'
         sim: '@focuser-sim'
       - "%default_focuser%"

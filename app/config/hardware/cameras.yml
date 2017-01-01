@@ -26,9 +26,6 @@ services:
       -
         base_uri: 'http://192.168.0.50/index.php/camera/sony/'
 
-  camera-dummy:
-    class: wlatanowicz\AppBundle\Hardware\Dummy\Camera
-
   camera-sim:
     class: wlatanowicz\AppBundle\Hardware\Simulator\Camera
     arguments:
@@ -47,6 +44,5 @@ services:
         local: '@camera-local'
         sony: '@camera-local'
         remote: '@camera-remote'
-        dummy: '@camera-dummy'
         sim: '@camera-sim'
       - "%default_camera%"
