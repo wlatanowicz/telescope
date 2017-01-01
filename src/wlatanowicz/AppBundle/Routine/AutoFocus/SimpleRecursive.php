@@ -31,6 +31,11 @@ class SimpleRecursive implements AutoFocusInterface
     /**
      * @var int
      */
+    private $tries;
+
+    /**
+     * @var int
+     */
     private $iterations;
 
     public function __construct(
@@ -41,6 +46,7 @@ class SimpleRecursive implements AutoFocusInterface
 
         $this->partials = 5;
         $this->iterations = 5;
+        $this->tries = 1;
     }
 
     /**
@@ -59,6 +65,14 @@ class SimpleRecursive implements AutoFocusInterface
         $this->iterations = $iterations;
     }
 
+    /**
+     * @param int $tries
+     */
+    public function setTries(int $tries)
+    {
+        $this->tries = $tries;
+    }
+
     public function autofocus(
         MeasureInterface $measure,
         ImagickCameraInterface $camera,
@@ -68,6 +82,8 @@ class SimpleRecursive implements AutoFocusInterface
         int $time
     ): AutofocusResult {
         $this->measureCache = [];
+        $start = time();
+
         $results = $this->recursiveAutoFocus(
             $measure,
             $camera,
@@ -77,7 +93,19 @@ class SimpleRecursive implements AutoFocusInterface
             $time
         );
 
-        return $this->prepareResult($results);
+        $result = $this->prepareResult($results);
+
+        $finish = time();
+
+        $this->logger->info(
+            "Finish after {time} seconds (position={position}, measurement={measurement})",
+            [
+                "time" => $finish - $start,
+                "position" => $result->getMaximum()->getPosition(),
+                "measurement" => $result->getMaximum()->getMeasure(),
+            ]
+        );
+        return $result;
     }
 
     /**
@@ -154,13 +182,24 @@ class SimpleRecursive implements AutoFocusInterface
         $points = $this->generatePoints($min, $max, $reverse);
         $measurements = [];
 
+        $this->logger->info(
+            "Starting iteration {iteration} of {iterations} (points={points})",
+            [
+                "iteration" => $iteration + 1,
+                "iterations" => $this->iterations,
+                "points" => \json_encode($points),
+            ]
+        );
+
         foreach ($points as $index=>$position) {
             $measurements[] = $this->getMeasureForPosition(
                 $measure,
                 $camera,
                 $focuser,
                 $position,
-                $time
+                $time,
+                $iteration,
+                $index
             );
         }
 
@@ -168,7 +207,7 @@ class SimpleRecursive implements AutoFocusInterface
         $bestIndex = null;
         foreach ($measurements as $index => $measurement) {
             /**
-             * @var $measure AutofocusPoint
+             * @var $measurement AutofocusPoint
              */
             if ($bestMeasurement === null
                 || $measurement->getMeasure() < $bestMeasurement) {
@@ -181,6 +220,14 @@ class SimpleRecursive implements AutoFocusInterface
         $newMax = $points[$bestIndex+1];
 
         $result = $measurements;
+
+        $this->logger->info(
+            "Finished iteration {iteration} of {iterations}",
+            [
+                "iteration" => $iteration + 1,
+                "iterations" => $this->iterations,
+            ]
+        );
 
         if (($iteration + 1) < $this->iterations) {
             $nextResult = $this->recursiveAutoFocus(
@@ -224,17 +271,70 @@ class SimpleRecursive implements AutoFocusInterface
         ImagickCameraInterface $camera,
         FocuserInterface $focuser,
         int $position,
-        int $time
+        int $time,
+        int $iteration,
+        int $partial
     ): AutofocusPoint {
         if ( !isset($this->measureCache[$position])) {
             $focuser->setPosition($position);
 
-            $image = $camera->exposure($time);
-            $measure = $measure->measure($image);
+            $image = null;
+            $measurement = 0;
+
+            for ($i = 0; $i < $this->tries; $i++) {
+                $this->logger->info(
+                    "Exposing image for i={iteration}/{iterations} p={partial}/{partials} t={try}/{tries} (position={position})",
+                    [
+                        "iteration" => $iteration + 1,
+                        "iterations" => $this->iterations + 1,
+                        "partial" => $partial + 1,
+                        "partials" => $this->partials,
+                        "try" => $i + 1,
+                        "tries" => $this->tries,
+                        "position" => $position,
+                    ]
+                );
+
+                $currentImage = $camera->exposure($time);
+                $currentMeasurement = $measure->measure($currentImage);
+
+                $this->logger->info(
+                    "Measured image for i={iteration}/{iterations} p={partial}/{partials} t={try}/{tries} (measurement={measurement}, position={position})",
+                    [
+                        "iteration" => $iteration + 1,
+                        "iterations" => $this->iterations + 1,
+                        "partial" => $partial + 1,
+                        "partials" => $this->partials,
+                        "try" => $i + 1,
+                        "tries" => $this->tries,
+                        "position" => $position,
+                        "measurement" => round($currentMeasurement, 4),
+                    ]
+                );
+
+                if ($i === 0 ||
+                    ($currentMeasurement > 0 && $currentMeasurement < $measurement) ) {
+                    $image = $currentImage;
+                    $measurement = $currentMeasurement;
+                }
+            }
+
             $this->measureCache[$position] = new AutofocusPoint(
                 $position,
-                $measure,
+                $measurement,
                 $image
+            );
+        } else {
+            $this->logger->info(
+                "Using cached measurement for i={iteration}/{iterations} p={partial}/{partials} (measurement={measurement}, position={position})",
+                [
+                    "iteration" => $iteration + 1,
+                    "iterations" => $this->iterations + 1,
+                    "partial" => $partial + 1,
+                    "partials" => $this->partials,
+                    "position" => $position,
+                    "measurement" => round($this->measureCache[$position]->getMeasure(), 4)
+                ]
             );
         }
         return $this->measureCache[$position];

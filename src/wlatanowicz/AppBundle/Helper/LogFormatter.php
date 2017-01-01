@@ -11,7 +11,7 @@ use Monolog\Formatter\LineFormatter;
 
 class LogFormatter extends LineFormatter
 {
-    const OTHER_DEVICE_DISPLAY = 'Other Device';
+    const OTHER_DISPLAY = 'Other';
 
     /**
      * @var Ansi
@@ -42,27 +42,27 @@ class LogFormatter extends LineFormatter
     {
         $formattedRecord = $this->nestedFormatter->format($record);
 
-        $color = SGR::COLOR_BG_BLACK;
+        $bgcolor = SGR::COLOR_BG_WHITE;
+        $fgcolor = SGR::COLOR_FG_BLACK;
 
         if (isset($record['context']['color'])) {
             switch ($record['context']['color']) {
-                case 'red' : $color = SGR::COLOR_BG_RED; break;
-                case 'blue' : $color = SGR::COLOR_BG_BLUE; break;
-                case 'green' : $color = SGR::COLOR_BG_GREEN; break;
+                case 'red' : $bgcolor = SGR::COLOR_BG_RED; break;
+                case 'blue' : $bgcolor = SGR::COLOR_BG_BLUE; break;
+                case 'green' : $bgcolor = SGR::COLOR_BG_GREEN; break;
+                case 'yellow' : $bgcolor = SGR::COLOR_BG_YELLOW; break;
             }
         }
 
-        if (isset($record['context']['display'])) {
-            $record['context']['display'] =
-                $this->ansi->color($color)->get()
-                . $record['context']['display']
-                . $this->ansi->reset()->get();
-        } else {
-            $record['context']['display'] =
-                $this->ansi->color(SGR::COLOR_BG_WHITE)->color(SGR::COLOR_FG_BLACK)->get()
-                . self::OTHER_DEVICE_DISPLAY
-                . $this->ansi->reset()->get();
+        if (!isset($record['context']['display'])) {
+            $record['context']['display'] = self::OTHER_DISPLAY;
         }
+
+        $record['context']['display'] =
+            $this->ansi->color($bgcolor)->color($fgcolor)->get()
+            . $record['context']['display']
+            . $this->ansi->reset()->get();
+
         return parent::format($record).$formattedRecord;
     }
 

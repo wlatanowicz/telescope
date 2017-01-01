@@ -82,7 +82,8 @@ class AutofocusCommand extends Command
             ->addOption('min', null, InputOption::VALUE_REQUIRED, 'Minimum focuser position', 3000)
             ->addOption('max', null, InputOption::VALUE_REQUIRED, 'Maximum focuser position', 4000)
             ->addOption('partials', null, InputOption::VALUE_REQUIRED, 'Number of autofocus itaration partials', 5)
-            ->addOption('iterations', null, InputOption::VALUE_REQUIRED, 'Number of autofocus iterations', 5)
+            ->addOption('iterations', null, InputOption::VALUE_REQUIRED, 'Number of autofocus iterations', 6)
+            ->addOption('tries', null, InputOption::VALUE_REQUIRED, 'Number of exposures on each position', 1)
             ->addOption('threshold', null, InputOption::VALUE_REQUIRED, 'Measurement noise level threshold', 0.1)
             ->addOption('save-report', null, InputOption::VALUE_REQUIRED, 'Report file', "af-report-" . date('Y-m-d-H-i-s') . ".jpg");
         ;
@@ -110,6 +111,7 @@ class AutofocusCommand extends Command
 
         $partials = intval($input->getOption('partials'), 10);
         $iterations = intval($input->getOption('iterations'), 10);
+        $tries = intval($input->getOption('tries'), 10);
 
         $reportFile = $input->getOption('save-report');
 
@@ -129,6 +131,7 @@ class AutofocusCommand extends Command
         $autofocus = $this->autofocus;
         $autofocus->setPartials($partials);
         $autofocus->setIterations($iterations);
+        $autofocus->setTries($tries);
 
         $result = $this->autofocus->autofocus(
             $measure,

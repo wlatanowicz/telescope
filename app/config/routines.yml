@@ -3,6 +3,8 @@ services:
     class: wlatanowicz\AppBundle\Routine\AutoFocus\SimpleRecursive
     arguments:
       - '@logger'
+    tags:
+      - { name: logger.metadata, color: blue, display: 'AutoFocus' }
 
   measure-star-fwhm:
     class: wlatanowicz\AppBundle\Routine\Measure\StarFWHM
