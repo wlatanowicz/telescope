@@ -131,11 +131,46 @@ class Camera implements CameraInterface
 
     public function getIso(): int
     {
-        // TODO: Implement getIso() method.
+        $cmd = "{$this->bin}"
+            . " --quiet"
+            . " --get-config iso";
+
+        $output = $this->process->exec($cmd);
+
+        $iso = intval( $this->getCurentSettingFromCommandOutput($output), 10);
+
+        return $iso;
     }
 
     public function getFormat(): string
     {
-        // TODO: Implement getFormat() method.
+        $cmd = "{$this->bin}"
+            . " --quiet"
+            . " --get-config imagequality";
+
+        $output = $this->process->exec($cmd);
+
+        $rawFormat = $this->getCurentSettingFromCommandOutput($output);
+
+        if ($rawFormat === "RAW") {
+            $format = self::FORMAT_RAW;
+        } elseif ($rawFormat === "Standard" || $rawFormat === "Fine") {
+            $format = self::FORMAT_JPEG;
+        } else {
+            throw new \Exception("Unknown image format: ".$rawFormat);
+        }
+
+        return $format;
+    }
+
+    private function getCurentSettingFromCommandOutput(array $output): string
+    {
+        $search = "Current: ";
+        foreach ($output as $line) {
+            if (strpos($line, $search) === 0) {
+                return substr($line, strlen($search));
+            }
+        }
+        throw new \Exception("Cannot read current setting");
     }
 }

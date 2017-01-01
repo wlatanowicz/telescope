@@ -7,7 +7,7 @@ use wlatanowicz\AppBundle\Hardware\Helper\Exception\ProcessException;
 
 class Process
 {
-    public function exec(string $command)
+    public function exec(string $command): array
     {
         $result = null;
         $code = 0;
