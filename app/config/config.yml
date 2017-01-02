@@ -34,8 +34,11 @@ services:
     monolog.formatter.inner:
         class: Bramus\Monolog\Formatter\ColoredLineFormatter
         arguments:
-            - ~
+            - '@monolog.formatter.color-scheme'
             - "%%message%%\n"
+
+    monolog.formatter.color-scheme:
+        class: wlatanowicz\AppBundle\Helper\LoggerColorScheme
 
     monolog.formatter.custom:
         class: wlatanowicz\AppBundle\Helper\LogFormatter
