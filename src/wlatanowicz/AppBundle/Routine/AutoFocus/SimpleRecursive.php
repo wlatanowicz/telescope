@@ -29,7 +29,7 @@ class SimpleRecursive implements AutoFocusInterface
     private $partials;
 
     /**
-     * @var int
+     * @var int[]
      */
     private $tries;
 
@@ -46,7 +46,7 @@ class SimpleRecursive implements AutoFocusInterface
 
         $this->partials = 5;
         $this->iterations = 5;
-        $this->tries = 1;
+        $this->tries = [1];
     }
 
     /**
@@ -70,7 +70,19 @@ class SimpleRecursive implements AutoFocusInterface
      */
     public function setTries(int $tries)
     {
+        $this->tries = [$tries];
+    }
+
+    public function setTriesArray(array $tries)
+    {
         $this->tries = $tries;
+    }
+
+    private function getTriesForIteration(int $iteration)
+    {
+        return isset($this->tries[$iteration])
+            ? $this->tries[$iteration]
+            : $this->tries[count($this->tries) - 1];
     }
 
     public function autofocus(
@@ -281,7 +293,9 @@ class SimpleRecursive implements AutoFocusInterface
             $image = null;
             $measurement = 0;
 
-            for ($i = 0; $i < $this->tries; $i++) {
+            $tries = $this->getTriesForIteration($iteration);
+
+            for ($i = 0; $i < $tries; $i++) {
                 $this->logger->info(
                     "Exposing image for i={iteration}/{iterations} p={partial}/{partials} t={try}/{tries} (position={position})",
                     [
@@ -290,7 +304,7 @@ class SimpleRecursive implements AutoFocusInterface
                         "partial" => $partial + 1,
                         "partials" => $this->partials,
                         "try" => $i + 1,
-                        "tries" => $this->tries,
+                        "tries" => $tries,
                         "position" => $position,
                     ]
                 );
@@ -306,7 +320,7 @@ class SimpleRecursive implements AutoFocusInterface
                         "partial" => $partial + 1,
                         "partials" => $this->partials,
                         "try" => $i + 1,
-                        "tries" => $this->tries,
+                        "tries" => $tries,
                         "position" => $position,
                         "measurement" => round($currentMeasurement, 4),
                     ]

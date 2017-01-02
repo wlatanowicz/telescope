@@ -111,7 +111,12 @@ class AutofocusCommand extends Command
 
         $partials = intval($input->getOption('partials'), 10);
         $iterations = intval($input->getOption('iterations'), 10);
-        $tries = intval($input->getOption('tries'), 10);
+        $tries = array_map(
+            function ($value) {
+                return intval($value, 10);
+            },
+            explode(",", $input->getOption('tries') )
+        );
 
         $reportFile = $input->getOption('save-report');
 
@@ -131,7 +136,7 @@ class AutofocusCommand extends Command
         $autofocus = $this->autofocus;
         $autofocus->setPartials($partials);
         $autofocus->setIterations($iterations);
-        $autofocus->setTries($tries);
+        $autofocus->setTriesArray($tries);
 
         $result = $this->autofocus->autofocus(
             $measure,
