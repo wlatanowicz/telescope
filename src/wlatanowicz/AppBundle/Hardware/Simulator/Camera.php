@@ -68,8 +68,8 @@ class Camera implements CameraInterface
         $this->logger = $logger;
 
         $this->focusPoint = 3421;
-        $this->focusSlope1 = 0.5;
-        $this->focusSlope2 = 0.8;
+        $this->focusSlope1 = 0.3;
+        $this->focusSlope2 = 0.2;
     }
 
     public function exposure(int $time): BinaryImage

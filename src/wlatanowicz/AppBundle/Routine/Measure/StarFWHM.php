@@ -5,6 +5,7 @@ namespace wlatanowicz\AppBundle\Routine\Measure;
 
 use wlatanowicz\AppBundle\Data\ImagickImage;
 use wlatanowicz\AppBundle\Data\Range;
+use wlatanowicz\AppBundle\Routine\Measure\Exception\CannotMeasureException;
 use wlatanowicz\AppBundle\Routine\MeasureInterface;
 
 class StarFWHM implements MeasureInterface
@@ -45,9 +46,6 @@ class StarFWHM implements MeasureInterface
             for ($x = 0; $x < $width; $x++) {
                 $value = $image->getBrightness($x, $y)->inRange($range)->getValue();
                 if ($value > $this->threshold) {
-                    $minValue = $minValue === null || $value < $minValue
-                        ? $value
-                        : $minValue;
                     $maxValue = $maxValue === null || $value > $maxValue
                         ? $value
                         : $maxValue;
@@ -55,7 +53,11 @@ class StarFWHM implements MeasureInterface
             }
         }
 
-        $halfWidthThreshold = $minValue + ($maxValue - $minValue) * $this->half;
+        if ($maxValue === null) {
+            throw new CannotMeasureException("No pixels above threshold");
+        }
+
+        $halfWidthThreshold = $this->threshold + (($maxValue - $this->threshold) * $this->half);
 
         for ($y = 0; $y < $height; $y++) {
             for ($x = 0; $x < $width; $x++) {
@@ -63,6 +65,10 @@ class StarFWHM implements MeasureInterface
                     $area++;
                 }
             }
+        }
+
+        if ($area <= 0) {
+            throw new CannotMeasureException("No star area");
         }
 
         return sqrt( $area / M_PI );

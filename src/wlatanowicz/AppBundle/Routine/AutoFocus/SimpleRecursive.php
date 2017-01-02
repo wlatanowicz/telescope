@@ -9,6 +9,7 @@ use wlatanowicz\AppBundle\Data\AutofocusResult;
 use wlatanowicz\AppBundle\Hardware\ImagickCameraInterface;
 use wlatanowicz\AppBundle\Hardware\FocuserInterface;
 use wlatanowicz\AppBundle\Routine\AutoFocusInterface;
+use wlatanowicz\AppBundle\Routine\Measure\Exception\CannotMeasureException;
 use wlatanowicz\AppBundle\Routine\MeasureInterface;
 
 class SimpleRecursive implements AutoFocusInterface
@@ -110,7 +111,7 @@ class SimpleRecursive implements AutoFocusInterface
         $finish = time();
 
         $this->logger->info(
-            "Finish after {time} seconds (position={position}, measurement={measurement})",
+            "Finished after {time} seconds (position={position}, measurement={measurement})",
             [
                 "time" => $finish - $start,
                 "position" => $result->getMaximum()->getPosition(),
@@ -308,7 +309,7 @@ class SimpleRecursive implements AutoFocusInterface
                     "Exposing image for i={iteration}/{iterations} p={partial}/{partials} t={try}/{tries} (position={position})",
                     [
                         "iteration" => $iteration + 1,
-                        "iterations" => $this->iterations + 1,
+                        "iterations" => $this->iterations,
                         "partial" => $partial + 1,
                         "partials" => $this->partials,
                         "try" => $i + 1,
@@ -317,28 +318,52 @@ class SimpleRecursive implements AutoFocusInterface
                     ]
                 );
 
+                $currentMeasurement = null;
                 $currentImage = $camera->exposure($time);
-                $currentMeasurement = $measure->measure($currentImage);
+
+                try {
+                    $currentMeasurement = $measure->measure($currentImage);
+                } catch(CannotMeasureException $ex) {
+                    $this->logger->warning(
+                        "Measurement failed ({message})",
+                        [
+                            "message" => $ex->getMessage(),
+                            "exception" => $ex,
+                        ]
+                    );
+                }
 
                 $this->logger->info(
                     "Measured image for i={iteration}/{iterations} p={partial}/{partials} t={try}/{tries} (measurement={measurement}, position={position})",
                     [
                         "iteration" => $iteration + 1,
-                        "iterations" => $this->iterations + 1,
+                        "iterations" => $this->iterations,
                         "partial" => $partial + 1,
                         "partials" => $this->partials,
                         "try" => $i + 1,
                         "tries" => $tries,
                         "position" => $position,
-                        "measurement" => round($currentMeasurement, 4),
+                        "measurement" => $currentMeasurement !== null
+                            ? round($currentMeasurement, 4)
+                            : "NULL",
                     ]
                 );
 
                 if ($i === 0 ||
-                    ($currentMeasurement > 0 && $currentMeasurement < $measurement) ) {
+                    ($currentMeasurement !== null && $currentMeasurement < $measurement) ) {
                     $image = $currentImage;
                     $measurement = $currentMeasurement;
                 }
+            }
+
+            if ($measurement === null) {
+                $this->logger->error(
+                    "Autofocus failed: Cannot measure focus (position={position})",
+                    [
+                        "position" => $position,
+                    ]
+                );
+                throw new \Exception("Autofocus failed: Cannot measure focus");
             }
 
             $this->measureCache[$position] = new AutofocusPoint(
@@ -351,7 +376,7 @@ class SimpleRecursive implements AutoFocusInterface
                 "Using cached measurement for i={iteration}/{iterations} p={partial}/{partials} (measurement={measurement}, position={position})",
                 [
                     "iteration" => $iteration + 1,
-                    "iterations" => $this->iterations + 1,
+                    "iterations" => $this->iterations,
                     "partial" => $partial + 1,
                     "partials" => $this->partials,
                     "position" => $position,
