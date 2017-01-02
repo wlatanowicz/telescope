@@ -140,9 +140,17 @@ class SimpleRecursive implements AutoFocusInterface
         $bestIndices = [];
         $bestMeasure = null;
 
+        usort(
+            $uniquePoints,
+            function (AutofocusPoint $a, AutofocusPoint $b) {
+                return $a->getPosition() - $b->getPosition();
+            }
+        );
+
         foreach ($uniquePoints as $index => $point) {
             if ($bestMeasure === null
-                || $point->getMeasure() < $bestMeasure) {
+                || $point->getMeasure() < $bestMeasure
+            ) {
                 $bestIndices = [$index];
                 $bestMeasure = $point->getMeasure();
             } elseif ($point->getMeasure() === $bestMeasure) {
@@ -153,13 +161,6 @@ class SimpleRecursive implements AutoFocusInterface
         $bestIndexIndex = (int)floor((count($bestIndices)-1) / 2);
 
         $best = $uniquePoints[$bestIndices[$bestIndexIndex]];
-
-        usort(
-            $uniquePoints,
-            function (AutofocusPoint $a, AutofocusPoint $b) {
-                return $a->getPosition() - $b->getPosition();
-            }
-        );
 
         return new AutofocusResult(
             $best,
@@ -216,7 +217,8 @@ class SimpleRecursive implements AutoFocusInterface
         }
 
         $bestMeasurement = null;
-        $bestIndex = null;
+        $bestIndices = [];
+
         foreach ($measurements as $index => $measurement) {
             /**
              * @var $measurement AutofocusPoint
@@ -224,9 +226,15 @@ class SimpleRecursive implements AutoFocusInterface
             if ($bestMeasurement === null
                 || $measurement->getMeasure() < $bestMeasurement) {
                 $bestMeasurement = $measurement->getMeasure();
-                $bestIndex = $index;
+                $bestIndices = [$index];
+            } elseif ($measurement->getMeasure() === $bestMeasurement) {
+                $bestIndices[] = $index;
             }
         }
+
+        $bestIndexIndex = (int)floor((count($bestIndices)-1) / 2);
+
+        $bestIndex = $bestIndices[$bestIndexIndex];
 
         $newMin = $points[$bestIndex-1];
         $newMax = $points[$bestIndex+1];

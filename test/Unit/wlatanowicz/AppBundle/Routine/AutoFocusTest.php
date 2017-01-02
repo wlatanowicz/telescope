@@ -109,6 +109,67 @@ class AutoFocusTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
+    /**
+     * @test
+     * @dataProvider dataProviderForConstMeasure
+     */
+    public function itShouldFindBestFocusOnCenterWhenMeasureIsConstant(
+        int $tolerance,
+        int $minPosition,
+        int $maxPosition,
+        int $partials,
+        int $iterations
+    ) {
+        $measure = $this->createMock(MeasureInterface::class);
+        $measure->expects($this->any())
+            ->method('measure')
+            ->willReturn(1);
+
+        $autofocus = new SimpleRecursive(
+            $this->logger
+        );
+
+        $autofocus->setPartials($partials);
+        $autofocus->setIterations($iterations);
+
+        $result = $autofocus->autofocus(
+            $measure,
+            $this->camera,
+            $this->focuser,
+            $minPosition,
+            $maxPosition,
+            1
+        );
+
+        $focusPoint = ($maxPosition + $minPosition) / 2;
+
+        $minExpected = $focusPoint - abs($tolerance);
+        $maxExpected = $focusPoint + abs($tolerance);
+
+        $this->assertGreaterThanOrEqual($minExpected, $result->getMaximum()->getPosition());
+        $this->assertLessThanOrEqual($maxExpected, $result->getMaximum()->getPosition());
+    }
+
+    public function dataProviderForConstMeasure(): array
+    {
+        return [
+            [
+                "tolerance" => 1,
+                "minPosition" => 1000,
+                "maxPosition" => 4000,
+                "partials" => 5,
+                "iterations" => 6
+            ],
+            [
+                "tolerance" => 1,
+                "minPosition" => 1000,
+                "maxPosition" => 5000,
+                "partials" => 7,
+                "iterations" => 7
+            ],
+        ];
+    }
+
     private function cameraMock(): ImagickCameraInterface
     {
         $imagickImage = new ImagickImage(new \Imagick());
