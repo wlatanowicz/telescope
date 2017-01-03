@@ -237,6 +237,22 @@ class SimpleRecursive implements AutoFocusInterface
 
         $bestIndex = $bestIndices[$bestIndexIndex];
 
+        if ($bestIndex === 0
+            || $bestIndex === (count($points) - 1)) {
+            if ($iteration === 0) {
+                $this->logger->error(
+                    $bestIndices === 0
+                        ? "Best focus measure found on MIN focuser position. Try decreasing focuser range min and max values."
+                        : "Best focus measure found on MAX focuser position. Try increasing focuser range min and max values."
+                );
+            } else {
+                $this->logger->critical(
+                    "Best focus measure found on position conflicting with previous iteration. Something went really bad."
+                );
+            }
+            throw new \Exception("Autofocus failed. Best measure found on current iteration's range end-point.");
+        }
+
         $newMin = $points[$bestIndex-1];
         $newMax = $points[$bestIndex+1];
 
