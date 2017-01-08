@@ -217,44 +217,7 @@ class SimpleRecursive implements AutoFocusInterface
             );
         }
 
-        $bestMeasurement = null;
-        $bestIndices = [];
-
-        foreach ($measurements as $index => $measurement) {
-            /**
-             * @var $measurement AutofocusPoint
-             */
-            if ($bestMeasurement === null
-                || $measurement->getMeasure() < $bestMeasurement) {
-                $bestMeasurement = $measurement->getMeasure();
-                $bestIndices = [$index];
-            } elseif ($measurement->getMeasure() === $bestMeasurement) {
-                $bestIndices[] = $index;
-            }
-        }
-
-        $bestIndexIndex = (int)floor((count($bestIndices)-1) / 2);
-
-        $bestIndex = $bestIndices[$bestIndexIndex];
-
-        if ($bestIndex === 0
-            || $bestIndex === (count($points) - 1)) {
-            if ($iteration === 0) {
-                $this->logger->error(
-                    $bestIndices === 0
-                        ? "Best focus measure found on MIN focuser position. Try decreasing focuser range min and max values."
-                        : "Best focus measure found on MAX focuser position. Try increasing focuser range min and max values."
-                );
-            } else {
-                $this->logger->critical(
-                    "Best focus measure found on position conflicting with previous iteration. Something went really bad."
-                );
-            }
-            throw new \Exception("Autofocus failed. Best measure found on current iteration's range end-point.");
-        }
-
-        $newMin = $points[$bestIndex-1];
-        $newMax = $points[$bestIndex+1];
+        list($newMin, $newMax) = $this->nextPivotMinAndMax($measurements, $iteration);
 
         $result = $measurements;
 
@@ -301,6 +264,65 @@ class SimpleRecursive implements AutoFocusInterface
             : $points;
 
         return $points;
+    }
+
+    /**
+     * @param AutofocusPoint[]
+     * @return int[2] {min,max}
+     * @throws \Exception
+     */
+    private function nextPivotMinAndMax(array $measurements, $iteration): array
+    {
+        $bestMeasurement = null;
+        $bestIndices = [];
+        $points = [];
+
+        usort(
+            $measurements,
+            function (AutofocusPoint $a, AutofocusPoint $b) {
+                return $a->getPosition() - $b->getPosition();
+            }
+        );
+
+        foreach ($measurements as $index => $measurement) {
+            /**
+             * @var $measurement AutofocusPoint
+             */
+            if ($bestMeasurement === null
+                || $measurement->getMeasure() < $bestMeasurement) {
+                $bestMeasurement = $measurement->getMeasure();
+                $bestIndices = [$index];
+            } elseif ($measurement->getMeasure() === $bestMeasurement) {
+                $bestIndices[] = $index;
+            }
+
+            $points[] = $measurement->getPosition();
+        }
+
+        $bestIndexIndex = (int)floor((count($bestIndices)-1) / 2);
+
+        $bestIndex = $bestIndices[$bestIndexIndex];
+
+        if ($bestIndex === 0
+            || $bestIndex === (count($points) - 1)) {
+            if ($iteration === 0) {
+                $this->logger->error(
+                    $bestIndices === 0
+                        ? "Best focus measure found on MIN focuser position. Try decreasing focuser range min and max values."
+                        : "Best focus measure found on MAX focuser position. Try increasing focuser range min and max values."
+                );
+            } else {
+                $this->logger->critical(
+                    "Best focus measure found on position conflicting with previous iteration. Something went really bad."
+                );
+            }
+            throw new \Exception("Autofocus failed. Best measure found on current iteration's range end-point.");
+        }
+
+        $newMin = $points[$bestIndex-1];
+        $newMax = $points[$bestIndex+1];
+
+        return [$newMin, $newMax];
     }
 
     private function getMeasureForPosition(
