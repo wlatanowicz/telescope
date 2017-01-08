@@ -115,7 +115,7 @@ class AutofocusCommand extends Command
             function ($value) {
                 return intval($value, 10);
             },
-            explode(",", $input->getOption('tries') )
+            explode(",", (string)$input->getOption('tries') )
         );
 
         $reportFile = $input->getOption('save-report');
