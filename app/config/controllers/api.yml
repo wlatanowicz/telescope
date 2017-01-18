@@ -1,0 +1,3 @@
+services:
+  ctrl-api-heartbeat:
+    class: wlatanowicz\AppBundle\Controller\Api\Heartbeat

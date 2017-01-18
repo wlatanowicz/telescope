@@ -1,16 +1,16 @@
 <?php
 declare(strict_types = 1);
 
-namespace wlatanowicz\AppBundle\Api\Controller;
+namespace wlatanowicz\AppBundle\Controller\Api;
 
 use Symfony\Component\HttpFoundation\JsonResponse;
 
-class Info
+class Heartbeat
 {
-    public function getInfo()
+    public function getHeartbeat()
     {
         return new JsonResponse([
-            "message" => "hi",
+            "status" => "Alive",
             "time" => date("Y-m-d H:i:s"),
         ]);
     }

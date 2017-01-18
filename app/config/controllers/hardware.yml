@@ -1,0 +1,24 @@
+services:
+  ctrl-hw-camera-image:
+    class: wlatanowicz\AppBundle\Controller\Hardware\Camera\Image
+    arguments:
+      - '@camera-provider'
+      - '@jms_serializer'
+
+  ctrl-hw-camera-settings:
+    class: wlatanowicz\AppBundle\Controller\Hardware\Camera\Settings
+    arguments:
+      - '@camera-provider'
+      - '@jms_serializer'
+
+  ctrl-hw-focuser-position:
+    class: wlatanowicz\AppBundle\Controller\Hardware\Focuser\Position
+    arguments:
+      - '@camera-provider'
+      - '@jms_serializer'
+
+  ctrl-hw-telescope-position:
+    class: wlatanowicz\AppBundle\Controller\Hardware\Telescope\Position
+    arguments:
+      - '@telescope-provider'
+      - '@jms_serializer'

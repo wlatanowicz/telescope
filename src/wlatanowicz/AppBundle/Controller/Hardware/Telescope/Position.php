@@ -1,7 +1,7 @@
 <?php
 declare(strict_types = 1);
 
-namespace wlatanowicz\AppBundle\Api\Controller\Telescope;
+namespace wlatanowicz\AppBundle\Controller\Hardware\Telescope;
 
 use JMS\Serializer\SerializerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;

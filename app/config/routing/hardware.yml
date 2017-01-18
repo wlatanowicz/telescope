@@ -1,0 +1,62 @@
+camera-image-expose:
+  path: /camera/{name}/image
+  defaults:
+    _controller: ctrl-hw-camera-image:getImage
+    _format: json
+  methods: [GET]
+
+camera-settings-set-iso:
+  path: /camera/{name}/iso
+  defaults:
+    _controller: ctrl-hw-camera-settings:setIso
+    _format: json
+  methods: [POST]
+
+camera-settings-set-format:
+  path: /camera/{name}/format
+  defaults:
+    _controller: ctrl-hw-camera-settings:setFormat
+    _format: json
+  methods: [POST]
+
+camera-settings-get-iso:
+  path: /camera/{name}/iso
+  defaults:
+    _controller: ctrl-hw-camera-settings:getIso
+    _format: json
+  methods: [GET]
+
+camera-settings-get-format:
+  path: /camera/{name}/format
+  defaults:
+    _controller: ctrl-hw-camera-settings:getFormat
+    _format: json
+  methods: [GET]
+
+focuser-position-get:
+  path: /focuser/{name}/position
+  defaults:
+    _controller: ctrl-hw-focuser-position:getPosition
+    _format: json
+  methods: [GET]
+
+focuser-position-set:
+  path: /focuser/{name}/position
+  defaults:
+    _controller: ctrl-hw-focuser-position:setPosition
+    _format: json
+  methods: [POST]
+
+telescope-position-get:
+  path: /telescope/{name}/position
+  defaults:
+    _controller: ctrl-hw-telescope-position:getPosition
+    _format: json
+  methods: [GET]
+
+telescope-position-set:
+  path: /telescope/{name}/position
+  defaults:
+    _controller: ctrl-hw-telescope-position:setPosition
+    _format: json
+  methods: [POST]

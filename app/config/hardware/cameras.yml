@@ -24,7 +24,7 @@ services:
     class: GuzzleHttp\Client
     arguments:
       -
-        base_uri: 'http://192.168.0.50/index.php/camera/sony/'
+        base_uri: 'http://192.168.0.50/index.php/hardware/camera/sony/'
 
   camera-sim:
     class: wlatanowicz\AppBundle\Hardware\Simulator\Camera

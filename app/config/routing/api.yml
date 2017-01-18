@@ -1,0 +1,6 @@
+heartbeat:
+  path: /heartbeat
+  defaults:
+    _controller: ctrl-api-heartbeat:getHeartbeat
+    _format: json
+  methods: [GET]

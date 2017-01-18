@@ -1,7 +1,7 @@
 <?php
 declare(strict_types = 1);
 
-namespace wlatanowicz\AppBundle\Api\Controller\Focuser;
+namespace wlatanowicz\AppBundle\Controller\Hardware\Focuser;
 
 use JMS\Serializer\SerializerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
