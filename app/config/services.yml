@@ -11,3 +11,15 @@ services:
       - '@logger'
     tags:
       - { name: kernel.event_listener, event: kernel.exception }
+
+  job-log-handler:
+    class: wlatanowicz\AppBundle\Helper\JobLogHandler
+    arguments:
+      - "@job-manager"
+
+  job-manager:
+    class: wlatanowicz\AppBundle\Helper\JobManager
+    arguments:
+      - "%kernel.jobs_dir%/logs"
+      - "%kernel.jobs_dir%/statuses"
+      - "%kernel.jobs_dir%/results"

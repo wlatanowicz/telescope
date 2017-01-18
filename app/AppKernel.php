@@ -36,8 +36,23 @@ class AppKernel extends Kernel
         return dirname(__DIR__).'/var/logs';
     }
 
+    public function getJobsDir()
+    {
+        return dirname(__DIR__).'/var/jobs';
+    }
+
     public function registerContainerConfiguration(LoaderInterface $loader)
     {
         $loader->load($this->getRootDir().'/config/config.yml');
+    }
+
+    protected function getKernelParameters()
+    {
+        return array_merge(
+            parent::getKernelParameters(),
+            [
+                "kernel.jobs_dir" => $this->getJobsDir(),
+            ]
+        );
     }
 }
