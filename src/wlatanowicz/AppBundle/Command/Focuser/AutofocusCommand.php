@@ -3,68 +3,31 @@ declare(strict_types = 1);
 
 namespace wlatanowicz\AppBundle\Command\Focuser;
 
-use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use wlatanowicz\AppBundle\Data\BinaryImage;
-use wlatanowicz\AppBundle\Hardware\Provider\FocuserProvider;
-use wlatanowicz\AppBundle\Hardware\Provider\ImagickCroppedCameraProvider;
+use wlatanowicz\AppBundle\Jobs\Autofocus;
 use wlatanowicz\AppBundle\Routine\AutoFocus\SimpleRecursive;
-use wlatanowicz\AppBundle\Routine\AutoFocusInterface;
 use wlatanowicz\AppBundle\Routine\AutoFocusReport;
-use wlatanowicz\AppBundle\Routine\Measure\StarFWHM;
-use wlatanowicz\AppBundle\Routine\Provider\MeasureProvider;
 
 class AutofocusCommand extends Command
 {
     /**
-     * @var ImagickCroppedCameraProvider
+     * @var Autofocus
      */
-    private $cameraProvider;
+    private $job;
 
     /**
-     * @var FocuserProvider
+     * AutofocusCommand constructor.
+     * @param Autofocus $job
      */
-    private $focuserProvider;
-
-    /**
-     * @var MeasureProvider
-     */
-    private $measureProvider;
-
-    /**
-     * @var AutoFocusInterface
-     */
-    private $autofocus;
-
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
-
-    /**
-     * MeasureCommand constructor.
-     * @param ImagickCroppedCameraProvider $cameraProvider
-     * @param FocuserProvider $focuserProvider
-     */
-    public function __construct(
-        ImagickCroppedCameraProvider $cameraProvider,
-        FocuserProvider $focuserProvider,
-        MeasureProvider $measureProvider,
-        AutoFocusInterface $autofocus,
-        LoggerInterface $logger
-    ) {
+    public function __construct(Autofocus $job)
+    {
         parent::__construct(null);
 
-        $this->cameraProvider = $cameraProvider;
-        $this->focuserProvider = $focuserProvider;
-        $this->measureProvider = $measureProvider;
-        $this->autofocus = $autofocus;
-        $this->logger = $logger;
+        $this->job = $job;
     }
-
 
     protected function configure()
     {
@@ -120,39 +83,21 @@ class AutofocusCommand extends Command
 
         $reportFile = $input->getOption('save-report');
 
-        $camera = $this->cameraProvider->getCamera($cameraName);
-        $focuser = $this->focuserProvider->getFocuser($focuserName);
-        $measure = $this->measureProvider->getMeasure($measureName);
+        $this->job->start([
+            "cameraName" => $cameraName,
+            "focuserName" => $focuserName,
+            "measureName" => $measureName,
+            "min" => $min,
+            "max" => $max,
+            "time" => $time,
+            "partials" => $partials,
+            "iterations" => $iterations,
+            "tries" => $tries,
+            "radius" => $radius,
+            "x" => $x,
+            "y" => $y,
+            "reportFile" => $reportFile,
+        ]);
 
-        $camera->setCroping(
-            $radius,
-            $x,
-            $y
-        );
-
-        /**
-         * @var $autofocus SimpleRecursive
-         */
-        $autofocus = $this->autofocus;
-        $autofocus->setPartials($partials);
-        $autofocus->setIterations($iterations);
-        $autofocus->setTriesArray($tries);
-
-        $result = $this->autofocus->autofocus(
-            $measure,
-            $camera,
-            $focuser,
-            $min,
-            $max,
-            $time
-        );
-
-        $focuser->setPosition($result->getMaximum()->getPosition());
-
-        if ($reportFile !== null) {
-            $reporter = new AutoFocusReport();
-            $report = $reporter->generateReport($result);
-            file_put_contents($reportFile, $report->getImageBlob());
-        }
     }
 }

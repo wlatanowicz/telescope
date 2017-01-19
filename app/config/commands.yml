@@ -32,12 +32,7 @@ services:
   command-focuser-autofocus:
     class: wlatanowicz\AppBundle\Command\Focuser\AutofocusCommand
     arguments:
-      - '@job-manager'
-      - '@imagick-camera-provider'
-      - '@focuser-provider'
-      - '@measure-provider'
-      - '@autofocus-default'
-      - '@logger'
+      - '@job-autofocus'
     tags:
         - { name: console.command }
 

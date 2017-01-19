@@ -1,0 +1,10 @@
+services:
+  job-autofocus:
+    class: wlatanowicz\AppBundle\Jobs\Autofocus
+    arguments:
+      - '@job-manager'
+      - '@imagick-camera-provider'
+      - '@focuser-provider'
+      - '@measure-provider'
+      - '@autofocus-default'
+      - '@logger'
