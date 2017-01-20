@@ -5,7 +5,7 @@ namespace wlatanowicz\AppBundle\Data;
 
 use JMS\Serializer\Annotation\Accessor;
 use JMS\Serializer\Annotation\Type;
-use JMS\Serializer\Annotation\Exclude
+use JMS\Serializer\Annotation\Exclude;
 
 class BinaryImage
 {
