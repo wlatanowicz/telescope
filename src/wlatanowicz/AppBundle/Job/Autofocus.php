@@ -1,7 +1,7 @@
 <?php
 declare(strict_types = 1);
 
-namespace wlatanowicz\AppBundle\Jobs;
+namespace wlatanowicz\AppBundle\Job;
 
 use Psr\Log\LoggerInterface;
 use wlatanowicz\AppBundle\Hardware\Provider\FocuserProvider;

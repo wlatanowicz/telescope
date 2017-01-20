@@ -1,7 +1,7 @@
 <?php
 declare(strict_types = 1);
 
-namespace wlatanowicz\AppBundle\Jobs;
+namespace wlatanowicz\AppBundle\Job;
 
 abstract class AbstractJob
 {
@@ -21,9 +21,6 @@ abstract class AbstractJob
                 $parametersArray[$parameter->getPosition()] = $namedParameters[$parameterName];
             }
         }
-
-        print_r($namedParameters);
-        print_r($parametersArray);
 
         $method = 'execute';
         $this->{$method}(...$parametersArray);
