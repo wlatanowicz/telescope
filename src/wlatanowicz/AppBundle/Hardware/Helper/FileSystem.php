@@ -7,6 +7,12 @@ class FileSystem
 {
     public function filePutContents(string $path, string $data)
     {
+        $dir = dirname($path);
+        if (strlen($dir) > 0) {
+            if (!is_dir($dir)) {
+                mkdir($dir, 0777, true);
+            }
+        }
         file_put_contents($path, $data);
     }
 

@@ -7,6 +7,7 @@ services:
       - '@focuser-provider'
       - '@measure-provider'
       - '@autofocus-default'
+      - '@sys-filesystem'
       - '@logger'
 
   job-provider:

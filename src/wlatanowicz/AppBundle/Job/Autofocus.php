@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace wlatanowicz\AppBundle\Job;
 
 use Psr\Log\LoggerInterface;
+use wlatanowicz\AppBundle\Hardware\Helper\FileSystem;
 use wlatanowicz\AppBundle\Hardware\Provider\FocuserProvider;
 use wlatanowicz\AppBundle\Hardware\Provider\ImagickCroppedCameraProvider;
 use wlatanowicz\AppBundle\Helper\JobManager;
@@ -36,6 +37,11 @@ class Autofocus extends AbstractJob
     private $autofocus;
 
     /**
+     * @var FileSystem
+     */
+    private $fileSystem;
+
+    /**
      * @var LoggerInterface
      */
     private $logger;
@@ -55,6 +61,7 @@ class Autofocus extends AbstractJob
         FocuserProvider $focuserProvider,
         MeasureProvider $measureProvider,
         AutoFocusInterface $autofocus,
+        FileSystem $fileSystem,
         LoggerInterface $logger
     ) {
         $this->jobManager = $jobManager;
@@ -62,6 +69,7 @@ class Autofocus extends AbstractJob
         $this->focuserProvider = $focuserProvider;
         $this->measureProvider = $measureProvider;
         $this->autofocus = $autofocus;
+        $this->fileSystem = $fileSystem;
         $this->logger = $logger;
     }
 
@@ -112,7 +120,7 @@ class Autofocus extends AbstractJob
         if ($params->hasReportFile()) {
             $reporter = new AutoFocusReport();
             $report = $reporter->generateReport($result);
-            file_put_contents(
+            $this->fileSystem->filePutContents(
                 $this->jobManager->getCurrentJobResultDirPath() . '/' . $params->getReportFile(),
                 $report->getImageBlob()
             );

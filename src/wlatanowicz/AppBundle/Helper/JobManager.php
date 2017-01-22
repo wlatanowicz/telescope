@@ -3,6 +3,8 @@ declare(strict_types = 1);
 
 namespace wlatanowicz\AppBundle\Helper;
 
+use wlatanowicz\AppBundle\Hardware\Helper\FileSystem;
+
 class JobManager
 {
     /**
@@ -50,8 +52,8 @@ class JobManager
 
     public function startJob(string $jobId = null, string $sessionId = null)
     {
-        $this->currentJobId = md5((string)(time().rand(0,999)));
-        $this->currentSessionId = 'sess'.date('Ymd');
+        $this->currentJobId = 'job' . date('YmdHis') . str_pad((string)rand(0, 999), 3, '0', STR_PAD_LEFT);
+        $this->currentSessionId = 'sess' . date('Ymd');
     }
 
     /**
