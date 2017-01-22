@@ -20,6 +20,6 @@ services:
   job-manager:
     class: wlatanowicz\AppBundle\Helper\JobManager
     arguments:
-      - "%kernel.jobs_dir%/logs"
-      - "%kernel.jobs_dir%/statuses"
-      - "%kernel.jobs_dir%/results"
+      - "%kernel.sessions_dir%/{sessionId}/jobs/{jobId}.log"
+      - "%kernel.sessions_dir%/{sessionId}/jobs/{jobId}.status.json"
+      - "%kernel.sessions_dir%/{sessionId}/results"

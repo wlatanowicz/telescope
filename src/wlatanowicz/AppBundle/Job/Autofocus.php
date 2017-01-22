@@ -112,7 +112,10 @@ class Autofocus extends AbstractJob
         if ($params->hasReportFile()) {
             $reporter = new AutoFocusReport();
             $report = $reporter->generateReport($result);
-            file_put_contents($params->getReportFile(), $report->getImageBlob());
+            file_put_contents(
+                $this->jobManager->getCurrentJobResultDirPath() . '/' . $params->getReportFile(),
+                $report->getImageBlob()
+            );
         }
 
     }

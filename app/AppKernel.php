@@ -36,9 +36,9 @@ class AppKernel extends Kernel
         return dirname(__DIR__).'/var/logs';
     }
 
-    public function getJobsDir()
+    public function getSessionsDir()
     {
-        return dirname(__DIR__).'/var/jobs';
+        return dirname(__DIR__).'/var/sessions';
     }
 
     public function registerContainerConfiguration(LoaderInterface $loader)
@@ -51,7 +51,7 @@ class AppKernel extends Kernel
         return array_merge(
             parent::getKernelParameters(),
             [
-                "kernel.jobs_dir" => $this->getJobsDir(),
+                "kernel.sessions_dir" => $this->getSessionsDir(),
             ]
         );
     }
