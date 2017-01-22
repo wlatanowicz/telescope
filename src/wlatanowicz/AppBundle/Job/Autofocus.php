@@ -7,6 +7,7 @@ use Psr\Log\LoggerInterface;
 use wlatanowicz\AppBundle\Hardware\Provider\FocuserProvider;
 use wlatanowicz\AppBundle\Hardware\Provider\ImagickCroppedCameraProvider;
 use wlatanowicz\AppBundle\Helper\JobManager;
+use wlatanowicz\AppBundle\Job\Params\AutofocusParams;
 use wlatanowicz\AppBundle\Routine\AutoFocus\SimpleRecursive;
 use wlatanowicz\AppBundle\Routine\AutoFocusInterface;
 use wlatanowicz\AppBundle\Routine\AutoFocusReport;
@@ -14,11 +15,6 @@ use wlatanowicz\AppBundle\Routine\Provider\MeasureProvider;
 
 class Autofocus extends AbstractJob
 {
-    /**
-     * @var JobManager
-     */
-    private $jobManager;
-
     /**
      * @var ImagickCroppedCameraProvider
      */
@@ -70,55 +66,53 @@ class Autofocus extends AbstractJob
     }
 
     protected function execute(
-        string $cameraName = null,
-        string $focuserName = null,
-        string $measureName = null,
-        int $min,
-        int $max,
-        int $time,
-        int $partials,
-        int $iterations,
-        array $tries,
-        int $radius,
-        int $x = null,
-        int $y = null,
-        string $reportFile = null
+        AutofocusParams $params
     ) {
-        $this->jobManager->startJob();
+        $cameraName = $params->hasCameraName()
+            ? $params->getCameraName()
+            : null;
+
+        $focuserName = $params->hasFocuserName()
+            ? $params->getFocuserName()
+            : null;
+
+        $measureName = $params->hasMeasureName()
+            ? $params->getMeasureName()
+            : null;
 
         $camera = $this->cameraProvider->getCamera($cameraName);
         $focuser = $this->focuserProvider->getFocuser($focuserName);
         $measure = $this->measureProvider->getMeasure($measureName);
 
         $camera->setCroping(
-            $radius,
-            $x,
-            $y
+            $params->getRadius(),
+            $params->hasX() ? $params->getX() : null,
+            $params->hasY() ? $params->getY() : null
         );
 
         /**
          * @var $autofocus SimpleRecursive
          */
         $autofocus = $this->autofocus;
-        $autofocus->setPartials($partials);
-        $autofocus->setIterations($iterations);
-        $autofocus->setTriesArray($tries);
+        $autofocus->setPartials($params->getPartials());
+        $autofocus->setIterations($params->getIterations());
+        $autofocus->setTriesArray($params->getTries());
 
         $result = $this->autofocus->autofocus(
             $measure,
             $camera,
             $focuser,
-            $min,
-            $max,
-            $time
+            $params->getMin(),
+            $params->getMax(),
+            $params->getTime()
         );
 
         $focuser->setPosition($result->getMaximum()->getPosition());
 
-        if ($reportFile !== null) {
+        if ($params->hasReportFile()) {
             $reporter = new AutoFocusReport();
             $report = $reporter->generateReport($result);
-            file_put_contents($reportFile, $report->getImageBlob());
+            file_put_contents($params->getReportFile(), $report->getImageBlob());
         }
 
     }

@@ -8,6 +8,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use wlatanowicz\AppBundle\Job\Autofocus;
+use wlatanowicz\AppBundle\Job\Params\AutofocusParams;
 use wlatanowicz\AppBundle\Routine\AutoFocus\SimpleRecursive;
 use wlatanowicz\AppBundle\Routine\AutoFocusReport;
 
@@ -83,21 +84,23 @@ class AutofocusCommand extends Command
 
         $reportFile = $input->getOption('save-report');
 
-        $this->job->start([
-            "cameraName" => $cameraName,
-            "focuserName" => $focuserName,
-            "measureName" => $measureName,
-            "min" => $min,
-            "max" => $max,
-            "time" => $time,
-            "partials" => $partials,
-            "iterations" => $iterations,
-            "tries" => $tries,
-            "radius" => $radius,
-            "x" => $x,
-            "y" => $y,
-            "reportFile" => $reportFile,
-        ]);
+        $this->job->start(
+            new AutofocusParams(
+                $cameraName,
+                $focuserName,
+                $measureName,
+                $min,
+                $max,
+                $time,
+                $partials,
+                $iterations,
+                $tries,
+                $radius,
+                $x,
+                $y,
+                $reportFile
+            )
+        );
 
     }
 }

@@ -1,6 +1,6 @@
 services:
   job-autofocus:
-    class: wlatanowicz\AppBundle\Jobs\Autofocus
+    class: wlatanowicz\AppBundle\Job\Autofocus
     arguments:
       - '@job-manager'
       - '@imagick-camera-provider'
@@ -8,3 +8,9 @@ services:
       - '@measure-provider'
       - '@autofocus-default'
       - '@logger'
+
+  job-provider:
+    class: wlatanowicz\AppBundle\Job\JobProvider
+    arguments:
+      -
+        autofocus: '@job-autofocus'

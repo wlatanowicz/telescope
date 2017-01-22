@@ -3,28 +3,31 @@ declare(strict_types = 1);
 
 namespace wlatanowicz\AppBundle\Job;
 
+use wlatanowicz\AppBundle\Helper\JobManager;
+use wlatanowicz\AppBundle\Job\Params\JobParamsInterface;
+
 abstract class AbstractJob
 {
-    public function start(array $namedParameters)
+    /**
+     * @var JobManager
+     */
+    protected $jobManager;
+
+    public function start(JobParamsInterface $params, string $jobId = null, string $sessionId = null)
+    {
+        $method = 'execute';
+
+        $this->jobManager->startJob($jobId, $sessionId);
+        $this->{$method}($params);
+    }
+
+    public function getParamsClass(): string
     {
         $reflection = new \ReflectionMethod(get_class($this), "execute");
         $parameters = $reflection->getParameters();
-
-        $parametersArray = [];
-
-        foreach ($parameters as $parameter) {
-            /**
-             * @var $parameter \ReflectionParameter
-             */
-            $parameterName = $parameter->getName();
-            if (array_key_exists($parameterName, $namedParameters)) {
-                $parametersArray[$parameter->getPosition()] = $namedParameters[$parameterName];
-            }
-        }
-
-        $method = 'execute';
-        $this->{$method}(...$parametersArray);
+        $clasname = $parameters[0]->getClass()->getName();
+        return $clasname;
     }
 
-    //protected abstract function execute(...);
+    //protected abstract function execute(JobParamsInterface $params);
 }

@@ -39,7 +39,7 @@ class JobManager
         $this->currentJobId = null;
     }
 
-    public function startJob()
+    public function startJob(string $jobId = null, string $sessionId = null)
     {
         $this->currentJobId = md5((string)(time().rand(0,999)));
     }
