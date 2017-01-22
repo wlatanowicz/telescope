@@ -119,7 +119,7 @@ class JobManager
         );
     }
 
-    public function getJobResultDirPath(string $jobId, string $sessionId): string
+    public function getJobResultDirPath(string $jobId = null, string $sessionId): string
     {
         return $this->processDirName(
             $this->resultDir,
@@ -128,7 +128,7 @@ class JobManager
         );
     }
 
-    private function processDirName(string $dir, string $jobId, string $sessionId): string
+    private function processDirName(string $dir, string $jobId = null, string $sessionId = null): string
     {
         return strtr(
             $dir,
