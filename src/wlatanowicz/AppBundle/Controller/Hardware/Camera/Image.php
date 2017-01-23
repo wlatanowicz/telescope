@@ -37,11 +37,9 @@ class Image
     public function getImage(string $name, Request $request): Response
     {
         $time = intval($request->query->get('time'), 10);
-        $iso = intval($request->query->get('iso'), 10);
-        $format = $request->query->get('format');
 
         $camera = $this->cameraProvider->getCamera($name);
-        $image = $camera->exposure($time, $iso, $format);
+        $image = $camera->exposure($time);
 
         $json = $this->serializer->serialize($image, 'json');
         return new JsonResponse($json, 200, [], true);
