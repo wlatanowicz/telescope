@@ -5,6 +5,7 @@ namespace wlatanowicz\AppBundle\Data;
 
 use JMS\Serializer\Annotation\Accessor;
 use JMS\Serializer\Annotation\Type;
+use JMS\Serializer\Annotation\Exclude;
 
 class BinaryImage
 {
@@ -12,6 +13,10 @@ class BinaryImage
     const MIMETYPE_JPEG = 'image/jpeg';
     const MIMETYPE_SONY_RAW = 'image/x-sony-arw';
 
+    /**
+     * @var array
+     * @Exclude
+     */
     private static $EXTENSIONS = [
         self::MIMETYPE_BIN => 'bin',
         self::MIMETYPE_JPEG => 'jpeg',

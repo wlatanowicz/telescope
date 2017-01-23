@@ -32,4 +32,10 @@
             </exclude>
         </whitelist>
     </filter>
+	<logging>
+		<log type="coverage-html" target="var/test/coverage" />
+		<log type="testdox-html" target="var/test/testdox.html"/>
+		<log type="testdox-text" target="var/test/testdox.txt"/>
+	</logging>
+
 </phpunit>
