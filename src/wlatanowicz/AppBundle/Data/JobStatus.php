@@ -40,4 +40,14 @@ class JobStatus
      * @Type("string")
      */
     private $sessionId;
+
+    /**
+     * @var mixed
+     */
+    private $result;
+
+    public function setResult($result)
+    {
+        $this->result = $result;
+    }
 }

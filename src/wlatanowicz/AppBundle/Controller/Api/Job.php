@@ -58,7 +58,7 @@ class Job
 
         $job = $this->jobProvider->getJob($input['method']);
         $params = $this->serializer->fromArray(
-            $job['params'],
+            $input['params'],
             $job->getParamsClass()
         );
 

@@ -64,7 +64,7 @@ class Autofocus extends AbstractJob
         FileSystem $fileSystem,
         LoggerInterface $logger
     ) {
-        $this->jobManager = $jobManager;
+        parent::__construct($jobManager);
         $this->cameraProvider = $cameraProvider;
         $this->focuserProvider = $focuserProvider;
         $this->measureProvider = $measureProvider;
