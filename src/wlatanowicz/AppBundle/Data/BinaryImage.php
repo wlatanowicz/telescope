@@ -79,7 +79,8 @@ class BinaryImage
 
     private function autodetectMimeType()
     {
-        if (substr($this->data, 6, 4) === 'JFIF')
+        if (substr($this->data, 6, 4) === 'JFIF'
+            || substr($this->data, 6, 4) === 'Exif')
         {
             return self::MIMETYPE_JPEG;
         }
