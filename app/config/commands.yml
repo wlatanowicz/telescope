@@ -1,15 +1,22 @@
 services:
-  command-goto:
+  command-telesope-goto:
     class: wlatanowicz\AppBundle\Command\Telescope\GotoCommand
     arguments:
-      - '@telescope-provider'
+      - '@job-telescope-set-position'
+    tags:
+        - { name: console.command }
+
+  command-telesope-position:
+    class: wlatanowicz\AppBundle\Command\Telescope\PositionCommand
+    arguments:
+      - '@job-telescope-get-position'
     tags:
         - { name: console.command }
 
   command-focuser-goto:
     class: wlatanowicz\AppBundle\Command\Focuser\GotoCommand
     arguments:
-      - '@focuser-provider'
+      - '@job-focuser-set-position'
     tags:
         - { name: console.command }
 

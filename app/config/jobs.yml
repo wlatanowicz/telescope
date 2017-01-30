@@ -10,8 +10,36 @@ services:
       - '@sys-filesystem'
       - '@logger'
 
+  job-telescope-set-position:
+    class: wlatanowicz\AppBundle\Job\TelescopeSetPosition
+    arguments:
+      - '@job-manager'
+      - '@telescope-provider'
+
+  job-telescope-get-position:
+    class: wlatanowicz\AppBundle\Job\TelescopeGetPosition
+    arguments:
+      - '@job-manager'
+      - '@telescope-provider'
+
+  job-focuser-set-position:
+    class: wlatanowicz\AppBundle\Job\FocuserSetPosition
+    arguments:
+      - '@job-manager'
+      - '@focuser-provider'
+
+  job-focuser-get-position:
+    class: wlatanowicz\AppBundle\Job\FocuserGetPosition
+    arguments:
+      - '@job-manager'
+      - '@focuser-provider'
+
   job-provider:
     class: wlatanowicz\AppBundle\Job\JobProvider
     arguments:
       -
         autofocus: '@job-autofocus'
+        telescope.get-position: '@job-telescope-get-position'
+        telescope.set-position: '@job-telescope-set-position'
+        focuser.get-position: '@job-focuser-get-position'
+        focuser.set-position: '@job-focuser-set-position'

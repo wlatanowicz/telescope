@@ -42,7 +42,7 @@ class Focuser implements FocuserInterface
     public function setPosition(
         int $position,
         bool $wait = true,
-        int $tolerance = 5
+        int $tolerance = null
     ) {
         $this->logger->info(
             "Setting position (current={current}, target={target})",
