@@ -121,7 +121,7 @@ class JobTest extends \PHPUnit_Framework_TestCase
         $wrappedJobResult->setResult($jobResult);
 
         $expectedResponsePayload = \json_encode([
-
+            "some-json" => "value",
         ]);
 
         $this->serializerMock
