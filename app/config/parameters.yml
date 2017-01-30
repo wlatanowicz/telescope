@@ -3,6 +3,6 @@ parameters:
   default_camera: 'remote'
   default_iamgick_camera: 'remote'
   default_focuser: 'node'
-  default_telescope: 'remote'
+  default_telescope: 'stellarium'
   default_radio: 'local'
   default_measure: 'fwhm'
