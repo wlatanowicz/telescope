@@ -8,8 +8,8 @@ use wlatanowicz\AppBundle\Hardware\TelescopeInterface;
 
 class StellariumTelescope implements TelescopeInterface
 {
-    const DEFAULT_TOLERANCE_RA = 0.1;
-    const DEFAULT_TOLERANCE_DEC = 0.1;
+    const DEFAULT_TOLERANCE_RA = 0.01;
+    const DEFAULT_TOLERANCE_DEC = 0.01;
 
     const SETTLE_CHECK_WAIT = 1000000; // 1 sec
     const SETTLE_WAIT = 1000000; // 1 sec
