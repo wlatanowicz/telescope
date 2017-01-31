@@ -1,3 +1,0 @@
-services:
-  test-generator:
-    class: wlatanowicz\DevBundle\Generator\TestGenerator

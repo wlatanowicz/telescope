@@ -16,6 +16,7 @@ class AppKernel extends Kernel
 
         if (in_array($this->getEnvironment(), ['dev', 'test'], true)) {
             $bundles[] = new Symfony\Bundle\DebugBundle\DebugBundle();
+            $bundles[] = new \wlatanowicz\DevBundle\DevBundle();
         }
 
         return $bundles;

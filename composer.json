@@ -7,8 +7,15 @@
         "jms/serializer-bundle": "^1.1",
         "guzzlehttp/guzzle": "~6.0",
         "bramus/ansi-php": "~3.0",
-        "bramus/monolog-colored-line-formatter": "~2.0"
+        "bramus/monolog-colored-line-formatter": "~2.0",
+        "wlatanowicz/dev-bundle": "dev-master"
     },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url":  "git@github.com:wlatanowicz/dev-bundle.git"
+        }
+    ],
     "autoload": {
         "psr-4": {
             "": "src/"
@@ -18,7 +25,7 @@
         ]
     },
     "autoload-dev": {
-        "psr-4": { "Test\\" : "test/"}
+        "psr-4": { "Unit\\" : "test/Unit"}
     },
     "require-dev": {
         "phpunit/phpunit": "^5.4"
