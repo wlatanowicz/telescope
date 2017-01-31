@@ -1,0 +1,7 @@
+services:
+  command-generate-test:
+    class: wlatanowicz\DevBundle\Command\GenerateTestCommand
+    arguments:
+      - '@test-generator'
+    tags:
+        - { name: console.command }
