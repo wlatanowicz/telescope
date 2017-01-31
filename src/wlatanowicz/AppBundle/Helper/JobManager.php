@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace wlatanowicz\AppBundle\Helper;
 
+use JMS\Serializer\SerializerInterface;
 use wlatanowicz\AppBundle\Hardware\Helper\FileSystem;
 
 class JobManager
@@ -16,6 +17,16 @@ class JobManager
      * @var string
      */
     private $currentSessionId;
+
+    /**
+     * @var SerializerInterface
+     */
+    private $serializer;
+
+    /**
+     * @var FileSystem
+     */
+    private $fileSystem;
 
     /**
      * @var string
@@ -39,6 +50,8 @@ class JobManager
      * @param string $resultDir
      */
     public function __construct(
+        SerializerInterface $serializer,
+        FileSystem $fileSystem,
         string $logFile,
         string $statusFile,
         string $resultDir
@@ -54,6 +67,12 @@ class JobManager
     {
         $this->currentJobId = 'job' . date('YmdHis') . str_pad((string)rand(0, 999), 3, '0', STR_PAD_LEFT);
         $this->currentSessionId = 'sess' . date('Ymd');
+    }
+
+    public function saveCurrentJobResult(string $fileName, string $data)
+    {
+        $fullFileName = $this->getCurrentJobResultDirPath() . '/' . $fileName;
+        $this->fileSystem->filePutContents($fullFileName, $data);
     }
 
     /**

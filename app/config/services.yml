@@ -20,6 +20,8 @@ services:
   job-manager:
     class: wlatanowicz\AppBundle\Helper\JobManager
     arguments:
+      - '@jms_serializer'
+      - '@sys-filesystem'
       - "%kernel.sessions_dir%/{sessionId}/jobs/{jobId}.log"
       - "%kernel.sessions_dir%/{sessionId}/jobs/{jobId}.status.json"
       - "%kernel.sessions_dir%/{sessionId}/results"
