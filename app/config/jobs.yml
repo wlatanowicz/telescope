@@ -34,6 +34,12 @@ services:
       - '@job-manager'
       - '@focuser-provider'
 
+  job-camera-expose:
+    class: wlatanowicz\AppBundle\Job\CameraExpose
+    arguments:
+      - '@job-manager'
+      - '@camera-provider'
+
   job-provider:
     class: wlatanowicz\AppBundle\Job\JobProvider
     arguments:

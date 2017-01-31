@@ -23,8 +23,7 @@ services:
   command-camera-expose:
     class: wlatanowicz\AppBundle\Command\Camera\ExposeCommand
     arguments:
-      - '@camera-provider'
-      - '@sys-filesystem'
+      - '@job-camera-expose'
     tags:
         - { name: console.command }
 

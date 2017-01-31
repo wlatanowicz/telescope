@@ -7,25 +7,21 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use wlatanowicz\AppBundle\Hardware\CameraInterface;
-use wlatanowicz\AppBundle\Hardware\Helper\FileSystem;
-use wlatanowicz\AppBundle\Hardware\Provider\CameraProvider;
+use wlatanowicz\AppBundle\Job\CameraExpose;
+use wlatanowicz\AppBundle\Job\Params\CameraExposeParams;
 
 class ExposeCommand extends Command
 {
-    private $provider;
-
     /**
-     * @var FileSystem
+     * @var CameraExpose
      */
-    private $fileSystem;
+    private $job;
 
-    public function __construct(CameraProvider $cameraProvider, FileSystem $fileSystem)
+    public function __construct(CameraExpose $job)
     {
         parent::__construct(null);
 
-        $this->provider = $cameraProvider;
-        $this->fileSystem = $fileSystem;
+        $this->job = $job;
     }
 
     protected function configure()
@@ -36,7 +32,7 @@ class ExposeCommand extends Command
             ->setHelp("This command allows you to create users...")
             ->addOption('camera', null, InputOption::VALUE_REQUIRED, 'Camera name', null)
             ->addOption('time', null, InputOption::VALUE_REQUIRED, 'Exposure time (seconds)', 1)
-            ->addOption('filename', null, InputOption::VALUE_REQUIRED, 'Target file', "capture-" . date("Y-m-d-H-i-s"))
+            ->addOption('filename', null, InputOption::VALUE_REQUIRED, 'Target file', null)
         ;
     }
 
@@ -44,9 +40,12 @@ class ExposeCommand extends Command
     {
         $camera = $input->getOption('camera');
         $time = intval($input->getOption('time'), 10);
+        $filename = $input->getOption('filename');
 
-        $image = $this->provider->getCamera($camera)->exposure($time);
-        $fileName = $input->getOption('filename') . "." . $image->getFileExtension();
-        $this->fileSystem->filePutContents($fileName, $image->getData());
+        $this->job->execute(new CameraExposeParams(
+            $camera,
+            $time,
+            $filename
+        ));
     }
 }
