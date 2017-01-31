@@ -49,3 +49,4 @@ services:
         telescope.set-position: '@job-telescope-set-position'
         focuser.get-position: '@job-focuser-get-position'
         focuser.set-position: '@job-focuser-set-position'
+        camera.expose: '@job-camera-expose'
