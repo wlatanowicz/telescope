@@ -5,51 +5,81 @@ namespace Unit\wlatanowicz\AppBundle\Routine\Measure;
 
 use wlatanowicz\AppBundle\Data\BinaryImage;
 use wlatanowicz\AppBundle\Data\ImagickImage;
+use wlatanowicz\AppBundle\Routine\Measure\Exception\CannotMeasureException;
 use wlatanowicz\AppBundle\Routine\Measure\StarFWHM as StarFWHM;
 
 class StarFWHMTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var float
+     * @test
+     * @dataProvider dataProvider
      */
-    private $thresholdMock;
-
-    /**
-     * @var float
-     */
-    private $halfMock;
-
-    /**
-     * @var StarFWHM
-     */
-    private $starFWHM;
-
-    /**
-     * @before
-     */
-    public function prepare()
-    {
-        $this->thresholdMock = 0.1;
-        $this->halfMock = 0.5;
-
-        $this->starFWHM = new StarFWHM(
-            $this->thresholdMock,
-            $this->halfMock
+    public function itShouldMeasureStarSize(
+        string $filename,
+        float $threshold,
+        float $half,
+        int $pixelCount
+    ) {
+        $starFWHM = new StarFWHM(
+            $threshold,
+            $half
         );
+
+        $binData = file_get_contents(__DIR__ . "/../Resources/" . $filename);
+        $binImage = new BinaryImage($binData);
+        $imagickImage = ImagickImage::fromBinaryImage($binImage);
+
+        $result = $starFWHM->measure($imagickImage);
+        $expected = sqrt($pixelCount / M_PI);
+
+        $this->assertEquals($expected, $result);
+    }
+
+    public function dataProvider()
+    {
+        return  [
+            [
+                "fake_star_2.png",
+                0.1,
+                0.5,
+                4,
+                null
+            ]
+        ];
     }
 
     /**
      * @test
+     * @dataProvider dataProviderForExceptions
      */
-    public function itShouldMeasureStarSize()
-    {
-        $binData = file_get_contents(__DIR__ . "/../Resources/fake_star_2.png");
+    public function itShouldThrowExcrption(
+        string $filename,
+        float $threshold,
+        float $half,
+        string $exception
+    ) {
+        $starFWHM = new StarFWHM(
+            $threshold,
+            $half
+        );
+
+        $binData = file_get_contents(__DIR__ . "/../Resources/" . $filename);
         $binImage = new BinaryImage($binData);
         $imagickImage = ImagickImage::fromBinaryImage($binImage);
 
-        $result = $this->starFWHM->measure($imagickImage);
-        $expected = sqrt(4 / M_PI);
+        $this->expectException($exception);
+        $starFWHM->measure($imagickImage);
+    }
 
-        $this->assertEquals($expected, $result);
+    public function dataProviderForExceptions()
+    {
+        return  [
+            [
+                "fake_star_2.png",
+                1.1,
+                0.5,
+                CannotMeasureException::class,
+            ],
+        ];
     }
 }
