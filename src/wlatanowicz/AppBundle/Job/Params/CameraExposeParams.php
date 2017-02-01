@@ -3,20 +3,25 @@ declare(strict_types = 1);
 
 namespace wlatanowicz\AppBundle\Job\Params;
 
+use JMS\Serializer\Annotation\Type;
+
 class CameraExposeParams implements JobParamsInterface
 {
     /**
      * @var string|null
+     * @Type("string")
      */
     private $cameraName;
 
     /**
      * @var int
+     * @Type("int")
      */
     private $time;
 
     /**
      * @var string|null
+     * @Type("string")
      */
     private $fileName;
 

@@ -48,5 +48,7 @@ class CameraExpose extends AbstractJob
         $image = $camera->exposure($time);
         $fileName = $fileName . "." . $image->getFileExtension();
         $this->jobManager->saveCurrentJobResult($fileName, $image->getData());
+
+        return $fileName;
     }
 }

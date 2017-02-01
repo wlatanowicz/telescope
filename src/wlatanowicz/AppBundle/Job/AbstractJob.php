@@ -28,7 +28,8 @@ abstract class AbstractJob
         $method = 'execute';
 
         $this->jobManager->startJob($jobId, $sessionId);
-        $this->{$method}($params);
+        $result = $this->{$method}($params);
+        $this->jobManager->finishJob($result);
 
         return $this->jobManager->getCurrentJobStatus();
     }
