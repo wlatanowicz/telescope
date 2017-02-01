@@ -43,8 +43,25 @@ class StarFWHMTest extends \PHPUnit_Framework_TestCase
                 0.1,
                 0.5,
                 4,
-                null
-            ]
+            ],
+            [
+                "fake_star_4.png",
+                0.1,
+                0.15,
+                12,
+            ],
+            [
+                "fake_star_4.png",
+                0.1,
+                0.2,
+                4,
+            ],
+            [
+                "fake_star_4.png",
+                0.1,
+                0.6,
+                4,
+            ],
         ];
     }
 
