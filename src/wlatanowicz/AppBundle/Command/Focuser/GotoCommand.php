@@ -40,7 +40,7 @@ class GotoCommand extends Command
         $focuserName = $input->getOption('focuser');
         $position = intval($input->getOption('position'), 10);
 
-        $this->job->execute(new FocuserSetPositionParams(
+        $this->job->start(new FocuserSetPositionParams(
             $focuserName,
             $position
         ));

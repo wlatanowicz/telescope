@@ -29,7 +29,7 @@ class CameraExpose extends AbstractJob
     }
 
 
-    public function execute(
+    protected function execute(
         CameraExposeParams $params
     ) {
 

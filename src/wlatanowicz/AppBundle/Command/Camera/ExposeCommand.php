@@ -42,7 +42,7 @@ class ExposeCommand extends Command
         $time = intval($input->getOption('time'), 10);
         $filename = $input->getOption('filename');
 
-        $this->job->execute(new CameraExposeParams(
+        $this->job->start(new CameraExposeParams(
             $camera,
             $time,
             $filename

@@ -28,7 +28,7 @@ class TelescopeGetPosition extends AbstractJob
         $this->provider = $provider;
     }
 
-    public function execute(TelescopeGetPositionParams $params): Coordinates
+    protected function execute(TelescopeGetPositionParams $params): Coordinates
     {
         $telescopeName = $params->hasTelescopeName()
             ? $params->getTelescopeName()

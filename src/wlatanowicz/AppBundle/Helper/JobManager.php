@@ -4,20 +4,11 @@ declare(strict_types = 1);
 namespace wlatanowicz\AppBundle\Helper;
 
 use JMS\Serializer\SerializerInterface;
+use wlatanowicz\AppBundle\Data\JobStatus;
 use wlatanowicz\AppBundle\Hardware\Helper\FileSystem;
 
 class JobManager
 {
-    /**
-     * @var string
-     */
-    private $currentJobId;
-
-    /**
-     * @var string
-     */
-    private $currentSessionId;
-
     /**
      * @var SerializerInterface
      */
@@ -44,6 +35,11 @@ class JobManager
     private $resultDir;
 
     /**
+     * @var JobStatus
+     */
+    private $currentStatus;
+
+    /**
      * JobManager constructor.
      * @param string $logFile
      * @param string $statusFile
@@ -56,17 +52,31 @@ class JobManager
         string $statusFile,
         string $resultDir
     ) {
+        $this->serializer = $serializer;
+        $this->fileSystem = $fileSystem;
         $this->logFile = $logFile;
         $this->statusFile = $statusFile;
         $this->resultDir = $resultDir;
-        $this->currentJobId = null;
-        $this->currentSessionId = null;
+        $this->currentStatus = null;
     }
 
     public function startJob(string $jobId = null, string $sessionId = null)
     {
-        $this->currentJobId = 'job' . date('YmdHis') . str_pad((string)rand(0, 999), 3, '0', STR_PAD_LEFT);
-        $this->currentSessionId = 'sess' . date('Ymd');
+        $jobId = 'job' . date('YmdHis') . str_pad((string)rand(0, 999), 3, '0', STR_PAD_LEFT);
+        $sessionId = 'sess' . date('Ymd');
+
+        $this->currentStatus = new JobStatus($sessionId, $jobId);
+        $this->currentStatus->setStatus(JobStatus::STATUS_RUNNING);
+        $this->currentStatus->setStartTime(new \DateTime());
+        $this->storeCurrentStatus();
+    }
+
+    public function finishJob($result = null)
+    {
+        $this->currentStatus->setEndTime(new \DateTime());
+        $this->currentStatus->setStatus(JobStatus::STATUS_FINISHED);
+        $this->currentStatus->setResult($result);
+        $this->storeCurrentStatus();
     }
 
     public function saveCurrentJobResult(string $fileName, string $data)
@@ -75,12 +85,17 @@ class JobManager
         $this->fileSystem->filePutContents($fullFileName, $data);
     }
 
+    public function getCurrentJobStatus(): JobStatus
+    {
+        return $this->currentStatus;
+    }
+
     /**
      * @return string
      */
     public function getCurrentJobId(): string
     {
-        return $this->currentJobId;
+        return $this->currentStatus->getJobId();
     }
 
     /**
@@ -88,12 +103,12 @@ class JobManager
      */
     public function getCurrentSessionId(): string
     {
-        return $this->currentSessionId;
+        return $this->currentStatus->getSessionId();
     }
 
     public function isJobActive(): bool
     {
-        return $this->currentJobId !== null;
+        return $this->currentStatus !== null;
     }
 
     public function getCurrentJobLogFilePath(): string
@@ -155,6 +170,18 @@ class JobManager
                 "{jobId}" => $jobId,
                 "{sessionId}" => $sessionId,
             ]
+        );
+    }
+
+    private function storeCurrentStatus()
+    {
+        $json = $this->serializer->serialize($this->currentStatus, 'json');
+        $this->fileSystem->filePutContents(
+            $this->getJobStatusFilePath(
+                $this->getCurrentJobId(),
+                $this->getCurrentSessionId()
+            ),
+            $json
         );
     }
 }

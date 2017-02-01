@@ -30,7 +30,7 @@ abstract class AbstractJob
         $this->jobManager->startJob($jobId, $sessionId);
         $this->{$method}($params);
 
-        return new JobStatus();
+        return $this->jobManager->getCurrentJobStatus();
     }
 
     public function getParamsClass(): string

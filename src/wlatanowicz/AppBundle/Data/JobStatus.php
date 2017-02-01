@@ -46,6 +46,57 @@ class JobStatus
      */
     private $result;
 
+    /**
+     * JobStatus constructor.
+     * @param string $jobId
+     * @param string $sessionId
+     */
+    public function __construct(string $sessionId, string $jobId)
+    {
+        $this->jobId = $jobId;
+        $this->sessionId = $sessionId;
+    }
+
+    /**
+     * @return string
+     */
+    public function getJobId(): string
+    {
+        return $this->jobId;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSessionId(): string
+    {
+        return $this->sessionId;
+    }
+
+    /**
+     * @param string $status
+     */
+    public function setStatus(string $status)
+    {
+        $this->status = $status;
+    }
+
+    /**
+     * @param \DateTime|null $startTime
+     */
+    public function setStartTime($startTime)
+    {
+        $this->startTime = $startTime;
+    }
+
+    /**
+     * @param \DateTime|null $endTime
+     */
+    public function setEndTime($endTime)
+    {
+        $this->endTime = $endTime;
+    }
+
     public function setResult($result)
     {
         $this->result = $result;

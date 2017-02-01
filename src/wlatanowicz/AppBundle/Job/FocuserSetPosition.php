@@ -27,7 +27,7 @@ class FocuserSetPosition extends AbstractJob
         $this->provider = $provider;
     }
 
-    public function execute(FocuserSetPositionParams $params)
+    protected function execute(FocuserSetPositionParams $params)
     {
         $focuserName = $params->hasFocuserName()
             ? $params->getFocuserName()
