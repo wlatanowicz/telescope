@@ -13,6 +13,7 @@ use wlatanowicz\AppBundle\Controller\Api\Job;
 use wlatanowicz\AppBundle\Data\JobStatus;
 use wlatanowicz\AppBundle\Hardware\Helper\FileSystem;
 use wlatanowicz\AppBundle\Helper\JobManager;
+use wlatanowicz\AppBundle\Job\AbstractJob;
 use wlatanowicz\AppBundle\Job\JobProvider;
 
 class JobTest extends \PHPUnit_Framework_TestCase
@@ -43,9 +44,9 @@ class JobTest extends \PHPUnit_Framework_TestCase
     private $controller;
 
     /**
-     * @var DummyJob
+     * @var AbstractJob|\PHPUnit_Framework_MockObject_MockObject
      */
-    private $job;
+    private $jobMock;
 
     /**
      * @before
@@ -56,8 +57,7 @@ class JobTest extends \PHPUnit_Framework_TestCase
         $this->jobManagerMock = $this->createMock(JobManager::class);
         $this->serializerMock = $this->createMock(Serializer::class);
         $this->fileSystemMock = $this->createMock(FileSystem::class);
-
-        $this->job = new DummyJob($this->jobManagerMock);
+        $this->jobMock = $this->createMock(AbstractJob::class);
 
         $this->controller = new Job(
             $this->jobProviderMock,
@@ -72,8 +72,6 @@ class JobTest extends \PHPUnit_Framework_TestCase
      */
     public function itShouldStartJob()
     {
-        $this->markTestSkipped();
-
         $jobId = "job-id";
         $sessionId = "session-id";
         $jobName = "job-name";
@@ -98,13 +96,16 @@ class JobTest extends \PHPUnit_Framework_TestCase
             "another string"
         );
 
+        $jobStatus = new JobStatus($sessionId, $jobId);
+        $jobStatus->setResult($jobResult);
+
         $request = new Request([], [], [], [], [], [], $json);
 
         $this->jobProviderMock
             ->expects($this->once())
             ->method('getJob')
             ->with($jobName)
-            ->willReturn($this->job);
+            ->willReturn($this->jobMock);
 
         $this->serializerMock
             ->expects($this->once())
@@ -117,10 +118,16 @@ class JobTest extends \PHPUnit_Framework_TestCase
                 $jobParams
             );
 
-        $this->job->jobResult = $jobResult;
+        $this->jobMock
+            ->expects($this->once())
+            ->method('start')
+            ->with($jobParams)
+            ->willReturn($jobStatus);
 
-        $wrappedJobResult = new JobStatus();
-        $wrappedJobResult->setResult($jobResult);
+        $this->jobMock
+            ->expects($this->once())
+            ->method('getParamsClass')
+            ->willReturn(DummyJobParams::class);
 
         $expectedResponsePayload = \json_encode([
             "some-json" => "value",
@@ -130,7 +137,7 @@ class JobTest extends \PHPUnit_Framework_TestCase
             ->expects($this->once())
             ->method('serialize')
             ->with(
-                $wrappedJobResult,
+                $jobStatus,
                 'json'
             )
             ->willReturn($expectedResponsePayload);
@@ -148,7 +155,6 @@ class JobTest extends \PHPUnit_Framework_TestCase
             $sessionId
         );
 
-        $this->assertEquals($jobParams, $this->job->jobParams);
         $this->assertEquals($expectedResult, $result);
     }
 }
