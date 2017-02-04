@@ -5,6 +5,7 @@ namespace wlatanowicz\AppBundle\Hardware\Simulator;
 
 use Psr\Log\LoggerInterface;
 use wlatanowicz\AppBundle\Hardware\FocuserInterface;
+use wlatanowicz\AppBundle\Hardware\Helper\FileSystem;
 
 class Focuser implements FocuserInterface
 {
@@ -19,21 +20,36 @@ class Focuser implements FocuserInterface
     private $speed;
 
     /**
+     * @var string|null
+     */
+    private $statusFile;
+
+    /**
      * @var LoggerInterface
      */
     private $logger;
+
+    /**
+     * @var FileSystem
+     */
+    private $fileSystem;
 
     /**
      * Focuser constructor.
      */
     public function __construct(
         float $speed,
+        string $statusFile = null,
+        FileSystem $fileSystem,
         LoggerInterface $logger
     )
     {
         $this->speed = $speed;
+        $this->statusFile = $statusFile;
+
 
         $this->logger = $logger;
+        $this->fileSystem = $fileSystem;
 
         $this->position = 0;
     }
@@ -58,6 +74,12 @@ class Focuser implements FocuserInterface
         }
 
         $this->position = $position;
+        if ($this->statusFile !== null){
+            $this->fileSystem->filePutContents(
+                $this->statusFile,
+                (string)$this->position
+            );
+        }
 
         $this->logger->info(
             "Position set (position={position})",
@@ -69,6 +91,16 @@ class Focuser implements FocuserInterface
 
     public function getPosition(): int
     {
+        if ($this->statusFile !== null) {
+            try {
+                $this->position = intval(
+                    $this->fileSystem->fileGetContents(
+                        $this->statusFile
+                    ),
+                    10
+                );
+            } catch (\Exception $ex){}
+        }
         return $this->position;
     }
 }
