@@ -18,6 +18,8 @@ services:
     class: wlatanowicz\AppBundle\Hardware\Simulator\Focuser
     arguments:
       - 500
+      - '%kernel.cache_dir%/state/focuser-simulator'
+      - '@sys-filesystem'
       - '@logger'
     tags:
       - { name: logger.metadata, color: red, display: 'Focuser Simulator' }
