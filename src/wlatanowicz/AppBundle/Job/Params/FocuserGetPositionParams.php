@@ -3,10 +3,13 @@ declare(strict_types = 1);
 
 namespace wlatanowicz\AppBundle\Job\Params;
 
+use JMS\Serializer\Annotation\Type;
+
 class FocuserGetPositionParams implements JobParamsInterface
 {
     /**
      * @var string|null
+     * @Type("string")
      */
     private $focuserName;
 

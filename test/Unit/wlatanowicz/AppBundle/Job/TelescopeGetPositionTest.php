@@ -65,12 +65,15 @@ class TelescopeGetPositionTest extends \PHPUnit_Framework_TestCase
             ->method('getPosition')
             ->willReturn($coordinates);
 
+        $this->jobManager
+            ->expects($this->once())
+            ->method('finishJob')
+            ->with($coordinates);
+
         $params = new TelescopeGetPositionParams(
             $telescopeName
         );
 
-        $result = $this->job->execute($params);
-
-        $this->assertEquals($coordinates, $result);
+        $this->job->start($params);
     }
 }

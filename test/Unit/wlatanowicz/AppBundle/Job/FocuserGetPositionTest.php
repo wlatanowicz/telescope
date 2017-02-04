@@ -45,7 +45,7 @@ class FocuserGetPositionTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function itShouldSetPosition()
+    public function itShouldGetPosition()
     {
         $telescopeName = 'focuser';
         $position = rand(-1000, 1000);
@@ -61,12 +61,15 @@ class FocuserGetPositionTest extends \PHPUnit_Framework_TestCase
             ->method('getPosition')
             ->willReturn($position);
 
+        $this->jobManager
+            ->expects($this->once())
+            ->method('finishJob')
+            ->with($position);
+
         $params = new FocuserGetPositionParams(
             $telescopeName
         );
 
-        $result = $this->job->execute($params);
-
-        $this->assertEquals($position, $result);
+        $this->job->start($params);
     }
 }

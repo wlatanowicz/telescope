@@ -46,6 +46,8 @@ class FocuserSetPosition extends AbstractJob
             true,
             $tolerance
         );
+
+        return $position;
     }
 
 }

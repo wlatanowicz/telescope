@@ -66,6 +66,6 @@ class FocuserSetPositionTest extends \PHPUnit_Framework_TestCase
             $position
         );
 
-        $this->job->execute($params);
+        $this->job->start($params);
     }
 }

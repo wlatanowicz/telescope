@@ -86,6 +86,6 @@ class CameraExposeTest extends \PHPUnit_Framework_TestCase
             $fileName
         );
 
-        $this->cameraExpose->execute($params);
+        $this->cameraExpose->start($params);
     }
 }

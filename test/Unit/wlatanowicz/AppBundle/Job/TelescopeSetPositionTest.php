@@ -70,6 +70,6 @@ class TelescopeSetPositionTest extends \PHPUnit_Framework_TestCase
             $coordinates
         );
 
-        $this->job->execute($params);
+        $this->job->start($params);
     }
 }
