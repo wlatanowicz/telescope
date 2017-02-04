@@ -12,6 +12,20 @@ rpc-start:
     _format: json
   methods: [POST]
 
+rpc-start-alt-1:
+  path: /job
+  defaults:
+    _controller: ctrl-api-job:start
+    _format: json
+  methods: [POST]
+
+rpc-start-alt-2:
+  path: /job/{sessionId}
+  defaults:
+    _controller: ctrl-api-job:start
+    _format: json
+  methods: [POST]
+
 rpc-status:
   path: /job/{sessionId}/{jobId}
   defaults:
