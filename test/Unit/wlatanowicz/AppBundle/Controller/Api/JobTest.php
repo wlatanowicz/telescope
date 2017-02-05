@@ -6,15 +6,64 @@ namespace Unit\wlatanowicz\AppBundle\Controller\Api;
 use JMS\Serializer\Serializer;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Unit\wlatanowicz\AppBundle\Controller\Api\Helper\DummyJob;
-use Unit\wlatanowicz\AppBundle\Controller\Api\Helper\DummyJobParams;
-use Unit\wlatanowicz\AppBundle\Controller\Api\Helper\DummyJobResult;
 use wlatanowicz\AppBundle\Controller\Api\Job;
 use wlatanowicz\AppBundle\Data\JobStatus;
 use wlatanowicz\AppBundle\Hardware\Helper\FileSystem;
 use wlatanowicz\AppBundle\Helper\JobManager;
 use wlatanowicz\AppBundle\Job\AbstractJob;
 use wlatanowicz\AppBundle\Job\JobProvider;
+use wlatanowicz\AppBundle\Job\Params\JobParamsInterface;
+
+class DummyJobParams implements JobParamsInterface
+{
+    /**
+     * @var string
+     */
+    private $string;
+
+    /**
+     * @var int
+     */
+    private $int;
+
+    /**
+     * DummyJobParams constructor.
+     * @param string $string
+     * @param int $int
+     */
+    public function __construct(string $string, int $int)
+    {
+        $this->string = $string;
+        $this->int = $int;
+    }
+
+}
+
+class DummyJobResult
+{
+    /**
+     * @var int
+     * @Type("int")
+     */
+    private $int;
+
+    /**
+     * @var string
+     * @Type("string")
+     */
+    private $string;
+
+    /**
+     * DummyJobResult constructor.
+     * @param int $int
+     * @param string $string
+     */
+    public function __construct(int $int, string $string)
+    {
+        $this->int = $int;
+        $this->string = $string;
+    }
+}
 
 class JobTest extends \PHPUnit_Framework_TestCase
 {
