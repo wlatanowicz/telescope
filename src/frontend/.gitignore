@@ -1,0 +1,5 @@
+build/*
+test_build/*
+node_modules
+bower_components/*
+tmp/*

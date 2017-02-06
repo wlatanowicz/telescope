@@ -1,0 +1,15 @@
+{
+	"mains": [
+		"main.js"
+	],
+	"templates": [
+		"**/*.tpl"
+	],
+	"resources": [
+		"**/*.html",
+		"**/*.css",
+		"lte/bootstrap/**/*",
+		"lte/dist/**/*",
+		"lte/plugins/**/*"
+  	]
+}
