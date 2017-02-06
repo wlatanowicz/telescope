@@ -8,8 +8,9 @@
 	"resources": [
 		"**/*.html",
 		"**/*.css",
-		"lte/bootstrap/**/*",
-		"lte/dist/**/*",
-		"lte/plugins/**/*"
+		"lib/lte/bootstrap/**/*",
+		"lib/lte/dist/**/*",
+		"lib/lte/plugins/**/*",
+		"lib/leaflet/**/*"
   	]
 }

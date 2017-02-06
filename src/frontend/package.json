@@ -11,6 +11,9 @@
 		"mkdirp" : "*",
 		"fs-extra" : "*",
 		"uglify-js" : "*",
-		"ndoc" : "*"
+		"ndoc" : "*",
+
+		"admin-lte": "*",
+		"leaflet": "*"
 	}
 }
