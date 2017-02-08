@@ -118,4 +118,38 @@ class Job
             ]
         );
     }
+
+    public function resultInfo(string $sessionId, string $filename, Request $request)
+    {
+        $dir = $this->jobManager->getJobResultDirPath(null, $sessionId);
+        $path = $dir . '/' . $filename;
+
+        $extension = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
+
+        $info = [
+            "filename" => $filename,
+            "session-id" => $sessionId,
+            "url" => ($request->isSecure() ? 'https://' : 'http://')
+                . $request->server->get('HTTP_HOST')
+                . dirname($request->getRequestUri()),
+        ];
+
+        if (in_array($extension, ['jpeg', 'jpg', 'png'])) {
+            $size = getimagesize($path);
+            $info['size'] = [
+                'width' => $size[0],
+                'height' => $size[1],
+            ];
+        }
+
+        return new JsonResponse(
+            $this->serializer->serialize(
+                $info,
+                'json'
+            ),
+            200,
+            [],
+            true
+        );
+    }
 }
