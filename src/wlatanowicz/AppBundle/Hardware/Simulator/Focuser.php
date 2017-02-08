@@ -60,16 +60,17 @@ class Focuser implements FocuserInterface
         bool $wait = true,
         int $tolerance = 5
     ) {
+        $currentPosition = $this->getPosition();
         $this->logger->info(
             "Setting position (current={current}, target={target})",
             [
-                "current" => $this->position,
+                "current" => $currentPosition,
                 "target" => $position
             ]
         );
 
         if ($this->speed > 0) {
-            $time = (int)ceil(abs($this->position - $position) / $this->speed);
+            $time = (int)ceil(abs($currentPosition - $position) / $this->speed);
             sleep($time);
         }
 
