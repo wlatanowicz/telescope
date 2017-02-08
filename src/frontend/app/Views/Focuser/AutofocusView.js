@@ -6,24 +6,30 @@ klass("AutofocusView", TTemplateControl, {
     capturePreviewClicked : function() {
         var rpc = new RPC();
         rpc.focuserSetPosition(
-            "sim",
-            4000
+            this.$('FocuserName').getValue(),
+            this.$('InitialPosition').getValue()
         ).done(function(){
             rpc.cameraExpose(
-                "sim",
+                this.$('CameraName').getValue(),
                 3
             ).done(function (result) {
-                console.log(result);
-            });
+                rpc.getInfo(
+                    result.session_id,
+                    result.result
+                ).done(function (result) {
+
+                    this.$('Image').setImage(
+                        result.url,
+                        result.size.width,
+                        result.size.height
+                    );
+
+                }.bind(this));
+            }.bind(this));
         }.bind(this));
     },
 
     buttonClicked : function() {
 
-        this.$('Image').setImage(
-            "http://localhost/radio-telescope/index.php/api/job/sess20170201/results/capture-2017-02-01-20-14-01.jpeg",
-            564,
-            470
-        );
     }
 });

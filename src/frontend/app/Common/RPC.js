@@ -16,7 +16,7 @@ klass('RPC', TObject, {
     _execute : function(method, params) {
         var promise = new RPCPromise();
 
-        this._http.post('/api/job', {
+        this._http.post('/api/job#' + method, {
             jsonrpc: "2.0",
             method: method,
             params: params
@@ -25,6 +25,12 @@ klass('RPC', TObject, {
         });
 
         return promise;
+    },
+
+    getInfo : function(sessionId, resultFile) {
+        return this._http.get(
+            "/api/job/" + sessionId + "/results/" + resultFile + "/info"
+        );
     },
 
     cameraExpose : function(name, time) {
