@@ -55,11 +55,21 @@ klass( 'Image', TPanel, [TEventResponderMixin], {
 
 			var latlon = e.latlng;
 
-			this.setCrosshair(latlon, pixel);
 
-            this._Selection = pixel;
 
-            this.triggerEvent('Select', pixel);
+            if ( pixel.x >= 0 && pixel.y >= 0
+                && pixel.x <= this._width && pixel.y <= this._height ) {
+
+                this.setCrosshair(latlon, pixel);
+                this._Selection = pixel;
+                this.triggerEvent('Select', pixel);
+
+            } else {
+            	if (this._marker) {
+                    this._map.removeLayer(this._marker);
+                    this._marker = null;
+                }
+			}
 
 		}.bind(this));
 
@@ -73,21 +83,21 @@ klass( 'Image', TPanel, [TEventResponderMixin], {
 	},
 
 	setCrosshair : function(latlon, pixel) {
-        var label = pixel.x + " x " + pixel.y;
+		var label = pixel.x + " x " + pixel.y;
 
-        if ( this._marker ){
-            this._marker.setLatLng( [latlon.lat, latlon.lng] ).bindPopup(label).openPopup();
-        } else {
-            var crosshair = L.icon({
-                iconUrl: 'assets/crosshair.png',
+		if (this._marker) {
+			this._marker.setLatLng([latlon.lat, latlon.lng]).bindPopup(label).openPopup();
+		} else {
+			var crosshair = L.icon({
+				iconUrl: 'assets/crosshair.png',
 
-                iconSize:     [7, 7], // size of the icon
-                iconAnchor:   [4, 4], // point of the icon which will correspond to marker's location
-                popupAnchor:  [0, -3] // point from which the popup should open relative to the iconAnchor
-            });
+				iconSize: [7, 7], // size of the icon
+				iconAnchor: [4, 4], // point of the icon which will correspond to marker's location
+				popupAnchor: [0, -3] // point from which the popup should open relative to the iconAnchor
+			});
 
-            this._marker = L.marker( [ latlon.lat, latlon.lng ], {icon: crosshair} ).addTo(this._map).bindPopup(label).openPopup();
-        }
+			this._marker = L.marker([latlon.lat, latlon.lng], {icon: crosshair}).addTo(this._map).bindPopup(label).openPopup();
+		}
 	},
 
 	setImage : function(url, width, height) {
