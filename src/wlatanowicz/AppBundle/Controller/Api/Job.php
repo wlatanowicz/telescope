@@ -7,6 +7,7 @@ use JMS\Serializer\Serializer;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use wlatanowicz\AppBundle\Data\RPCResponse;
 use wlatanowicz\AppBundle\Hardware\Helper\FileSystem;
 use wlatanowicz\AppBundle\Helper\JobManager;
 use wlatanowicz\AppBundle\Job\JobProvider;
@@ -65,7 +66,7 @@ class Job
         $result = $job->start($params, $jobId, $sessionId);
 
         $serializedResult = $this->serializer->serialize(
-            $result,
+            RPCResponse::initWithResult($result),
             'json'
         );
 
@@ -116,6 +117,40 @@ class Job
             [
                 "Content-Type" => $mimetype
             ]
+        );
+    }
+
+    public function resultInfo(string $sessionId, string $filename, Request $request)
+    {
+        $dir = $this->jobManager->getJobResultDirPath(null, $sessionId);
+        $path = $dir . '/' . $filename;
+
+        $extension = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
+
+        $info = [
+            "filename" => $filename,
+            "session-id" => $sessionId,
+            "url" => ($request->isSecure() ? 'https://' : 'http://')
+                . $request->server->get('HTTP_HOST')
+                . dirname($request->getRequestUri()),
+        ];
+
+        if (in_array($extension, ['jpeg', 'jpg', 'png'])) {
+            $size = getimagesize($path);
+            $info['size'] = [
+                'width' => $size[0],
+                'height' => $size[1],
+            ];
+        }
+
+        return new JsonResponse(
+            $this->serializer->serialize(
+                $info,
+                'json'
+            ),
+            200,
+            [],
+            true
         );
     }
 }

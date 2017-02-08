@@ -47,3 +47,10 @@ rpc-result:
     _format: json
   methods: [GET]
 
+rpc-result-info:
+  path: /job/{sessionId}/results/{filename}/info
+  defaults:
+    _controller: ctrl-api-job:resultInfo
+    _format: json
+  methods: [GET]
+

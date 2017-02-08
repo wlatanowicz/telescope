@@ -8,6 +8,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use wlatanowicz\AppBundle\Controller\Api\Job;
 use wlatanowicz\AppBundle\Data\JobStatus;
+use wlatanowicz\AppBundle\Data\RPCResponse;
 use wlatanowicz\AppBundle\Hardware\Helper\FileSystem;
 use wlatanowicz\AppBundle\Helper\JobManager;
 use wlatanowicz\AppBundle\Job\AbstractJob;
@@ -186,7 +187,7 @@ class JobTest extends \PHPUnit_Framework_TestCase
             ->expects($this->once())
             ->method('serialize')
             ->with(
-                $jobStatus,
+                RPCResponse::initWithResult($jobStatus),
                 'json'
             )
             ->willReturn($expectedResponsePayload);
