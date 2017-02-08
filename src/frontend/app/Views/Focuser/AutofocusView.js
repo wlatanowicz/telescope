@@ -3,33 +3,50 @@
 
 klass("AutofocusView", TTemplateControl, {
 
-    capturePreviewClicked : function() {
-        var rpc = new RPC();
-        rpc.focuserSetPosition(
-            this.$('FocuserName').getValue(),
-            this.$('InitialPosition').getValue()
-        ).done(function(){
-            rpc.cameraExpose(
-                this.$('CameraName').getValue(),
-                3
-            ).done(function (result) {
-                rpc.getInfo(
-                    result.session_id,
-                    result.result
-                ).done(function (result) {
+    rpc : null,
 
-                    this.$('Image').setImage(
-                        result.url,
-                        result.size.width,
-                        result.size.height
-                    );
+    constructor : function(options) {
+        this.base(options);
 
-                }.bind(this));
-            }.bind(this));
-        }.bind(this));
+        this.rpc = new RPC();
     },
 
-    buttonClicked : function() {
+    capturePreviewClicked : function() {
+        this.rpc.focuserSetPosition(
+            this.$('FocuserName').getValue(),
+            this.$('InitialPosition').getValue()
+        ).done(this.previewFocuserSet.bind(this));
+    },
 
+    previewFocuserSet : function() {
+        this.rpc.cameraExpose(
+            this.$('CameraName').getValue(),
+            this.$('ExposureTime').getValue()
+        ).done(this.previewExposureFinished.bind(this));
+    },
+
+    previewExposureFinished : function(result) {
+        this.rpc.getInfo(
+            result.session_id,
+            result.result
+        ).done(this.previewImageInfoGet.bind(this));
+    },
+
+    previewImageInfoGet : function(result) {
+        this.$('Image').setImage(
+            result.url,
+            result.size.width,
+            result.size.height
+        );
+    },
+
+    starSelected : function(sender, position) {
+        this.$('ImageX').setValue(position.x);
+        this.$('ImageY').setValue(position.y);
+    },
+
+    autofocusClicked : function () {
+        
     }
+
 });

@@ -1,0 +1,13 @@
+.autofocus__settings {
+    width: 50%;
+    height: calc( 100vh - 130px );
+    float: left;
+    padding: 0 20px;
+}
+
+.autofocus__image-preview {
+    width: 50%;
+    height: calc( 100vh - 130px );
+    float: right;
+    cursor: default;
+}
