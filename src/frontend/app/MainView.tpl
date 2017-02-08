@@ -10,6 +10,8 @@
 	<com:PlaceListView />
 	<com:PlaceEditView />
 	-->
+
+	<com:AutofocusView />
 </div>
 
 <footer class="main-footer">

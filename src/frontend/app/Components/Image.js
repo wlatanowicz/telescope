@@ -3,20 +3,20 @@
 
 klass( 'Image', TPanel, [TEventResponderMixin], {
 	
-	_triggersEvents : ['Change'],
+	_triggersEvents : ['Select'],
 	
 	_map : null,
-	
-	_maxZoom : 19,
-	
+	_marker : null,
+
+	_width : null,
+	_height : null,
+	_bounds : null,
+	_layer : null,
+
 	getPublicProperties : function(){
 		var a = this.base();
 		a.push(
-				{ name:'Location', type:'object', default: { Latitude: 0, Longitude: 0 } },
-				{ name:'Center', type:'object', default: { Latitude: 0, Longitude: 0 } },
-				{ name:'Zoom', type:'int', default: 17 },
-				{ name:'Dragable', type:'bool', default: true },
-				{ name:'Zoomable', type:'bool', default: true }
+				{ name:'Selection', type:'object', default: null }
 				);
 		return a;
 	},
@@ -24,52 +24,46 @@ klass( 'Image', TPanel, [TEventResponderMixin], {
 	constructor : function( options ){
 		this.base( options );
 		this._map = null;
-		this._myposition = null;
+		this._marker = null;
+        this._width = null;
+		this._height = null;
+		this._bounds = null;
+		this._layer = null;
 	},
 	
 	createMainElement : function(){
 		var d = this.base();
 		
 		var mymap = L.map( d,{
-//			zoomControl: false,
-//			attributionControl: false,
-			dragging: this.getDragable(),
-			touchZoom: this.getZoomable(),
-			scrollWheelZoom: this.getZoomable(),
+			zoomControl: true,
+			dragging: true,
+			touchZoom: true,
+			scrollWheelZoom: true,
             minZoom: 1,
             maxZoom: 4,
             center: [0, 0],
             zoom: 1,
             crs: L.CRS.Simple
 		});
-		
-		var w = 2000,
-            h = 1500,
-            url = 'http://localhost/newspaper-big.jpg';
 
-        var southWest = mymap.unproject([0, h], mymap.getMaxZoom()-1);
-        var northEast = mymap.unproject([w, 0], mymap.getMaxZoom()-1);
-        var bounds = new L.LatLngBounds(southWest, northEast);
+		mymap.on( 'click', function(e){
 
-
-		mymap.on( 'moveend', function(){
-			var latlon = mymap.getCenter();
-			this._Center = {
-				Latitude: latlon.lat,
-				Longitude: latlon.lng
+			var pixel = {
+                y: Math.round(this._height * e.latlng.lat / (this._bounds.getSouth() - this._bounds.getNorth())),
+				x: Math.round(this._width * e.latlng.lng / (this._bounds.getEast() - this._bounds.getWest()))
 			};
-			this.triggerEvent('Change',{});
-		}.bind(this) );
-		
-		mymap.on( 'zoomend', function(){
-			this._Zoom = mymap.getZoom();
-			this.triggerEvent('Change',{});
-		}.bind(this) );
+
+			var latlon = e.latlng;
+
+			this.setCrosshair(latlon, pixel);
+
+            this._Selection = pixel;
+
+            this.triggerEvent('Select', pixel);
+
+		}.bind(this));
 
 		setTimeout( function(){
-            L.imageOverlay(url, bounds).addTo(mymap);
-
-            mymap.setMaxBounds(bounds);
 			mymap.invalidateSize();
 		}, 200 );
 		
@@ -77,41 +71,42 @@ klass( 'Image', TPanel, [TEventResponderMixin], {
 
 		return d;
 	},
-	
-	setCenter : function( v ){
-		this._Center = v;
-		if ( this._map ){
-			var latlon = this.getCenter();
-			this._map.panTo( [latlon.Latitude, latlon.Longitude] );
-		}
-	},
-	
-	setZoom : function( v ){
-		this._Zoom = v;
-		if ( this._map ){
-			this._map.setZoom( this.getZoom() );
-		}
-	},
-	
-	setLocation : function( v ){
-		this._Location = v;
-		if ( this._myposition ){
-			var latlon = this.getLocation();
-			this._myposition.setLatLng( [latlon.Latitude, latlon.Longitude] );
-		}
-	},
-	
-	getBounds : function(){
-		if ( this._map ){
-			var bounds = this._map.getBounds();
-			return {
-				'North' : bounds.getNorth(),
-				'South' : bounds.getSouth(),
-				'West' : bounds.getWest(),
-				'East' : bounds.getEast()
-			};
-		}
-		return null;
-	}
 
+	setCrosshair : function(latlon, pixel) {
+        var label = pixel.x + " x " + pixel.y;
+
+        if ( this._marker ){
+            this._marker.setLatLng( [latlon.lat, latlon.lng] ).bindPopup(label).openPopup();
+        } else {
+            var crosshair = L.icon({
+                iconUrl: 'assets/crosshair.png',
+
+                iconSize:     [7, 7], // size of the icon
+                iconAnchor:   [4, 4], // point of the icon which will correspond to marker's location
+                popupAnchor:  [0, -3] // point from which the popup should open relative to the iconAnchor
+            });
+
+            this._marker = L.marker( [ latlon.lat, latlon.lng ], {icon: crosshair} ).addTo(this._map).bindPopup(label).openPopup();
+        }
+	},
+
+	setImage : function(url, width, height) {
+
+		this._width = width;
+		this._height = height;
+
+        var southWest = this._map.unproject([0, height], this._map.getMaxZoom()-1);
+
+        var northEast = this._map.unproject([width, 0], this._map.getMaxZoom()-1);
+        this._bounds = new L.LatLngBounds(southWest, northEast);
+
+        if (this._layer) {
+        	this._map.removeLayer(this._layer);
+		}
+
+        this._layer = L.imageOverlay(url, this._bounds);
+        this._layer.addTo(this._map);
+
+        this._map.setMaxBounds(this._bounds);
+	}
 });
