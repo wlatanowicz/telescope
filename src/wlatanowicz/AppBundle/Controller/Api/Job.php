@@ -7,6 +7,7 @@ use JMS\Serializer\Serializer;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use wlatanowicz\AppBundle\Data\RPCResponse;
 use wlatanowicz\AppBundle\Hardware\Helper\FileSystem;
 use wlatanowicz\AppBundle\Helper\JobManager;
 use wlatanowicz\AppBundle\Job\JobProvider;
@@ -65,7 +66,7 @@ class Job
         $result = $job->start($params, $jobId, $sessionId);
 
         $serializedResult = $this->serializer->serialize(
-            $result,
+            RPCResponse::initWithResult($result),
             'json'
         );
 
