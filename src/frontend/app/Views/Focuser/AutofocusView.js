@@ -46,7 +46,17 @@ klass("AutofocusView", TTemplateControl, {
     },
 
     autofocusClicked : function () {
-        
+        this.rpc.autofocus(
+            this.$('CameraName').getValue(),
+            this.$('FocuserName').getValue(),
+            this.$('ExposureTime').getValue(),
+            this.$('MinPosition').getValue(),
+            this.$('MaxPosition').getValue(),
+            this.$('ImageX').getValue(),
+            this.$('ImageY').getValue(),
+            this.$('Radius').getValue(),
+            this.$('Iterations').getValue()
+        );
     }
 
 });

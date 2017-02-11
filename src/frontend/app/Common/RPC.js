@@ -53,14 +53,22 @@ klass('RPC', TObject, {
         );
     },
 
-    autofocus : function(cameraName, focuserName, minPosition, maxPosition, x, y) {
+    autofocus : function(cameraName, focuserName, time, minPosition, maxPosition, x, y, radius, iterations) {
         return this._execute(
             "autofocus",
             {
                 "camera_name": cameraName,
                 "focuser_name": focuserName,
-                "min_position": minPosition,
-                "max_position": maxPosition
+                "measure_name": null,
+                "min": minPosition,
+                "max": maxPosition,
+                "time": time,
+                "x": x,
+                "y": y,
+                "radius": radius,
+                "iterations": iterations,
+                "partials": 5,
+                "tries": [1]
             }
         );
     }
