@@ -3,70 +3,85 @@ declare(strict_types = 1);
 
 namespace wlatanowicz\AppBundle\Job\Params;
 
+use JMS\Serializer\Annotation\Type;
+
 class AutofocusParams implements JobParamsInterface
 {
     /**
      * @var string|null
+     * @Type("string")
      */
     private $cameraName;
 
     /**
      * @var string|null
+     * @Type("string")
      */
     private $focuserName;
 
     /**
      * @var string|null
+     * @Type("string")
      */
     private $measureName;
 
     /**
      * @var int
+     * @Type("int")
      */
     private $min;
 
     /**
      * @var int
+     * @Type("int")
      */
     private $max;
 
     /**
      * @var int
+     * @Type("int")
      */
     private $time;
 
     /**
      * @var int
+     * @Type("int")
      */
     private $partials;
 
     /**
      * @var int
+     * @Type("int")
      */
     private $iterations;
 
     /**
      * @var int[]
+     * @Type("array<int>")
      */
     private $tries;
 
     /**
      * @var int
+     * @Type("int")
      */
     private $radius;
 
     /**
      * @var int|null
+     * @Type("int")
      */
     private $x;
 
     /**
      * @var int|null
+     * @Type("int")
      */
     private $y;
 
     /**
      * @var string|null
+     * @Type("string")
      */
     private $reportFile;
 

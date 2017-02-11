@@ -117,14 +117,15 @@ class Autofocus extends AbstractJob
 
         $focuser->setPosition($result->getMaximum()->getPosition());
 
-        if ($params->hasReportFile()) {
-            $reporter = new AutoFocusReport();
-            $report = $reporter->generateReport($result);
-            $this->fileSystem->filePutContents(
-                $this->jobManager->getCurrentJobResultDirPath() . '/' . $params->getReportFile(),
-                $report->getImageBlob()
-            );
-        }
+        $reportfilename = $params->hasReportFile()
+            ? $params->getReportFile()
+            : "af-report-" . date('Y-m-d-H-i-s') . ".jpeg";
 
+        $reporter = new AutoFocusReport();
+        $report = $reporter->generateReport($result);
+        $this->fileSystem->filePutContents(
+            $this->jobManager->getCurrentJobResultDirPath() . '/' . $reportfilename,
+            $report->getImageBlob()
+        );
     }
 }
