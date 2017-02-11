@@ -23,5 +23,11 @@
         <allow-intent href="itms:*" />
         <allow-intent href="itms-apps:*" />
     </platform>
-    <preference name="OverrideUserAgent" value="x" />
+    <preference name="OverrideUserAgent" value="FocuserRemote" />
+	<preference name="DisallowOverscroll" value="true"/>
+    <config-file platform="ios" target="*-Info.plist" parent="UISupportedInterfaceOrientations">
+        <array>
+            <string>UIInterfaceOrientationPortrait</string>          
+        </array>
+    </config-file>
 </widget>
