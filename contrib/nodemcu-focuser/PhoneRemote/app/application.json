@@ -1,0 +1,13 @@
+{
+	"target" : "www",
+	"mains": [
+		"main.js"
+	],
+	"templates": [
+		"**/*.tpl"
+	],
+	"resources": [
+		"**/*.html",
+		"common_lib"
+  	]
+}
