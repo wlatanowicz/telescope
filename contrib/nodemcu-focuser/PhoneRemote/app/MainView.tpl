@@ -10,17 +10,14 @@
 				 CustomData.Direction="up" />
 
 	<div class="list card">
-		<label class="item item-input item-select">
-			<div class="input-label">
-				Step size
-			</div>
-			<com:TDropDownList Disabled="[%= ! this.Connected %]"
-							   ID="StepSize">
-				<com:TOption Text="1" Value="1" />
-				<com:TOption Text="10" Value="10" />
-				<com:TOption Text="100" Value="100" />
-				<com:TOption Text="1000" Value="1000" />
-			</com:TDropDownList>
+		<label class="item range">
+			<i class="icon ion-speedometer"></i>
+			<com:TTextBox Disabled="[%= ! this.Connected %]"
+						  ID="StepSize"
+						  Type="range"
+						  Attributes.min="1"
+						  Attributes.max="1000"
+						  />
 		</label>
 		<com:TPlaceHolder ID="Position">
 			<a class="item" href="#">
