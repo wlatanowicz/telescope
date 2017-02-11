@@ -173,8 +173,17 @@ function processRequest(client, request)
         if (body.targetPosition == nil) then
             error("body.targetPosition has to be number")
         end
-        startPosition = position;
-        targetPosition = signedtonumber(body.targetPosition, 10);
+        local newTargetPosition = signedtonumber(body.targetPosition, 10);
+
+        if ( not (
+            (targetPosition > position and newTargetPosition > position)
+            or
+            (targetPosition < position and newTargetPosition < position)
+            ) ) then
+            startPosition = position;
+        end
+
+        targetPosition = newTargetPosition;
     end
 
     if (method == "PATCH")then
@@ -193,6 +202,7 @@ function processRequest(client, request)
     local response = cjson.encode({
                              position = position,
                              target = targetPosition,
+                             start = startPosition,
                              result = "OK"
                          });
 
