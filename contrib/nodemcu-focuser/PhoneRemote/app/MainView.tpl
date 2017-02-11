@@ -3,12 +3,6 @@
 </div>
 <div class="content has-header has-footer padding">
 
-	<com:TButton Disabled="[%= ! this.Connected %]"
-				 CssClass="button button-block button-positive icon-left ion-arrow-up-a"
-				 on:Click=".buttonClicked"
-				 Text="Up"
-				 CustomData.Direction="up" />
-
 	<div class="list card">
 		<label class="item range">
 			<i class="icon ion-speedometer"></i>
@@ -36,10 +30,16 @@
 	</div>
 
 	<com:TButton Disabled="[%= ! this.Connected %]"
-				 CssClass="button button-block button-positive icon-left ion-arrow-down-a"
+				 CssClass="button button-block button-positive icon-left ion-arrow-down-a position-button"
 				 on:Click=".buttonClicked"
 				 Text="Down"
 				 CustomData.Direction="down" />
+
+	<com:TButton Disabled="[%= ! this.Connected %]"
+				 CssClass="button button-block button-positive icon-left ion-arrow-up-a position-button"
+				 on:Click=".buttonClicked"
+				 Text="Up"
+				 CustomData.Direction="up" />
 
 </div>
 <div class="bar bar-footer bar-light">

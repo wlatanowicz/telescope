@@ -1,0 +1,6 @@
+button.position-button {
+    display: inline-block;
+    height: 200px;
+    margin: 10px;
+    width: calc(50% - 20px);
+}
