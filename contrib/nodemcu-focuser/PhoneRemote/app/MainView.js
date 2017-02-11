@@ -25,8 +25,11 @@ klass( 'MainView', TTemplateControl, {
 
 		step = this.$('StepSize').getValue();
 
+        this.TargetPosition = this.TargetPosition + (sign * step);
+        this.$('Position').render();
+
         node.post("",{},{
-        	"targetPosition": this.TargetPosition + (sign * step)
+        	"targetPosition": this.TargetPosition
 		})
 			.done(function(result){
 				this.updateStatus(result);
@@ -34,7 +37,7 @@ klass( 'MainView', TTemplateControl, {
 	},
 
     refreshFocuserStatus : function() {
-		var interval = 500;
+		var interval = 1000;
 		var node = new NodeClient({
 				"BaseUrl" : "http://" + this.IP
 			});
@@ -48,9 +51,8 @@ klass( 'MainView', TTemplateControl, {
 				);
 			}.bind(this))
 			.error(function() {
-				console.log('error');
-				if (! this.Connected){
-	               this.Connected = true;
+				if (this.Connected){
+	               this.Connected = false;
 	               this.render();
                 }
 
@@ -71,7 +73,10 @@ klass( 'MainView', TTemplateControl, {
             || result.target != this.TargetPosition) {
 
             this.Position = result.position;
-            this.TargetPosition = result.target;
+
+            if (this._TargetPosition === null) {
+                this.TargetPosition = result.target;
+            }
 
             this.$('Position').render();
         }
