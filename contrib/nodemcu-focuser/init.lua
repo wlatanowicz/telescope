@@ -160,7 +160,7 @@ function processRequest(client, request)
     local get = {}
     if (vars ~= nil)then
         for k, v in string.gmatch(vars, "(%w+)=([-%w]+)&*") do
-            _GET[k] = v
+            get[k] = v
         end
     end
 
@@ -170,10 +170,18 @@ function processRequest(client, request)
     print( "GET: " .. cjson.encode(get) )
 
     if (method == "POST")then
-        if (body.targetPosition == nil) then
+        if (body.targetPosition == nil and get.targetPosition == nil) then
             error("body.targetPosition has to be number")
         end
-        local newTargetPosition = signedtonumber(body.targetPosition, 10);
+
+        local newTargetPosition = 0;
+
+        if (get.targetPosition == nil)
+        then
+            newTargetPosition = signedtonumber(body.targetPosition, 10);
+        else
+            newTargetPosition = signedtonumber(get.targetPosition, 10);
+        end
 
         if ( not (
             (targetPosition > position and newTargetPosition > position)
