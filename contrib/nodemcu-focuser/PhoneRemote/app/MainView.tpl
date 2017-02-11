@@ -11,6 +11,7 @@
 						  Type="range"
 						  Attributes.min="1"
 						  Attributes.max="1000"
+						  Text="100"
 						  />
 		</label>
 		<com:TPlaceHolder ID="Position">
@@ -27,6 +28,17 @@
 				</span>
 			</a>
 		</com:TPlaceHolder>
+		<label class="item range">
+			<i class="icon ion-arrow-down-a"></i>
+			<com:TTextBox Disabled="[%= ! this.Connected %]"
+						  on:Change=".sliderMoved"
+						  ID="PositionSlider"
+						  Type="range"
+						  Attributes.min="[%= this.Min %]"
+						  Attributes.max="[%= this.Max %]"
+			/>
+			<i class="icon ion-arrow-up-a"></i>
+		</label>
 	</div>
 
 	<com:TButton Disabled="[%= ! this.Connected %]"
