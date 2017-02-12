@@ -18,7 +18,11 @@ class FileSystem
 
     public function fileGetContents(string $path): string
     {
-        return file_get_contents($path);
+        $result = file_get_contents($path);
+        if ($result === false){
+            throw new \Exception("Cannot read file");
+        }
+        return $result;
     }
 
     public function tempName(string $temp): string
