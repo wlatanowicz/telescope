@@ -16,7 +16,7 @@ pin3 = 2;
 pin4 = 3;
 
 --set -1 for reverse direction
-inverter = -1;
+inverter = 1;
 
 -- num of powered cycles before rotating shaft
 motorWarmUp = 5;
@@ -26,7 +26,7 @@ idleDelay = 500;
 runDelay = 105;
 
 -- this value is substracted from runDelay
-maxSpeed = 100;
+maxSpeed = 96;
 
 -- maxSpeed is reached after this many cycles
 flatOutDistance = 20;
@@ -172,6 +172,11 @@ function processRequest(client, request)
     if (method == "POST")then
         if (body.targetPosition == nil and get.targetPosition == nil) then
             error("body.targetPosition has to be number")
+        end
+
+        if (get.maxSpeed ~= nil)
+        then
+            maxSpeed = signedtonumber(get.maxSpeed, 10);
         end
 
         local newTargetPosition = 0;
