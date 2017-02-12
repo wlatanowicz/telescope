@@ -1,21 +1,6 @@
 {
-	"dependencies" : {
-		"gulp" : "*",
-		"require-dir" : "*",
-		
-		"tsc" : "*",
-		"libxmljs" : "*",
-		"glob" : "*",
-		"minimist" : "*",
-		"md5" : "*",
-		"mkdirp" : "*",
-		"fs-extra" : "*",
-		"uglify-js" : "*",
-		"ndoc" : "*",
-
-		"admin-lte": "*",
-		"leaflet": "*",
-		"font-awesome": "*",
-		"ionicons": "*"
+	"private": true,
+	"dependencies":{
+		"tomek.js" : "wlatanowicz/tomek.js"
 	}
 }
