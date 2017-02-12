@@ -1,6 +1,10 @@
 {
-	"private": true,
-	"dependencies":{
-		"tomek.js" : "wlatanowicz/tomek.js"
-	}
+  "private": true,
+  "dependencies": {
+    "admin-lte": "2.3.11",
+    "font-awesome": "4.7.0",
+    "ionicons": "3.0.0",
+    "leaflet": "1.0.3",
+    "tomek.js": "github:wlatanowicz/tomek.js"
+  }
 }
