@@ -6,7 +6,8 @@ klass( 'MainView', TTemplateControl, {
 	getPublicProperties : function() {
 		var arr = this.base();
         arr.push({name: "Min", type: "int", default: 0});
-        arr.push({name: "Max", type: "int", default: 10000});
+        arr.push({name: "Max", type: "int", default: 15000});
+        arr.push({name: "MaxSpeed", type: "int", default: 100});
         arr.push({name: "Connected", type: "bool", default: false});
         arr.push({name: "Position", type: "int", default: null});
         arr.push({name: "TargetPosition", type: "int", default: null});
@@ -44,7 +45,8 @@ klass( 'MainView', TTemplateControl, {
             "BaseUrl" : "http://" + this.IP
         });
         node.post("",{},{
-            "targetPosition": this.TargetPosition
+            "targetPosition": this.TargetPosition,
+            "maxSpeed" : this.MaxSpeed
         })
             .done(function(result){
                 this.updateStatus(result);
