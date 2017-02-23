@@ -19,16 +19,6 @@ class ImagickImage
         $this->imagick = $imagick;
     }
 
-    public static function fromBinaryImage(BinaryImage $binaryImage): self
-    {
-        $imagick = new \Imagick();
-        $imagick->readImageBlob(
-            $binaryImage->getData()
-        );
-        return new self($imagick);
-    }
-
-
     public function getWidth(): int
     {
         return $this->imagick->getImageWidth();
@@ -82,12 +72,61 @@ class ImagickImage
         return $this->imagick;
     }
 
-    function __clone()
+    public function __clone()
     {
         return new self(
             clone $this->imagick
         );
     }
 
+    public static function fromBinaryImage(BinaryImage $binaryImage): self
+    {
+        $imagick = new \Imagick();
+        $imagick->readImageBlob(
+            $binaryImage->getData()
+        );
+        return new self($imagick);
+    }
 
+    public static function fromRGBMatrix(RGBMatrix $matrix, \ImagickPixel $background = null): self
+    {
+        $background = $background ?? new \ImagickPixel('rgba(0,0,0,0)');
+        $width = $matrix->getWidth();
+        $height = $matrix->getHeight();
+
+        $imagick = new \Imagick();
+        $imagick->newImage(
+            $width,
+            $height,
+            $background
+        );
+        $imagick->setImageFormat('png');
+
+        $draw = new \ImagickDraw();
+
+        $range = new Range(0, 255);
+
+        for ($x = 0; $x < $width; $x++) {
+            for ($y = 0; $y < $height; $y++) {
+                if ($matrix->hasPoint($x, $y)) {
+                    $point = $matrix->getPoint($x, $y);
+                    $color = new \ImagickPixel(
+                        sprintf(
+                            "rgba(%d,%d,%d,%d)",
+                            $point->getR()->inRange($range)->getValue(),
+                            $point->getG()->inRange($range)->getValue(),
+                            $point->getB()->inRange($range)->getValue(),
+                            1
+                        )
+                    );
+                    $draw->setFillColor($color);
+                    $draw->point($x, $y);
+                }
+            }
+        }
+
+        $imagick->drawImage($draw);
+
+        return new self($imagick);
+    }
 }

@@ -23,11 +23,17 @@ class RadioReceiver
      */
     private $process;
 
-    public function __construct(Process $process, string $bin, int $receiverId)
+    /**
+     * @var int
+     */
+    private $gain;
+
+    public function __construct(Process $process, string $bin, int $receiverId, int $gain = 0)
     {
         $this->process = $process;
         $this->bin = $bin;
         $this->receiverId = $receiverId;
+        $this->gain = $gain;
     }
 
     public function getPowerSpectrum(
@@ -36,7 +42,8 @@ class RadioReceiver
         string $binSize,
         int $integrationTime
     ) : array {
-        $cmd = "{$this->bin} -f {$minFreq}:{$maxFreq}:{$binSize} -i {$integrationTime} -1";
+        $cmd = "{$this->bin} -f {$minFreq}:{$maxFreq}:{$binSize} -i {$integrationTime} -g {$this->gain} -1 2> /dev/null";
+        echo "$cmd\n";
         return $this->process->exec($cmd);
     }
 }
