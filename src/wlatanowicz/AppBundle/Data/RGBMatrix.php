@@ -40,32 +40,12 @@ class RGBMatrix
         return $this->points[$x][$y];
     }
 
-    private function setPoint(int $x, int $y, RGB $rgb)
+    public function setPoint(int $x, int $y, RGB $rgb)
     {
         if (! isset($this->points[$x])) {
             $this->points[$x] = [];
         }
 
         $this->points[$x][$y] = $rgb;
-    }
-
-    public static function fromSpectrumMatrix(SpectrumMatrix $matrix): self
-    {
-        $pixels = new RGBMatrix();
-        for ($x=0; $x < $matrix->getWidth(); $x++) {
-            for ($y=0; $y < $matrix->getHeight(); $y++) {
-                $pixels->setPoint(
-                    $x,
-                    $y,
-                    RGB::fromSpectrum(
-                        $matrix->getSpectrum(
-                            $x,
-                            $y
-                        )
-                    )
-                );
-            }
-        }
-        return $pixels;
     }
 }

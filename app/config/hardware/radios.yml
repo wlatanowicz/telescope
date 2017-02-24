@@ -4,6 +4,7 @@ services:
     class: wlatanowicz\AppBundle\Hardware\Local\Radio
     arguments:
       - '@radio-local-receiver'
+      - '@factory-spectrum'
 
   radio-local-receiver:
     class: wlatanowicz\AppBundle\Hardware\Local\RadioReceiver

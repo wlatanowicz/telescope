@@ -31,6 +31,7 @@ services:
     arguments:
       - '@focuser-sim'
       - '@sys-filesystem'
+      - '@factory-imagick-image'
       - 'star.jpg'
       - '@logger'
     tags:

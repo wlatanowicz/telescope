@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace wlatanowicz\AppBundle\Hardware\Local;
 
 use wlatanowicz\AppBundle\Data\Spectrum;
+use wlatanowicz\AppBundle\Factory\SpectrumFactory;
 use wlatanowicz\AppBundle\Hardware\RadioInterface;
 
 class Radio implements RadioInterface
@@ -14,13 +15,21 @@ class Radio implements RadioInterface
     private $radioReceiver;
 
     /**
+     * @var SpectrumFactory
+     */
+    private $spectrumFactory;
+
+    /**
      * Radio constructor.
      * @param RadioReceiver $radioReceiver
+     * @param SpectrumFactory $spectrumFactory
      */
-    public function __construct(RadioReceiver $radioReceiver)
+    public function __construct(RadioReceiver $radioReceiver, SpectrumFactory $spectrumFactory)
     {
         $this->radioReceiver = $radioReceiver;
+        $this->spectrumFactory = $spectrumFactory;
     }
+
 
     public function getSpectrum(
         string $minFreq,
@@ -35,6 +44,6 @@ class Radio implements RadioInterface
             $binSize,
             $integrationTime
         );
-        return Spectrum::fromReceiverOutput($dataArray);
+        return $this->spectrumFactory->fromReceiverOutput($dataArray);
     }
 }

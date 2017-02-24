@@ -6,6 +6,7 @@ namespace wlatanowicz\AppBundle\Hardware\Simulator;
 use Psr\Log\LoggerInterface;
 use wlatanowicz\AppBundle\Data\BinaryImage;
 use wlatanowicz\AppBundle\Data\ImagickImage;
+use wlatanowicz\AppBundle\Factory\ImagickImageFactory;
 use wlatanowicz\AppBundle\Hardware\CameraInterface;
 use wlatanowicz\AppBundle\Hardware\FocuserInterface;
 use wlatanowicz\AppBundle\Hardware\Helper\FileSystem;
@@ -23,6 +24,11 @@ class Camera implements CameraInterface
      * @var FileSystem
      */
     private $fileSystem;
+
+    /**
+     * @var ImagickImageFactory
+     */
+    private $imagickImageFactory;
 
     /**
      * @var string
@@ -58,11 +64,14 @@ class Camera implements CameraInterface
     public function __construct(
         FocuserInterface $focuser,
         FileSystem $fileSystem,
+        ImagickImageFactory $imagickImageFactory,
         string $imageName,
         LoggerInterface $logger
     ) {
         $this->focuser = $focuser;
         $this->fileSystem = $fileSystem;
+        $this->imagickImageFactory = $imagickImageFactory;
+
         $this->imageName = $imageName;
 
         $this->logger = $logger;
@@ -85,7 +94,7 @@ class Camera implements CameraInterface
 
         $image = $this->getImage();
 
-        $imagickImage = ImagickImage::fromBinaryImage($image);
+        $imagickImage = $this->imagickImageFactory->fromBinaryImage($image);
 
         $this->blurImage($imagickImage);
 

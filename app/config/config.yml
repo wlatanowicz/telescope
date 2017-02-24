@@ -1,6 +1,7 @@
 imports:
     - { resource: parameters.yml }
     - { resource: services.yml }
+    - { resource: factories.yml }
     - { resource: routines.yml }
     - { resource: commands.yml }
     - { resource: controllers/api.yml }

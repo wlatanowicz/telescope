@@ -5,6 +5,7 @@ namespace Unit\wlatanowicz\AppBundle\Routine\Measure;
 
 use wlatanowicz\AppBundle\Data\BinaryImage;
 use wlatanowicz\AppBundle\Data\ImagickImage;
+use wlatanowicz\AppBundle\Factory\ImagickImageFactory;
 use wlatanowicz\AppBundle\Routine\Measure\Exception\CannotMeasureException;
 use wlatanowicz\AppBundle\Routine\Measure\StarFWHM as StarFWHM;
 
@@ -27,7 +28,8 @@ class StarFWHMTest extends \PHPUnit_Framework_TestCase
 
         $binData = file_get_contents(__DIR__ . "/../Resources/" . $filename);
         $binImage = new BinaryImage($binData);
-        $imagickImage = ImagickImage::fromBinaryImage($binImage);
+        $factory = new ImagickImageFactory();
+        $imagickImage = $factory->fromBinaryImage($binImage);
 
         $result = $starFWHM->measure($imagickImage);
         $expected = sqrt($pixelCount / M_PI);
@@ -82,7 +84,8 @@ class StarFWHMTest extends \PHPUnit_Framework_TestCase
 
         $binData = file_get_contents(__DIR__ . "/../Resources/" . $filename);
         $binImage = new BinaryImage($binData);
-        $imagickImage = ImagickImage::fromBinaryImage($binImage);
+        $factory = new ImagickImageFactory();
+        $imagickImage = $factory->fromBinaryImage($binImage);
 
         $this->expectException($exception);
         $starFWHM->measure($imagickImage);

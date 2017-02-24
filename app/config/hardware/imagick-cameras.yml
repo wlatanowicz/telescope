@@ -4,16 +4,19 @@ services:
     class: wlatanowicz\AppBundle\Hardware\Wrapper\ImagickCamera
     arguments:
       - '@camera-local'
+      - '@factory-imagick-image'
 
   imagick-camera-remote:
     class: wlatanowicz\AppBundle\Hardware\Wrapper\ImagickCamera
     arguments:
       - '@camera-remote'
+      - '@factory-imagick-image'
 
   imagick-camera-sim:
     class: wlatanowicz\AppBundle\Hardware\Wrapper\ImagickCamera
     arguments:
       - '@camera-sim'
+      - '@factory-imagick-image'
 
   imagick-cropped-local:
     class: wlatanowicz\AppBundle\Hardware\Wrapper\ImagickCircleCroppingCamera

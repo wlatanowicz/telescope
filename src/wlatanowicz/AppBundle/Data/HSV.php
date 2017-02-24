@@ -56,18 +56,4 @@ class HSV
     {
         return $this->v;
     }
-
-    public static function fromSpectrumPoint(SpectrumPoint $spectrumPoint, Range $frequencyRange, Range $powerRange): self
-    {
-        $targetRange = new Range(0, 280);
-        $frequency = new RangedValue($spectrumPoint->getFrequency(), $frequencyRange);
-
-        $hValue = $frequency->inRange($targetRange)->getValue();
-
-        $h = new RangedValue($hValue, Range::DEGREE());
-        $s = RangedValue::ONE();
-        $v = new RangedValue($spectrumPoint->getPower(), $powerRange);
-
-        return new self($h, $s, $v );
-    }
 }

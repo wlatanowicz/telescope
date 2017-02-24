@@ -1,0 +1,22 @@
+services:
+  factory-hsv:
+    class: wlatanowicz\AppBundle\Factory\HSVFactory
+
+  factory-rgb:
+    class: wlatanowicz\AppBundle\Factory\RGBFactory
+    arguments:
+      - '@factory-hsv'
+      - 5
+
+  factory-imagick-image:
+    class: wlatanowicz\AppBundle\Factory\ImagickImageFactory
+    arguments:
+      - '@factory-rgb-matrix'
+
+  factory-rgb-matrix:
+    class: wlatanowicz\AppBundle\Factory\RGBMatrixFactory
+    arguments:
+      - '@factory-rgb'
+
+  factory-spectrum:
+    class: wlatanowicz\AppBundle\Factory\SpectrumFactory
