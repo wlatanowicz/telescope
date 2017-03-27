@@ -7,7 +7,6 @@ use JMS\Serializer\SerializerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use wlatanowicz\AppBundle\Data\Binary64Image;
 use wlatanowicz\AppBundle\Hardware\Provider\CameraProvider;
 
 class Image
