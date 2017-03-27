@@ -49,9 +49,3 @@ services:
     tags:
         - { name: console.command }
 
-  command-radio-scan:
-    class: wlatanowicz\AppBundle\Command\Radio\ScanCommand
-    arguments:
-      - '@radio-provider'
-    tags:
-        - { name: console.command }
