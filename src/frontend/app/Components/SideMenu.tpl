@@ -11,10 +11,10 @@
 				</a>
 				<ul class="treeview-menu menu-open" style="display: block;">
 					<li>
-						<a href="index.html"><i class="fa fa-circle-o"></i> Manual</a>
+						<a href="#"><i class="fa fa-circle-o"></i> Manual</a>
 					</li>
 					<li>
-						<a href="index.html"><i class="fa fa-circle-o"></i> Autofocus</a>
+						<a href="#/autofocus/step-one"><i class="fa fa-circle-o"></i> Autofocus</a>
 					</li>
 				</ul>
 			</li>

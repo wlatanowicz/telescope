@@ -1,39 +1,39 @@
-//= require TPanel
-//= require TEventResponder
+import TPanel from "@framework/WebControls/TPanel";
+import TEventResponderInterface from "@framework/TEventResponderInterface";
+import TEventResponder from "@framework/TEventResponder";
 
-klass( 'Image', TPanel, [TEventResponderMixin], {
-	
-	_triggersEvents : ['Select'],
-	
-	_map : null,
-	_marker : null,
+export default class Image extends TPanel implements TEventResponderInterface
+{
 
-	_width : null,
-	_height : null,
-	_bounds : null,
-	_layer : null,
+    private _event = null;
 
-	getPublicProperties : function(){
-		var a = this.base();
-		a.push(
-				{ name:'Selection', type:'object', default: null }
-				);
-		return a;
-	},
-	
-	constructor : function( options ){
-		this.base( options );
-		this._map = null;
-		this._marker = null;
-        this._width = null;
-		this._height = null;
-		this._bounds = null;
-		this._layer = null;
-	},
-	
-	createMainElement : function(){
-		var d = this.base();
-		
+    get event():TEventResponder
+    {
+        if (this._event === null) {
+            this._event = new TEventResponder(this, ['Select']);
+        }
+        return this._event;
+    }
+
+	_map = null;
+	_marker = null;
+
+	_width = null;
+	_height = null;
+	_bounds = null;
+	_layer = null;
+
+    protected _Selection;
+
+    get Selection()
+    {
+        return this._Selection;
+    }
+
+	createMainElement()
+    {
+		var d = super.createMainElement();
+
 		var mymap = L.map( d,{
 			zoomControl: true,
 			dragging: true,
@@ -62,7 +62,7 @@ klass( 'Image', TPanel, [TEventResponderMixin], {
 
                 this.setCrosshair(latlon, pixel);
                 this._Selection = pixel;
-                this.triggerEvent('Select', pixel);
+                this.event.trigger('Select', pixel);
 
             } else {
             	if (this._marker) {
@@ -76,13 +76,14 @@ klass( 'Image', TPanel, [TEventResponderMixin], {
 		setTimeout( function(){
 			mymap.invalidateSize();
 		}, 200 );
-		
+
 		this._map = mymap;
 
 		return d;
-	},
+	}
 
-	setCrosshair : function(latlon, pixel) {
+	setCrosshair(latlon, pixel)
+    {
 		var label = pixel.x + " x " + pixel.y;
 
 		if (this._marker) {
@@ -98,10 +99,10 @@ klass( 'Image', TPanel, [TEventResponderMixin], {
 
 			this._marker = L.marker([latlon.lat, latlon.lng], {icon: crosshair}).addTo(this._map).bindPopup(label).openPopup();
 		}
-	},
+	}
 
-	setImage : function(url, width, height) {
-
+	setImage(url, width, height)
+    {
 		this._width = width;
 		this._height = height;
 
@@ -119,4 +120,4 @@ klass( 'Image', TPanel, [TEventResponderMixin], {
 
         this._map.setMaxBounds(this._bounds);
 	}
-});
+}

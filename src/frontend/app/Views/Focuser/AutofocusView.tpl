@@ -5,28 +5,28 @@
         <div class="form-horizontal">
             <div class="box-body">
                 <div class="form-group">
-                    <com:TLabel For="FocuserName">
+                    <com:TLabel ForControl="FocuserName">
                         Focuser name:
                     </com:TLabel>
                     <com:TTextBox ID="FocuserName" Value="sim" />
                 </div>
 
                 <div class="form-group">
-                    <com:TLabel For="CameraName">
+                    <com:TLabel ForControl="CameraName">
                         Camera name:
                     </com:TLabel>
                     <com:TTextBox ID="CameraName" Value="sim" />
                 </div>
 
                 <div class="form-group">
-                    <com:TLabel For="InitialPosition">
+                    <com:TLabel ForControl="InitialPosition">
                         Initial focuser position:
                     </com:TLabel>
                     <com:TTextBox ID="InitialPosition" Value="3000" />
                 </div>
 
                 <div class="form-group">
-                    <com:TLabel For="ExposureTime">
+                    <com:TLabel ForControl="ExposureTime">
                         Exposure time:
                     </com:TLabel>
                     <com:TTextBox ID="ExposureTime" Value="3" />
@@ -39,7 +39,7 @@
 
             <div class="box-body">
                 <div class="form-group">
-                    <com:TLabel For="MinPosition">
+                    <com:TLabel ForControl="MinPosition">
                         Star position:
                     </com:TLabel>
                     <com:TTextBox ID="ImageX" Value="" />
@@ -48,28 +48,28 @@
                 </div>
 
                 <div class="form-group">
-                    <com:TLabel For="MinPosition">
+                    <com:TLabel ForControl="MinPosition">
                         Measure area radius:
                     </com:TLabel>
                     <com:TTextBox ID="Radius" Value="40" />
                 </div>
 
                 <div class="form-group">
-                    <com:TLabel For="MinPosition">
+                    <com:TLabel ForControl="MinPosition">
                         Min focuser position:
                     </com:TLabel>
                     <com:TTextBox ID="MinPosition" Value="3000" />
                 </div>
 
                 <div class="form-group">
-                    <com:TLabel For="MaxPosition">
+                    <com:TLabel ForControl="MaxPosition">
                         Max focuser position:
                     </com:TLabel>
                     <com:TTextBox ID="MaxPosition" Value="4000" />
                 </div>
 
                 <div class="form-group">
-                    <com:TLabel For="Iterations">
+                    <com:TLabel ForControl="Iterations">
                         Iterations:
                     </com:TLabel>
                     <com:TTextBox ID="Iterations" Value="5" />

@@ -1,0 +1,16 @@
+{
+  "compilerOptions" : {
+    "module": "commonjs",
+    "removeComments": true,
+    "target": "es5",
+    "baseUrl": ".",
+    "paths": {
+      "@framework/*": [
+        "./node_modules/tomek.js/framework/*"
+      ],
+      "@app/*": [
+        "./app/*"
+      ]
+    }
+  }
+}

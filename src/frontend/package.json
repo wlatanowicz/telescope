@@ -5,6 +5,7 @@
     "font-awesome": "4.7.0",
     "ionicons": "3.0.0",
     "leaflet": "1.0.3",
-    "tomek.js": "github:wlatanowicz/tomek.js"
+    "@types/leaflet": "*",
+    "tomek.js": "git+ssh://git@git.flux.pl:wlatanowicz/tomekjs.git#tomek-ts"
   }
 }

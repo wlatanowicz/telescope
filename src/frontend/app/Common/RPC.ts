@@ -1,19 +1,18 @@
-//= require TObject
-//= require THttp
-//= require RPCPromise
+import THttp from "@framework/Data/THttp";
+import RPCPromise from "@app/Common/RPCPromise";
 
-klass('RPC', TObject, {
+export default class RPC
+{
+    _http = null;
 
-    _http : null,
-
-    constructor : function () {
-        this.base();
-
+    constructor()
+    {
         this._http = new THttp();
-        this._http.setBaseUrl("http://localhost/radio-telescope/index.php");
-    },
+        this._http.BaseUrl = "http://localhost/radio-telescope/index.php";
+    }
 
-    _execute : function(method, params) {
+    _execute(method, params)
+    {
         var promise = new RPCPromise();
 
         this._http.post('/api/job#' + method, {
@@ -25,15 +24,17 @@ klass('RPC', TObject, {
         });
 
         return promise;
-    },
+    }
 
-    getInfo : function(sessionId, resultFile) {
+    getInfo(sessionId, resultFile)
+    {
         return this._http.get(
             "/api/job/" + sessionId + "/results/" + resultFile + "/info"
         );
-    },
+    }
 
-    cameraExpose : function(name, time) {
+    cameraExpose(name, time)
+    {
         return this._execute(
             "camera.expose",
             {
@@ -41,9 +42,10 @@ klass('RPC', TObject, {
                 "time": time
             }
         );
-    },
+    }
 
-    focuserSetPosition : function(name, position) {
+    focuserSetPosition(name, position)
+    {
         return this._execute(
             "focuser.set-position",
             {
@@ -51,9 +53,10 @@ klass('RPC', TObject, {
                 "position": position
             }
         );
-    },
+    }
 
-    autofocus : function(cameraName, focuserName, time, minPosition, maxPosition, x, y, radius, iterations) {
+    autofocus(cameraName, focuserName, time, minPosition, maxPosition, x, y, radius, iterations)
+    {
         return this._execute(
             "autofocus",
             {
@@ -72,5 +75,4 @@ klass('RPC', TObject, {
             }
         );
     }
-
-});
+}
