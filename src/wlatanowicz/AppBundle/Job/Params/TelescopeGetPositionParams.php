@@ -4,11 +4,13 @@ declare(strict_types = 1);
 namespace wlatanowicz\AppBundle\Job\Params;
 
 use wlatanowicz\AppBundle\Data\Coordinates;
+use JMS\Serializer\Annotation\Type;
 
 class TelescopeGetPositionParams implements JobParamsInterface
 {
     /**
      * @var string|null
+     * @Type("string")
      */
     private $telescopeName;
 

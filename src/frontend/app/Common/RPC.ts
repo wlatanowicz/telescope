@@ -75,4 +75,28 @@ export default class RPC
             }
         );
     }
+
+    telescopeGetPosition(name)
+    {
+        return this._execute(
+            "telescope.get-position",
+            {
+                "telescope_name": name,
+            }
+        );
+    }
+
+    telescopeSetPosition(name, ra, dec)
+    {
+        return this._execute(
+            "telescope.set-position",
+            {
+                "telescope_name": name,
+                "coordinates" : {
+                    "right_ascension": ra,
+                    "declination": dec
+                }
+            }
+        );
+    }
 }

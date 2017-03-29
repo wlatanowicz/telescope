@@ -30,10 +30,10 @@
 						<a href="index.html"><i class="fa fa-circle-o"></i> Position</a>
 					</li>
 					<li>
-						<a href="index.html"><i class="fa fa-circle-o"></i> Calibration</a>
+						<a href="#/position/calibration"><i class="fa fa-circle-o"></i> Calibration</a>
 					</li>
 					<li>
-						<a href="index.html"><i class="fa fa-circle-o"></i> Reposition</a>
+						<a href="#/position/reposition"><i class="fa fa-circle-o"></i> Reposition</a>
 					</li>
 				</ul>
 			</li>

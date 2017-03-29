@@ -12,6 +12,8 @@
 	-->
 
 	<com:AutofocusView />
+	<com:CalibrationView />
+	<com:RepositionView />
 </div>
 
 <footer class="main-footer">

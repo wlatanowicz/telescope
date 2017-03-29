@@ -27,6 +27,9 @@ services:
       - '192.168.0.21'
       - 10001
 
+  telescope-sim:
+    class: wlatanowicz\AppBundle\Hardware\Simulator\Telescope
+
   telescope-remote-client:
     class: GuzzleHttp\Client
     arguments:
@@ -37,6 +40,7 @@ services:
     class: wlatanowicz\AppBundle\Hardware\Provider\TelescopeProvider
     arguments:
       -
+        sim: '@telescope-sim'
         local: '@telescope-local'
         sw: '@telescope-local'
         stellarium: '@telescope-stellarium'
