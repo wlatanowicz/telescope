@@ -1,5 +1,5 @@
-<com:TRouteView Path="/position/reposition">
+<com:RouteView Path="/position/reposition">
 
     Reposition
 
-</com:TRouteView>
+</com:RouteView>

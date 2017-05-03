@@ -1,83 +1,83 @@
 
-<com:TRouteView Path="/autofocus/step-one">
+<com:RouteView Path="/autofocus/step-one">
 
     <div class="autofocus__settings">
         <div class="form-horizontal">
             <div class="box-body">
                 <div class="form-group">
-                    <com:TLabel ForControl="FocuserName">
+                    <com:Label ForControl="FocuserName">
                         Focuser name:
-                    </com:TLabel>
-                    <com:TTextBox ID="FocuserName" Value="sim" />
+                    </com:Label>
+                    <com:TextBox ID="FocuserName" Value="sim" />
                 </div>
 
                 <div class="form-group">
-                    <com:TLabel ForControl="CameraName">
+                    <com:Label ForControl="CameraName">
                         Camera name:
-                    </com:TLabel>
-                    <com:TTextBox ID="CameraName" Value="sim" />
+                    </com:Label>
+                    <com:TextBox ID="CameraName" Value="sim" />
                 </div>
 
                 <div class="form-group">
-                    <com:TLabel ForControl="InitialPosition">
+                    <com:Label ForControl="InitialPosition">
                         Initial focuser position:
-                    </com:TLabel>
-                    <com:TTextBox ID="InitialPosition" Value="3000" />
+                    </com:Label>
+                    <com:TextBox ID="InitialPosition" Value="3000" />
                 </div>
 
                 <div class="form-group">
-                    <com:TLabel ForControl="ExposureTime">
+                    <com:Label ForControl="ExposureTime">
                         Exposure time:
-                    </com:TLabel>
-                    <com:TTextBox ID="ExposureTime" Value="3" />
+                    </com:Label>
+                    <com:TextBox ID="ExposureTime" Value="3" />
                 </div>
             </div>
 
             <div class="box-footer">
-                <com:TButton on:Click=".capturePreviewClicked" Text="Capture Preview" />
+                <com:Button on:Click=".capturePreviewClicked" Text="Capture Preview" />
             </div>
 
             <div class="box-body">
                 <div class="form-group">
-                    <com:TLabel ForControl="MinPosition">
+                    <com:Label ForControl="MinPosition">
                         Star position:
-                    </com:TLabel>
-                    <com:TTextBox ID="ImageX" Value="" />
+                    </com:Label>
+                    <com:TextBox ID="ImageX" Value="" />
                     x
-                    <com:TTextBox ID="ImageY" Value="" />
+                    <com:TextBox ID="ImageY" Value="" />
                 </div>
 
                 <div class="form-group">
-                    <com:TLabel ForControl="MinPosition">
+                    <com:Label ForControl="MinPosition">
                         Measure area radius:
-                    </com:TLabel>
-                    <com:TTextBox ID="Radius" Value="40" />
+                    </com:Label>
+                    <com:TextBox ID="Radius" Value="40" />
                 </div>
 
                 <div class="form-group">
-                    <com:TLabel ForControl="MinPosition">
+                    <com:Label ForControl="MinPosition">
                         Min focuser position:
-                    </com:TLabel>
-                    <com:TTextBox ID="MinPosition" Value="3000" />
+                    </com:Label>
+                    <com:TextBox ID="MinPosition" Value="3000" />
                 </div>
 
                 <div class="form-group">
-                    <com:TLabel ForControl="MaxPosition">
+                    <com:Label ForControl="MaxPosition">
                         Max focuser position:
-                    </com:TLabel>
-                    <com:TTextBox ID="MaxPosition" Value="4000" />
+                    </com:Label>
+                    <com:TextBox ID="MaxPosition" Value="4000" />
                 </div>
 
                 <div class="form-group">
-                    <com:TLabel ForControl="Iterations">
+                    <com:Label ForControl="Iterations">
                         Iterations:
-                    </com:TLabel>
-                    <com:TTextBox ID="Iterations" Value="5" />
+                    </com:Label>
+                    <com:TextBox ID="Iterations" Value="5" />
                 </div>
             </div>
 
             <div class="box-footer">
-                <com:TButton on:Click=".autofocusClicked" Text="Autofocus" />
+                <com:Button on:Click=".autofocusClicked" Text="Autofocus" />
             </div>
 
         </div>
@@ -85,4 +85,4 @@
 
     <com:Image ID="Image" CssClass="autofocus__image-preview" on:Select=".starSelected" />
 
-</com:TRouteView>
+</com:RouteView>

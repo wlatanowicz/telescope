@@ -1,6 +1,6 @@
-import TPromise from "@framework/TPromise";
+import Promise from "@framework/Promise";
 
-export default class RPCPromise extends TPromise
+export default class RPCPromise extends Promise
 {
     done(fn)
     {

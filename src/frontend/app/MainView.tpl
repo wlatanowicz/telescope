@@ -11,8 +11,8 @@
 	<com:PlaceEditView />
 	-->
 
-	<com:AutofocusView />
-	<com:CalibrationView />
+	<srv:view.focuser.autofocus />
+	<srv:view.position.calibration />
 	<com:RepositionView />
 </div>
 

@@ -1,16 +1,16 @@
-import TPanel from "@framework/WebControls/TPanel";
-import TEventResponderInterface from "@framework/TEventResponderInterface";
-import TEventResponder from "@framework/TEventResponder";
+import Panel from "@framework/WebControls/Panel";
+import EventResponderInterface from "@framework/EventResponderInterface";
+import EventResponder from "@framework/EventResponder";
 
-export default class Image extends TPanel implements TEventResponderInterface
+export default class Image extends Panel implements EventResponderInterface
 {
 
     private _event = null;
 
-    get event():TEventResponder
+    get event():EventResponder
     {
         if (this._event === null) {
-            this._event = new TEventResponder(this, ['Select']);
+            this._event = new EventResponder(this, ['Select']);
         }
         return this._event;
     }

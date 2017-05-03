@@ -1,22 +1,25 @@
-import TTemplateControl from "@framework/TTemplateControl";
-import RPC from "@app/Common/RPC";
+import TemplateControl from "@framework/TemplateControl";
 import template from "@app/Views/Focuser/AutofocusView.tpl.ts";
+import Focuser from "@app/Client/Focuser";
+import Camera from "@app/Client/Camera";
 
-export default class AutofocusView extends TTemplateControl
+export default class AutofocusView extends TemplateControl
 {
     template = template;
 
-    rpc = null;
+    focuser: Focuser;
+    camera: Camera;
 
-    constructor()
+    constructor(focuser: Focuser, camera: Camera)
     {
         super();
-        this.rpc = new RPC();
+        this.focuser = focuser;
+        this.camera = camera;
     }
 
     capturePreviewClicked()
     {
-        this.rpc.focuserSetPosition(
+        this.focuser.setPosition(
             this.$('FocuserName').Value,
             this.$('InitialPosition').Value
         ).done(this.previewFocuserSet.bind(this));
@@ -24,7 +27,7 @@ export default class AutofocusView extends TTemplateControl
 
     previewFocuserSet()
     {
-        this.rpc.cameraExpose(
+        this.camera.expose(
             this.$('CameraName').Value,
             this.$('ExposureTime').Value
         ).done(this.previewExposureFinished.bind(this));
@@ -32,7 +35,7 @@ export default class AutofocusView extends TTemplateControl
 
     previewExposureFinished(result)
     {
-        this.rpc.getInfo(
+        this.camera.getInfo(
             result.session_id,
             result.result
         ).done(this.previewImageInfoGet.bind(this));
@@ -55,7 +58,7 @@ export default class AutofocusView extends TTemplateControl
 
     autofocusClicked()
     {
-        this.rpc.autofocus(
+        this.focuser.autofocus(
             this.$('CameraName').Value,
             this.$('FocuserName').Value,
             this.$('ExposureTime').Value,
