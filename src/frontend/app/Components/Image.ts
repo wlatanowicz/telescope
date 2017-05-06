@@ -1,6 +1,7 @@
 import Panel from "@framework/WebControls/Panel";
 import EventResponderInterface from "@framework/EventResponderInterface";
 import EventResponder from "@framework/EventResponder";
+import PixelCoordinates from "@app/ValueObject/PixelCoordinates";
 
 export default class Image extends Panel implements EventResponderInterface
 {
@@ -23,9 +24,9 @@ export default class Image extends Panel implements EventResponderInterface
 	_bounds = null;
 	_layer = null;
 
-    protected _Selection;
+    protected _Selection: PixelCoordinates;
 
-    get Selection()
+    get Selection(): PixelCoordinates
     {
         return this._Selection;
     }
@@ -48,10 +49,10 @@ export default class Image extends Panel implements EventResponderInterface
 
 		mymap.on( 'click', function(e){
 
-			var pixel = {
-                y: Math.round(this._height * e.latlng.lat / (this._bounds.getSouth() - this._bounds.getNorth())),
-				x: Math.round(this._width * e.latlng.lng / (this._bounds.getEast() - this._bounds.getWest()))
-			};
+			var pixel = new PixelCoordinates(
+                Math.round(this._height * e.latlng.lat / (this._bounds.getSouth() - this._bounds.getNorth())),
+				Math.round(this._width * e.latlng.lng / (this._bounds.getEast() - this._bounds.getWest()))
+			);
 
 			var latlon = e.latlng;
 

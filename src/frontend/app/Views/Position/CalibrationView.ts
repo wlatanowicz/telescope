@@ -5,6 +5,7 @@ import PositionCalibrationRegistry from "@app/Registry/PositionCalibrationRegist
 import Coordinates from "@app/ValueObject/Coordinates";
 import Camera from "@app/Client/Camera";
 import Telescope from "@app/Client/Telescope";
+import PositionCalibrationFactory from "@app/Factory/PositionCalibrationFactory";
 
 export default class CalibrationView extends TemplateControl
 {
@@ -19,12 +20,19 @@ export default class CalibrationView extends TemplateControl
     calibrationDataRegistry: PositionCalibrationRegistry;
     camera: Camera;
     telescope: Telescope;
+    calibrationFactory: PositionCalibrationFactory;
 
-    constructor(calibrationDataRegistry: PositionCalibrationRegistry, camera: Camera, telescope: Telescope) {
+    constructor(
+        calibrationDataRegistry: PositionCalibrationRegistry,
+        calibrationFactory: PositionCalibrationFactory,
+        camera: Camera,
+        telescope: Telescope
+    ) {
         super();
         this.calibrationDataRegistry = calibrationDataRegistry;
         this.camera = camera;
         this.telescope = telescope;
+        this.calibrationFactory = calibrationFactory;
     }
 
     startCalibrationClicked()
@@ -97,50 +105,15 @@ export default class CalibrationView extends TemplateControl
         let secondaryStar = this.$('SecondaryImage').Selection;
 
         if (primaryStar && secondaryStar) {
-            let primaryRa = 360 * this.primaryCoordinates.RightAscension / 24;
-            let secondaryRa = 360 * this.secondaryCoordinates.RightAscension / 24;
-            let primaryDec = this.primaryCoordinates.Declination;
-            let secondaryDec = this.secondaryCoordinates.Declination;
-
-            let starAngle = Math.atan2(
-                secondaryStar.x - primaryStar.x,
-                secondaryStar.y - primaryStar.y
+            this.calibrationData = this.calibrationFactory.fromPositionAndImageOffsets(
+                this.primaryCoordinates,
+                this.secondaryCoordinates,
+                primaryStar,
+                secondaryStar
             );
 
-            let slewAngle = Math.atan2(
-                secondaryRa - primaryRa,
-                secondaryDec - primaryDec
-            );
-
-            let diffAngle = starAngle - slewAngle;
-
-            let starShift = Math.sqrt(
-                Math.pow(secondaryStar.x - primaryStar.x, 2)
-                + Math.pow(secondaryStar.y - primaryStar.y, 2)
-            );
-
-            let slewShift = Math.sqrt(
-                Math.pow(primaryRa - secondaryRa, 2)
-                + Math.pow(primaryDec - secondaryDec, 2)
-            );
-
-            let diffShift = slewShift / starShift;
-
-            while (diffAngle > Math.PI) {
-                diffAngle -= Math.PI;
-            }
-
-            while (diffAngle < -Math.PI) {
-                diffAngle += Math.PI;
-            }
-
-            this.$('DiffAngle').Text = diffAngle;
-            this.$('DiffShift').Text = diffShift;
-
-            this.calibrationData = new PositionCalibration(
-                diffAngle,
-                diffShift
-            );
+            this.$('DiffAngle').Text = this.calibrationData.AngleDiff;
+            this.$('DiffShift').Text = this.calibrationData.LengthRatio;
         }
     }
 

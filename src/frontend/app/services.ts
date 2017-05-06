@@ -9,6 +9,7 @@ import Focuser from "@app/Client/Focuser";
 import PositionCalibrationRegistry from "@app/Registry/PositionCalibrationRegistry";
 import CalibrationView from "@app/Views/Position/CalibrationView";
 import AutofocusView from "@app/Views/Focuser/AutofocusView";
+import PositionCalibrationFactory from "@app/Factory/PositionCalibrationFactory";
 
 export default function registerServices()
 {
@@ -77,9 +78,17 @@ export default function registerServices()
             CalibrationView,
             [
                 new ByName("registry.position_calibration"),
+                new ByName("factory.position_calibration"),
                 new ByName("client.camera"),
                 new ByName("client.telescope"),
             ]
+        )
+    );
+
+    ServiceContainer.define(
+        "factory.position_calibration",
+        new ByConstructor(
+            PositionCalibrationFactory
         )
     );
 }
