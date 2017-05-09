@@ -1,4 +1,3 @@
-import ServiceContainer from "@framework/DependencyInjection/ServiceContainer";
 import ByConstructor from "@framework/DependencyInjection/Definition/ByConstructor";
 import RPC from "@app/Client/Common/RPC";
 import Http from "@framework/Data/Http";
@@ -10,85 +9,62 @@ import PositionCalibrationRegistry from "@app/Registry/PositionCalibrationRegist
 import CalibrationView from "@app/Views/Position/CalibrationView";
 import AutofocusView from "@app/Views/Focuser/AutofocusView";
 import PositionCalibrationFactory from "@app/Factory/PositionCalibrationFactory";
+import ByValue from "@framework/DependencyInjection/Definition/ByValue";
 
-export default function registerServices()
+export default
 {
-    ServiceContainer.define(
-        "client.rpc",
-        new ByConstructor(
-            RPC,
-            [
-                new ByConstructor(Http),
-                "http://localhost/radio-telescope/index.php"
-            ]
-        )
-    );
+    "client.rpc": new ByConstructor(
+        RPC,
+        [
+            new ByConstructor(Http),
+            new ByValue("http://localhost/radio-telescope/index.php")
+        ]
+    ),
 
-    ServiceContainer.define(
-        "client.camera",
-        new ByConstructor(
-            Camera,
-            [
-                new ByName("client.rpc")
-            ]
-        )
-    );
+    "client.camera": new ByConstructor(
+        Camera,
+        [
+            new ByName("client.rpc")
+        ]
+    ),
 
-    ServiceContainer.define(
-        "client.telescope",
-        new ByConstructor(
-            Telescope,
-            [
-                new ByName("client.rpc")
-            ]
-        )
-    );
+    "client.telescope": new ByConstructor(
+        Telescope,
+        [
+            new ByName("client.rpc")
+        ]
+    ),
 
-    ServiceContainer.define(
-        "client.focuser",
-        new ByConstructor(
-            Focuser,
-            [
-                new ByName("client.rpc")
-            ]
-        )
-    );
+    "client.focuser": new ByConstructor(
+        Focuser,
+        [
+            new ByName("client.rpc")
+        ]
+    ),
 
-    ServiceContainer.define(
-        "registry.position_calibration",
-        new ByConstructor(
-            PositionCalibrationRegistry
-        )
-    );
+    "registry.position_calibration": new ByConstructor(
+        PositionCalibrationRegistry
+    ),
 
-    ServiceContainer.define(
-        "view.focuser.autofocus",
-        new ByConstructor(
-            AutofocusView,
-            [
-                new ByName("client.focuser"),
-                new ByName("client.camera"),
-            ]
-        )
-    );
+    "view.focuser.autofocus": new ByConstructor(
+        AutofocusView,
+        [
+            new ByName("client.focuser"),
+            new ByName("client.camera"),
+        ]
+    ),
 
-    ServiceContainer.define(
-        "view.position.calibration",
-        new ByConstructor(
-            CalibrationView,
-            [
-                new ByName("registry.position_calibration"),
-                new ByName("factory.position_calibration"),
-                new ByName("client.camera"),
-                new ByName("client.telescope"),
-            ]
-        )
-    );
+    "view.position.calibration": new ByConstructor(
+        CalibrationView,
+        [
+            new ByName("registry.position_calibration"),
+            new ByName("factory.position_calibration"),
+            new ByName("client.camera"),
+            new ByName("client.telescope"),
+        ]
+    ),
 
-    ServiceContainer.define(
-        "factory.position_calibration",
-        new ByConstructor(
-            PositionCalibrationFactory
-        )
-    );
-}
+    "factory.position_calibration": new ByConstructor(
+        PositionCalibrationFactory
+    ),
+};

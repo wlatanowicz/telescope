@@ -1,7 +1,9 @@
 import MainView from "@app/MainView";
-import registerServices from "@app/services";
+import ServiceContainer from "@framework/DependencyInjection/ServiceContainer";
 
-registerServices();
+import services from "@app/services";
+
+ServiceContainer.batchDefine(services);
 
 var c = new MainView();
 c.Placeholder = 'container';
