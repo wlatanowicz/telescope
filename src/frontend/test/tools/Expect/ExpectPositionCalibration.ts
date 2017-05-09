@@ -1,6 +1,7 @@
-import PositionCalibration from "@app/ValueObject/PositionCalibration";
 require('module-alias/register');
 import { Matcher, MatchError } from "alsatian";
+
+import PositionCalibration from "@app/ValueObject/PositionCalibration";
 
 class MatcherExtension extends Matcher
 {

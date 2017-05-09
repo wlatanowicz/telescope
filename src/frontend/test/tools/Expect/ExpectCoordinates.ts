@@ -1,6 +1,7 @@
-import Coordinates from "@app/ValueObject/Coordinates";
 require('module-alias/register');
 import { Matcher, MatchError } from "alsatian";
+
+import Coordinates from "@app/ValueObject/Coordinates";
 
 class MatcherExtension extends Matcher
 {
