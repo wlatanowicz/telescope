@@ -1,30 +1,20 @@
-var requireDir = require('require-dir');
-var tasks = requireDir('./compiler/gulp_tasks');
 var gulp = require('gulp');
-var exec = require( 'child_process' ).exec;
+var requireDir = require('require-dir');
 
+requireDir('./compiler/gulp_tasks');
 
 gulp.task('build', ['tomek-build'] );
-gulp.task('test-create', ['tomek-test-create'] );
-gulp.task('test-build', ['tomek-test-build'] );
 
 gulp.task( 'watch', function () {
-	gulp.watch( [ './app/**/*' ], [ 'tomek-build' ] );
+    gulp.watch( [ './app/**/*' ], [ 'tomek-build' ] );
 } );
 
+gulp.task('build-unit-tests', function () {
+    var exec = require( 'child_process' ).execSync;
+    exec('./node_modules/.bin/tsc --project ./test/tsconfig.json', {stdio:[0,1,2]});
+});
 
-gulp.task( 'tsc', function ( cb ) {
-	exec( './node_modules/tsc/bin/tsc --module commonjs compiler/*.ts', {
-		encoding : 'utf8',
-		timeout : 0,
-		maxBuffer : 1000 * 1024,
-		killSignal : 'SIGTERM',
-		cwd : null,
-		env : null
-	}, function ( err, stdout, stderr ) {
-		console.log( stdout );
-		console.log( stderr );
-		cb( err );
-	} );
-
-} );
+gulp.task('unit-test', ['build-unit-tests'], function () {
+    var exec = require( 'child_process' ).execSync;
+    exec('./node_modules/.bin/alsatian "./test/unit/**/*.spec.js"', {stdio:[0,1,2]});
+});

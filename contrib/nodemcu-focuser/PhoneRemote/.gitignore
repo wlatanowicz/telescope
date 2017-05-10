@@ -1,8 +1,6 @@
 build/*
 test_build/*
 node_modules
-www/*
-!www/.keep
-platforms/*
-!platforms/.keep
-tmp
+bower_components/*
+tmp/*
+framework
