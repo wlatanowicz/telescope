@@ -35,7 +35,7 @@ class Image
 
     public function getImage(string $name, Request $request): Response
     {
-        $time = intval($request->query->get('time'), 10);
+        $time = floatval($request->query->get('time'));
 
         $camera = $this->cameraProvider->getCamera($name);
         $image = $camera->exposure($time);
