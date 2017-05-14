@@ -81,7 +81,7 @@ class Camera implements CameraInterface
         $this->focusSlope2 = 0.2;
     }
 
-    public function exposure(int $time): BinaryImage
+    public function exposure(float $time): BinaryImage
     {
         $start = time();
 

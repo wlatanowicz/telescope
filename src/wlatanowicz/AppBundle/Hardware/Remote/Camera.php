@@ -42,7 +42,7 @@ class Camera implements CameraInterface
         $this->logger = $logger;
     }
 
-    public function exposure(int $time): BinaryImage
+    public function exposure(float $time): BinaryImage
     {
         $this->logger->info(
             "Starting exposure (time={time}s)",

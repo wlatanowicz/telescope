@@ -11,10 +11,10 @@ interface CameraInterface
     const FORMAT_JPEG = 'jpeg';
 
     /**
-     * @param int $time in seconds
+     * @param float $time in seconds
      * @return BinaryImage
      */
-    public function exposure(int $time): BinaryImage;
+    public function exposure(float $time): BinaryImage;
 
     public function setIso(int $iso);
 

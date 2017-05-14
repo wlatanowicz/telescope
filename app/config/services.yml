@@ -25,3 +25,11 @@ services:
       - "%kernel.sessions_dir%/{sessionId}/jobs/{jobId}.log"
       - "%kernel.sessions_dir%/{sessionId}/jobs/{jobId}.status.json"
       - "%kernel.sessions_dir%/{sessionId}/results"
+
+  factory-sony-exposure-time:
+    class: wlatanowicz\AppBundle\Factory\SonyExposureTimeStringFactory
+    arguments:
+      - '@factory-float-from-string'
+
+  factory-float-from-string:
+    class: wlatanowicz\AppBundle\Factory\FloatFromStringFactory

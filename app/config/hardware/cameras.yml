@@ -5,6 +5,7 @@ services:
     arguments:
       - '@sys-process'
       - '@sys-filesystem'
+      - '@factory-sony-exposure-time'
       - 'umask 0000 && sudo /usr/local/bin/gphoto2'
       - '/tmp'
       - '@logger'

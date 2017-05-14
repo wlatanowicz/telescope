@@ -5,6 +5,7 @@ namespace wlatanowicz\AppBundle\Hardware\Local;
 
 use Psr\Log\LoggerInterface;
 use wlatanowicz\AppBundle\Data\BinaryImage;
+use wlatanowicz\AppBundle\Factory\SonyExposureTimeStringFactory;
 use wlatanowicz\AppBundle\Hardware\CameraInterface;
 use wlatanowicz\AppBundle\Hardware\Helper\FileSystem;
 use wlatanowicz\AppBundle\Hardware\Helper\Process;
@@ -36,9 +37,15 @@ class Camera implements CameraInterface
      */
     private $logger;
 
+    /**
+     * @var SonyExposureTimeStringFactory
+     */
+    private $exposureTimeStringFactory;
+
     public function __construct(
         Process $process,
         FileSystem $filesystem,
+        SonyExposureTimeStringFactory $exposureTimeStringFactory,
         string $bin,
         string $temp,
         LoggerInterface $logger
@@ -47,34 +54,48 @@ class Camera implements CameraInterface
         $this->filesystem = $filesystem;
         $this->bin = $bin;
         $this->temp = $temp;
+        $this->exposureTimeStringFactory = $exposureTimeStringFactory;
 
         $this->logger = $logger;
     }
 
-    public function exposure(int $time): BinaryImage
+    public function exposure(float $time): BinaryImage
     {
-        $this->logger->info("Setting bulb mode");
-
-        $this->setBulb();
+        $timeAsString = $this->exposureTimeStringFactory->exposureStringFromFloat($time);
+        $this->logger->info(
+            "Setting camera speed (speed={speed})",
+            [
+                "speed" => $timeAsString,
+            ]
+        );
+        $this->setCameraSpeed($timeAsString);
 
         $this->logger->info(
             "Starting exposure (time={time}s)",
             [
-                "time" => $time,
+                "time" => $timeAsString,
             ]
         );
 
         $tempfile = $this->filesystem->tempName($this->temp);
         $this->filesystem->unlink($tempfile);
 
-        $cmd = "{$this->bin}"
-            . " --quiet"
-            . " --force-overwrite"
-            . " --set-config capture=on"
-            . " --wait-event={$time}s"
-            . " --set-config capture=off"
-            . " --wait-event-and-download=10s"
-            . " --filename={$tempfile}";
+        if ($timeAsString == SonyExposureTimeStringFactory::BULB) {
+            $cmd = "{$this->bin}"
+                . " --quiet"
+                . " --force-overwrite"
+                . " --set-config capture=on"
+                . " --wait-event={$time}s"
+                . " --set-config capture=off"
+                . " --wait-event-and-download=10s"
+                . " --filename={$tempfile}";
+        } else {
+            $cmd = "{$this->bin}"
+                . " --quiet"
+                . " --force-overwrite"
+                . " --capture-image-and-download"
+                . " --filename={$tempfile}";
+        }
 
         $this->process->exec($cmd);
 
@@ -104,11 +125,11 @@ class Camera implements CameraInterface
         $this->process->exec($cmd);
     }
 
-    private function setBulb()
+    private function setCameraSpeed(string $speed)
     {
         $cmd = "{$this->bin}"
             . " --quiet"
-            . " --set-config shutterspeed=Bulb";
+            . " --set-config shutterspeed=" . $speed;
 
         $this->process->exec($cmd);
     }
