@@ -4,3 +4,53 @@ heartbeat:
     _controller: ctrl-api-heartbeat:getHeartbeat
     _format: json
   methods: [GET]
+
+rpc-start:
+  path: /job/{sessionId}/{jobId}
+  defaults:
+    _controller: ctrl-api-job:start
+    _format: json
+  methods: [POST]
+
+rpc-start-alt-1:
+  path: /job
+  defaults:
+    _controller: ctrl-api-job:start
+    _format: json
+  methods: [POST]
+
+rpc-start-alt-2:
+  path: /job/{sessionId}
+  defaults:
+    _controller: ctrl-api-job:start
+    _format: json
+  methods: [POST]
+
+rpc-status:
+  path: /job/{sessionId}/{jobId}
+  defaults:
+    _controller: ctrl-api-job:status
+    _format: json
+  methods: [GET]
+
+rpc-logs:
+  path: /job/{sessionId}/{jobId}/logs
+  defaults:
+    _controller: ctrl-api-job:logs
+    _format: json
+  methods: [GET]
+
+rpc-result:
+  path: /job/{sessionId}/results/{filename}
+  defaults:
+    _controller: ctrl-api-job:result
+    _format: json
+  methods: [GET]
+
+rpc-result-info:
+  path: /job/{sessionId}/results/{filename}/info
+  defaults:
+    _controller: ctrl-api-job:resultInfo
+    _format: json
+  methods: [GET]
+

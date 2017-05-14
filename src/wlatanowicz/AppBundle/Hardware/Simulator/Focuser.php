@@ -58,7 +58,7 @@ class Focuser implements FocuserInterface
     public function setPosition(
         int $position,
         bool $wait = true,
-        int $tolerance = 5
+        int $tolerance = null
     ) {
         $currentPosition = $this->getPosition();
         $this->logger->info(

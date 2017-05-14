@@ -9,19 +9,21 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use wlatanowicz\AppBundle\Data\Coordinates;
 use wlatanowicz\AppBundle\Hardware\Provider\TelescopeProvider;
+use wlatanowicz\AppBundle\Job\Params\TelescopeSetPositionParams;
+use wlatanowicz\AppBundle\Job\TelescopeSetPosition;
 
 class GotoCommand extends Command
 {
     /**
-     * @var TelescopeProvider
+     * @var TelescopeSetPosition
      */
-    private $provider;
+    private $job;
 
-    public function __construct(TelescopeProvider $cameraProvider)
+    public function __construct(TelescopeSetPosition $job)
     {
         parent::__construct(null);
 
-        $this->provider = $cameraProvider;
+        $this->job = $job;
     }
 
     protected function configure()
@@ -33,17 +35,21 @@ class GotoCommand extends Command
             ->addOption('telescope', null, InputOption::VALUE_REQUIRED, 'Telescope name', null)
             ->addOption('right-ascension', 'ra', InputOption::VALUE_REQUIRED, 'Target position', 0)
             ->addOption('declination', 'dec', InputOption::VALUE_REQUIRED, 'Target position', 0)
-            ->addOption('wait', null, InputOption::VALUE_REQUIRED, 'Target position', false)
         ;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $telescope = $input->getOption('telescope');
-        $wait = filter_var($input->getOption('wait'), FILTER_VALIDATE_BOOLEAN);
+        $telescopeName = $input->getOption('telescope');
+
         $ra = floatval($input->getOption('right-ascension'));
         $dec = floatval($input->getOption('declination'));
         $coordinates = new Coordinates($ra, $dec);
-        $this->provider->getTelescope($telescope)->setPosition($coordinates, $wait);
+
+        $this->job->execute(new TelescopeSetPositionParams(
+            $telescopeName,
+            $coordinates,
+            null
+        ));
     }
 }

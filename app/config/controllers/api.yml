@@ -1,3 +1,11 @@
 services:
   ctrl-api-heartbeat:
     class: wlatanowicz\AppBundle\Controller\Api\Heartbeat
+
+  ctrl-api-job:
+    class: wlatanowicz\AppBundle\Controller\Api\Job
+    arguments:
+      - '@job-provider'
+      - '@job-manager'
+      - '@jms_serializer'
+      - '@sys-filesystem'

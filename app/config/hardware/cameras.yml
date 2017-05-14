@@ -37,6 +37,15 @@ services:
     tags:
       - { name: logger.metadata, color: green, display: 'Camera Simulator' }
 
+  camera-sim-fast:
+    class: wlatanowicz\AppBundle\Hardware\Simulator\SimpleCamera
+    arguments:
+      - '@sys-filesystem'
+      - 'star.jpg'
+      - '@logger'
+    tags:
+      - { name: logger.metadata, color: green, display: 'Camera Simulator' }
+
 
   camera-provider:
     class: wlatanowicz\AppBundle\Hardware\Provider\CameraProvider
@@ -46,4 +55,5 @@ services:
         sony: '@camera-local'
         remote: '@camera-remote'
         sim: '@camera-sim'
+        sim-fast: '@camera-sim-fast'
       - "%default_camera%"

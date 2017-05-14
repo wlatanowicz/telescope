@@ -2,6 +2,7 @@ imports:
     - { resource: parameters.yml }
     - { resource: services.yml }
     - { resource: factories.yml }
+    - { resource: jobs.yml }
     - { resource: routines.yml }
     - { resource: commands.yml }
     - { resource: controllers/api.yml }
@@ -74,3 +75,7 @@ monolog:
                 VERBOSITY_VERY_VERBOSE: INFO
                 VERBOSITY_DEBUG: DEBUG
             formatter: monolog.formatter.custom
+        job-logger:
+            type: service
+            id: job-log-handler
+

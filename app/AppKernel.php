@@ -37,8 +37,23 @@ class AppKernel extends Kernel
         return dirname(__DIR__).'/var/logs';
     }
 
+    public function getSessionsDir()
+    {
+        return dirname(__DIR__).'/var/sessions';
+    }
+
     public function registerContainerConfiguration(LoaderInterface $loader)
     {
         $loader->load($this->getRootDir().'/config/config.yml');
+    }
+
+    protected function getKernelParameters()
+    {
+        return array_merge(
+            parent::getKernelParameters(),
+            [
+                "kernel.sessions_dir" => $this->getSessionsDir(),
+            ]
+        );
     }
 }

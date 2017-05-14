@@ -37,8 +37,13 @@ class Focuser implements FocuserInterface
     public function setPosition(
         int $position,
         bool $wait = true,
-        int $tolerance = 5
+        int $tolerance = null
     ) {
+        if ($tolerance === null)
+        {
+            $tolerance = 0;
+        }
+
         $this->logger->info(
             "Setting position (target={target})",
             [

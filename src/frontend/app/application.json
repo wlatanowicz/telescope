@@ -1,0 +1,19 @@
+{
+	"mains": {
+		"main.ts": "main.js"
+	},
+	"templates": [
+		"**/*.tpl"
+	],
+	"resources": [
+		"**/*.html",
+		"**/*.css",
+		"assets/**/*",
+		"lib/lte/bootstrap/**/*",
+		"lib/lte/dist/**/*",
+		"lib/lte/plugins/**/*",
+		"lib/leaflet/**/*",
+		"lib/ionicons/**/*",
+		"lib/font-awesome/**/*"
+  	]
+}

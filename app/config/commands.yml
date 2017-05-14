@@ -1,23 +1,29 @@
 services:
-  command-goto:
+  command-telesope-goto:
     class: wlatanowicz\AppBundle\Command\Telescope\GotoCommand
     arguments:
-      - '@telescope-provider'
+      - '@job-telescope-set-position'
+    tags:
+        - { name: console.command }
+
+  command-telesope-position:
+    class: wlatanowicz\AppBundle\Command\Telescope\PositionCommand
+    arguments:
+      - '@job-telescope-get-position'
     tags:
         - { name: console.command }
 
   command-focuser-goto:
     class: wlatanowicz\AppBundle\Command\Focuser\GotoCommand
     arguments:
-      - '@focuser-provider'
+      - '@job-focuser-set-position'
     tags:
         - { name: console.command }
 
   command-camera-expose:
     class: wlatanowicz\AppBundle\Command\Camera\ExposeCommand
     arguments:
-      - '@camera-provider'
-      - '@sys-filesystem'
+      - '@job-camera-expose'
     tags:
         - { name: console.command }
 
@@ -32,11 +38,7 @@ services:
   command-focuser-autofocus:
     class: wlatanowicz\AppBundle\Command\Focuser\AutofocusCommand
     arguments:
-      - '@imagick-camera-provider'
-      - '@focuser-provider'
-      - '@measure-provider'
-      - '@autofocus-default'
-      - '@logger'
+      - '@job-autofocus'
     tags:
         - { name: console.command }
 

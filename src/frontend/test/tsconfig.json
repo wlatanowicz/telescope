@@ -1,0 +1,23 @@
+{
+  "compilerOptions" : {
+    "module": "commonjs",
+    "removeComments": true,
+    "experimentalDecorators": true,
+    "target": "es5",
+    "baseUrl": ".",
+    "paths": {
+      "@framework/*": [
+        "./../framework/*"
+      ],
+      "@app/*": [
+        "./../app/*"
+      ],
+      "@test/*": [
+        "./*"
+      ]
+    }
+  },
+  "include" : [
+	"./**/*.ts"
+  ]
+}

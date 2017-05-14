@@ -11,3 +11,17 @@ services:
       - '@logger'
     tags:
       - { name: kernel.event_listener, event: kernel.exception }
+
+  job-log-handler:
+    class: wlatanowicz\AppBundle\Helper\JobLogHandler
+    arguments:
+      - "@job-manager"
+
+  job-manager:
+    class: wlatanowicz\AppBundle\Helper\JobManager
+    arguments:
+      - '@jms_serializer'
+      - '@sys-filesystem'
+      - "%kernel.sessions_dir%/{sessionId}/jobs/{jobId}.log"
+      - "%kernel.sessions_dir%/{sessionId}/jobs/{jobId}.status.json"
+      - "%kernel.sessions_dir%/{sessionId}/results"
