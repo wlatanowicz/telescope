@@ -1,0 +1,74 @@
+body.night,
+.night h2,
+.night .item,
+.night .item span,
+.night .bar,
+.night select,
+.night .menu .content,
+.night .white-background,
+.night button:before,
+.night .scroll-content
+{
+	background: black;
+	color: #BF0000;
+}
+
+.night .item{
+	border-color: #BF0000;
+}
+
+.night .bar{
+	background-image: none !important;
+}
+
+.night .item-select:after,
+.night .item p,
+.night .item div,
+.night .bar div,
+.night .bar h1,
+.night a.title,
+.night a.item h2 small{
+	color: #BF0000 !important;
+}
+
+.night button.button{
+	color: #BF0000 !important;
+	background: black;
+	border: 1px solid #BF0000
+}
+
+.night .custom-select+i.icon,
+.night .refresh-puller *{
+	color: #BF0000 !important;
+}
+
+.night .toggle .track{
+	background: black !important;
+	border-color: #BF0000 !important; 
+}
+
+.night .toggle .track .handle{
+	background: black !important;
+	border: 1px solid #BF0000 !important;
+}
+
+.night .toggle input:checked+.track .handle{
+	background: #BF0000 !important;
+}
+
+.night .bar{
+	border-color: #BF0000;
+}
+
+.night.tablet-landscape .menu,
+.night.tablet-landscape .object-list-window{
+	border-right: 1px solid #BF0000;
+}
+
+.night input[type='range']::-webkit-slider-runnable-track {
+
+}
+
+.night input[type='range']::-webkit-slider-thumb {
+	background: #BF0000;
+}
