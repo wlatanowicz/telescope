@@ -97,4 +97,10 @@ class Camera implements CameraInterface
         $response = $this->client->request('GET', 'format' )->getBody()->getContents();
         return \json_decode($response);
     }
+
+    public function getBatteryLevel(): float
+    {
+        $response = $this->client->request('GET', 'batterylevel' )->getBody()->getContents();
+        return \json_decode($response);
+    }
 }

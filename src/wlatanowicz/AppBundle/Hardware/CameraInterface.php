@@ -23,4 +23,6 @@ interface CameraInterface
     public function getIso(): int;
 
     public function getFormat(): string;
+
+    public function getBatteryLevel(): float;
 }

@@ -183,6 +183,19 @@ class Camera implements CameraInterface
         return $format;
     }
 
+    public function getBatteryLevel(): float
+    {
+        $cmd = "{$this->bin}"
+            . " --quiet"
+            . " --get-config batterylevel";
+
+        $output = $this->process->exec($cmd);
+
+        $iso = floatval($this->getCurentSettingFromCommandOutput($output));
+
+        return $iso;
+    }
+
     private function getCurentSettingFromCommandOutput(array $output): string
     {
         $search = "Current: ";

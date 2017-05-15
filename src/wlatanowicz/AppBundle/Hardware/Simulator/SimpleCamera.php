@@ -92,6 +92,11 @@ class SimpleCamera implements CameraInterface
         return self::FORMAT_JPEG;
     }
 
+    public function getBatteryLevel(): float
+    {
+        return rand(0, 1000) / 10;
+    }
+
     private function getImage(): BinaryImage
     {
         $path = __DIR__ . "/Resources/" . $this->imageName;

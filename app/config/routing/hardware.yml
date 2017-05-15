@@ -33,6 +33,13 @@ camera-settings-get-format:
     _format: json
   methods: [GET]
 
+camera-settings-get-batterylevel:
+  path: /camera/{name}/batterylevel
+  defaults:
+    _controller: ctrl-hw-camera-settings:getBatteryLevel
+    _format: json
+  methods: [GET]
+
 focuser-position-get:
   path: /focuser/{name}/position
   defaults:

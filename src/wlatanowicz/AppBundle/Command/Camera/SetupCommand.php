@@ -76,5 +76,12 @@ class SetupCommand extends Command
             ]
         );
 
+        $this->logger->info(
+            'Current BatterLevel: {level}',
+            [
+                "level" => $camera->getBatteryLevel(),
+            ]
+        );
+
     }
 }

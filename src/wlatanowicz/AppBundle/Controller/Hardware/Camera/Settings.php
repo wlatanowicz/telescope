@@ -61,4 +61,11 @@ class Settings
         $json = json_encode($iso);
         return new JsonResponse($json, 200, [], true);
     }
+
+    public function getBatteryLevel(string $name)
+    {
+        $level = $this->cameraProvider->getCamera($name)->getBatteryLevel();
+        $json = json_encode($level);
+        return new JsonResponse($json, 200, [], true);
+    }
 }
