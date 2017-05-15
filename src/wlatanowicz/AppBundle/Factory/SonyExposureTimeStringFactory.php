@@ -90,6 +90,10 @@ class SonyExposureTimeStringFactory
             if ($this->equal($time, $speed)) {
                 return $speed;
             }
+
+            if ($this->less($time, $speed)) {
+                return $speed;
+            }
         }
 
         return self::BULB;
@@ -100,5 +104,10 @@ class SonyExposureTimeStringFactory
         $timeFromString = $this->floatFromString->floatFromString($timeAsString);
 
         return abs($timeFromString - $timeAsFloat) <= self::COMPARE_ERROR;
+    }
+
+    private function less(float $timeAsFloat, string $timeAsString): bool
+    {
+        return $this->floatFromString->floatFromString($timeAsString) > $timeAsFloat;
     }
 }

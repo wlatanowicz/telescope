@@ -14,8 +14,8 @@ class CameraExposeParams implements JobParamsInterface
     private $cameraName;
 
     /**
-     * @var int
-     * @Type("int")
+     * @var float
+     * @Type("float")
      */
     private $time;
 
@@ -28,12 +28,12 @@ class CameraExposeParams implements JobParamsInterface
     /**
      * CameraExposeParams constructor.
      * @param string|null $cameraName
-     * @param int $time
+     * @param float $time
      * @param string|null $fileName
      */
     public function __construct(
         string $cameraName = null,
-        int $time,
+        float $time,
         string $fileName = null
     ) {
         $this->cameraName = $cameraName;
@@ -55,9 +55,9 @@ class CameraExposeParams implements JobParamsInterface
     }
 
     /**
-     * @return int
+     * @return float
      */
-    public function getTime(): int
+    public function getTime(): float
     {
         return $this->time;
     }

@@ -7,6 +7,7 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use wlatanowicz\AppBundle\Factory\FloatFromStringFactory;
 use wlatanowicz\AppBundle\Job\CameraExpose;
 use wlatanowicz\AppBundle\Job\Params\CameraExposeParams;
 
@@ -17,11 +18,17 @@ class ExposeCommand extends Command
      */
     private $job;
 
-    public function __construct(CameraExpose $job)
+    /**
+     * @var FloatFromStringFactory
+     */
+    private $floatFromString;
+
+    public function __construct(CameraExpose $job, FloatFromStringFactory $floatFromString)
     {
         parent::__construct(null);
 
         $this->job = $job;
+        $this->floatFromString = $floatFromString;
     }
 
     protected function configure()
@@ -39,7 +46,7 @@ class ExposeCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $camera = $input->getOption('camera');
-        $time = floatval($input->getOption('time'));
+        $time = $this->floatFromString->floatFromString($input->getOption('time'));
         $filename = $input->getOption('filename');
 
         $this->job->start(new CameraExposeParams(

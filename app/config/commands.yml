@@ -24,6 +24,7 @@ services:
     class: wlatanowicz\AppBundle\Command\Camera\ExposeCommand
     arguments:
       - '@job-camera-expose'
+      - '@factory-float-from-string'
     tags:
         - { name: console.command }
 
