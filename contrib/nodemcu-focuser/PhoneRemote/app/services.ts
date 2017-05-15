@@ -22,7 +22,7 @@ export default {
     "repository.settings" : new ByConstructor(
         Settings,
         [
-            new ByValue("192.168.0.50"),
+            new ByValue("192.168.0.51"),
         ]
     ),
     "repository.bookmarks" : new ByConstructor(
