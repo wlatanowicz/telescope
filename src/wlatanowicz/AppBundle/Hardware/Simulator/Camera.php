@@ -103,7 +103,7 @@ class Camera implements CameraInterface
             $finish = time();
             $lasted = $finish - $start;
             if ($lasted < $willLast) {
-                sleep($willLast - $lasted);
+                sleep((int)round($willLast - $lasted));
             }
         }
 
