@@ -42,6 +42,7 @@ services:
     class: wlatanowicz\AppBundle\Hardware\Simulator\SimpleCamera
     arguments:
       - '@sys-filesystem'
+      - '@factory-imagick-image'
       - 'star.jpg'
       - '@logger'
     tags:

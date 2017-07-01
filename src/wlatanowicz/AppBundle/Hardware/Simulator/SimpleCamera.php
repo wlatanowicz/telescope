@@ -6,6 +6,7 @@ namespace wlatanowicz\AppBundle\Hardware\Simulator;
 use Psr\Log\LoggerInterface;
 use wlatanowicz\AppBundle\Data\BinaryImage;
 use wlatanowicz\AppBundle\Data\ImagickImage;
+use wlatanowicz\AppBundle\Factory\ImagickImageFactory;
 use wlatanowicz\AppBundle\Hardware\CameraInterface;
 use wlatanowicz\AppBundle\Hardware\FocuserInterface;
 use wlatanowicz\AppBundle\Hardware\Helper\FileSystem;
@@ -30,6 +31,11 @@ class SimpleCamera implements CameraInterface
     private $logger;
 
     /**
+     * @var ImagickImageFactory
+     */
+    private $imagickImageFactory;
+
+    /**
      * Camera constructor.
      * @param FocuserInterface $focuser
      * @param FileSystem $fileSystem
@@ -37,12 +43,14 @@ class SimpleCamera implements CameraInterface
      */
     public function __construct(
         FileSystem $fileSystem,
+        ImagickImageFactory $imagickImageFactory,
         string $imageName,
         LoggerInterface $logger
     ) {
         $this->fileSystem = $fileSystem;
         $this->imageName = $imageName;
         $this->logger = $logger;
+        $this->imagickImageFactory = $imagickImageFactory;
     }
 
     public function exposure(float $time): BinaryImage
@@ -58,14 +66,14 @@ class SimpleCamera implements CameraInterface
 
         $image = $this->getImage();
 
-        $imagickImage = ImagickImage::fromBinaryImage($image);
+        $imagickImage = $this->imagickImageFactory->fromBinaryImage($image);
 
         if ($time > 0) {
             $willLast = $time + self::SIM_DOWNLOAD_AND_PREPARE_TIME;
             $finish = time();
             $lasted = $finish - $start;
             if ($lasted < $willLast) {
-                sleep($willLast - $lasted);
+                sleep((int)round($willLast - $lasted));
             }
         }
 
