@@ -18,7 +18,7 @@ class FileSystem
 
     public function fileGetContents(string $path): string
     {
-        $result = file_get_contents($path);
+        $result = @file_get_contents($path);
         if ($result === false){
             throw new \Exception("Cannot read file");
         }
