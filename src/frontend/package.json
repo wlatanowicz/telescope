@@ -8,7 +8,7 @@
     "ionicons": "3.0.0",
     "leaflet": "1.0.3",
     "module-alias": "^2.0.0",
-    "tomek-js": "https://github.com/wlatanowicz/tomek.js.git#master"
+    "tomek-js": "git+https://github.com/wlatanowicz/tomek.js.git#master"
   },
   "_moduleAliases": {
     "@app": "./app",
