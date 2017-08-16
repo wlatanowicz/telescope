@@ -1,5 +1,5 @@
 import TemplateControl from "@framework/TemplateControl";
-import template from "@app/Views/Focuser/AutofocusView.tpl.ts";
+import template from "@app/Views/Focuser/AutofocusView.tpl";
 import Focuser from "@app/Client/Focuser";
 import Camera from "@app/Client/Camera";
 

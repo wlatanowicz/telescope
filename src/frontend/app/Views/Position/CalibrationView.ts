@@ -1,5 +1,5 @@
 import TemplateControl from "@framework/TemplateControl";
-import template from "@app/Views/Position/CalibrationView.tpl.ts";
+import template from "@app/Views/Position/CalibrationView.tpl";
 import PositionCalibration from "@app/ValueObject/PositionCalibration";
 import PositionCalibrationRegistry from "@app/Registry/PositionCalibrationRegistry";
 import Coordinates from "@app/ValueObject/Coordinates";

@@ -3,7 +3,7 @@ import EventResponderInterface from "@framework/EventResponderInterface";
 import EventResponder from "@framework/EventResponder";
 import PixelCoordinates from "@app/ValueObject/PixelCoordinates";
 
-export default class Image extends Panel implements EventResponderInterface
+export default class ImagePanel extends Panel implements EventResponderInterface
 {
 
     private _event = null;
@@ -99,6 +99,8 @@ export default class Image extends Panel implements EventResponderInterface
 			});
 
 			this._marker = L.marker([latlon.lat, latlon.lng], {icon: crosshair}).addTo(this._map).bindPopup(label).openPopup();
+
+			L.circle([latlon.lat, latlon.lng], 4).addTo(this._map);
 		}
 	}
 

@@ -83,6 +83,6 @@
         </div>
     </div>
 
-    <com:Image ID="Image" CssClass="autofocus__image-preview" on:Select=".starSelected" />
+    <com:ImagePanel ID="Image" CssClass="autofocus__image-preview" on:Select=".starSelected" />
 
 </com:RouteView>

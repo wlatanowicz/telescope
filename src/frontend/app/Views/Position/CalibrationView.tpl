@@ -52,8 +52,8 @@
         </div>
     </div>
 
-    <com:Image ID="PrimaryImage" CssClass="autofocus__image-preview" on:Select=".starSelected" />
+    <com:ImagePanel ID="PrimaryImage" CssClass="autofocus__image-preview" on:Select=".starSelected" />
 
-    <com:Image ID="SecondaryImage" CssClass="autofocus__image-preview" on:Select=".starSelected" />
+    <com:ImagePanel ID="SecondaryImage" CssClass="autofocus__image-preview" on:Select=".starSelected" />
 
 </com:RouteView>

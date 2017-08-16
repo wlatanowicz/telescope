@@ -1,5 +1,5 @@
 import TemplateControl from "@framework/TemplateControl";
-import template from "@app/Views/Position/RepositionView.tpl.ts";
+import template from "@app/Views/Position/RepositionView.tpl";
 
 export default class RepositionView extends TemplateControl
 {

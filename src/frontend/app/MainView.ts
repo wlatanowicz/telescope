@@ -1,5 +1,5 @@
 import TemplateControl from "@framework/TemplateControl";
-import template from "@app/MainView.tpl.ts";
+import template from "@app/MainView.tpl";
 
 export default class MainView extends TemplateControl
 {

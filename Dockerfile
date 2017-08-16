@@ -37,12 +37,17 @@ COPY . /app
 
 WORKDIR /app
 
+RUN rm -Rf \
+    vendor \
+    var \
+    src/frontend/node_modules
+
 RUN composer install
 
-#RUN pushd src/frontend \
-#	&& npm install \
-#	&& gulp build \
-#	&& popd
+RUN pushd src/frontend \
+	&& npm install \
+	&& gulp build \
+	&& popd
 
 RUN mkdir /app/var \
 	&& chmod a+rw /app/var
