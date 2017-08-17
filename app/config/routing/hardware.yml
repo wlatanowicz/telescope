@@ -1,3 +1,10 @@
+available:
+  path: /available/{deviceKind}
+  defaults:
+    _controller: ctrl-hw-available:getAvailable
+    _format: json
+  methods: [GET]
+
 camera-image-expose:
   path: /camera/{name}/image
   defaults:

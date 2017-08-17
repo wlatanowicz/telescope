@@ -5,7 +5,7 @@ namespace wlatanowicz\AppBundle\Hardware\Provider;
 
 use wlatanowicz\AppBundle\Hardware\CameraInterface;
 
-class CameraProvider
+class CameraProvider implements ProviderInterface
 {
     /**
      * @var CameraInterface[]
@@ -35,5 +35,10 @@ class CameraProvider
     public function getCamera(string $name = null): CameraInterface
     {
         return $this->cameras[$name ?? $this->default];
+    }
+
+    public function getAvailableValues(): array
+    {
+        return array_keys($this->cameras);
     }
 }

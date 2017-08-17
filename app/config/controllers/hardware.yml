@@ -22,3 +22,12 @@ services:
     arguments:
       - '@telescope-provider'
       - '@jms_serializer'
+
+  ctrl-hw-available:
+    class: wlatanowicz\AppBundle\Controller\Hardware\Available
+    arguments:
+      -
+        cameras: '@camera-provider'
+        telescopes: '@telescope-provider'
+        focusers: '@focuser-provider'
+      - '@jms_serializer'

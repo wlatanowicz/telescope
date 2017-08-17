@@ -5,7 +5,7 @@ namespace wlatanowicz\AppBundle\Hardware\Provider;
 
 use wlatanowicz\AppBundle\Hardware\TelescopeInterface;
 
-class TelescopeProvider
+class TelescopeProvider implements ProviderInterface
 {
     /**
      * @var TelescopeInterface[]
@@ -35,5 +35,10 @@ class TelescopeProvider
     public function getTelescope(string $name = null): TelescopeInterface
     {
         return $this->telescopes[$name ?? $this->default];
+    }
+
+    public function getAvailableValues(): array
+    {
+        return array_keys($this->telescopes);
     }
 }

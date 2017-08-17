@@ -5,7 +5,7 @@ namespace wlatanowicz\AppBundle\Hardware\Provider;
 
 use wlatanowicz\AppBundle\Hardware\FocuserInterface;
 
-class FocuserProvider
+class FocuserProvider implements ProviderInterface
 {
     /**
      * @var FocuserInterface[]
@@ -35,5 +35,10 @@ class FocuserProvider
     public function getFocuser(string $name = null): FocuserInterface
     {
         return $this->focusers[$name ?? $this->default];
+    }
+
+    public function getAvailableValues(): array
+    {
+        return array_keys($this->focusers);
     }
 }
