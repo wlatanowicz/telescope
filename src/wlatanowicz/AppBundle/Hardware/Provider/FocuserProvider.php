@@ -41,4 +41,9 @@ class FocuserProvider implements ProviderInterface
     {
         return array_keys($this->focusers);
     }
+
+    public function getDefaultValue(): string
+    {
+        return $this->default;
+    }
 }

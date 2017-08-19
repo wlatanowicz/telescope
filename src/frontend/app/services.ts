@@ -10,14 +10,25 @@ import CalibrationView from "@app/Views/Position/CalibrationView";
 import AutofocusView from "@app/Views/Focuser/AutofocusView";
 import PositionCalibrationFactory from "@app/Factory/PositionCalibrationFactory";
 import ByValue from "@framework/DependencyInjection/Definition/ByValue";
+import ResourceSelector from "@app/Components/ResourceSelector";
+
+import parameters from "@app/parameters";
+import PreviewView from "@app/Views/Camera/PreviewView";
+import CaptureView from "@app/Views/Camera/CaptureView";
 
 export default
 {
+    "client.http": new ByConstructor(
+        Http,
+        [
+            new ByValue(parameters.server_url)
+        ]
+    ),
+
     "client.rpc": new ByConstructor(
         RPC,
         [
-            new ByConstructor(Http),
-            new ByValue("http://localhost/radio-telescope/index.php")
+            new ByName("client.http"),
         ]
     ),
 
@@ -54,6 +65,20 @@ export default
         ]
     ),
 
+    "view.camera.preview": new ByConstructor(
+        PreviewView,
+        [
+            new ByName("client.camera"),
+        ]
+    ),
+
+    "view.camera.capture": new ByConstructor(
+        CaptureView,
+        [
+            new ByName("client.camera"),
+        ]
+    ),
+
     "view.position.calibration": new ByConstructor(
         CalibrationView,
         [
@@ -67,4 +92,20 @@ export default
     "factory.position_calibration": new ByConstructor(
         PositionCalibrationFactory
     ),
+
+    "component.selector.camera": new ByConstructor(
+        ResourceSelector,
+        [
+            new ByName("client.http"),
+            new ByValue("cameras")
+        ]
+    ),
+
+    "component.selector.focuser": new ByConstructor(
+        ResourceSelector,
+        [
+            new ByName("client.http"),
+            new ByValue("focusers")
+        ]
+    )
 };

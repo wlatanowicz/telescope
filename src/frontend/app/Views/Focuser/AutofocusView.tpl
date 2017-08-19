@@ -8,14 +8,14 @@
                     <com:Label ForControl="FocuserName">
                         Focuser name:
                     </com:Label>
-                    <com:TextBox ID="FocuserName" Value="sim" />
+                    <def:component.selector.focuser ID="FocuserName" />
                 </div>
 
                 <div class="form-group">
                     <com:Label ForControl="CameraName">
                         Camera name:
                     </com:Label>
-                    <com:TextBox ID="CameraName" Value="sim" />
+                    <def:component.selector.camera ID="CameraName" />
                 </div>
 
                 <div class="form-group">
@@ -83,6 +83,6 @@
         </div>
     </div>
 
-    <com:ImagePanel ID="Image" CssClass="autofocus__image-preview" on:Select=".starSelected" />
+    <com:SelectImagePanel ID="Image" CssClass="autofocus__image-preview" on:Select=".starSelected" />
 
 </com:RouteView>

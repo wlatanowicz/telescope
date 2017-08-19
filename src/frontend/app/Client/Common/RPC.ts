@@ -6,10 +6,9 @@ export default class RPC
 {
     _http = null;
 
-    constructor(http: Http, baseUrl: string)
+    constructor(http: Http)
     {
         this._http = http;
-        this._http.BaseUrl = baseUrl;
     }
 
     execute(method, params)

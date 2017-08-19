@@ -38,4 +38,13 @@ class Available
         );
         return new JsonResponse($json, 200, [], true);
     }
+
+    public function getDefault(string $deviceKind)
+    {
+        $json = $this->serializer->serialize(
+            $this->providers[$deviceKind]->getDefaultValue(),
+            'json'
+        );
+        return new JsonResponse($json, 200, [], true);
+    }
 }

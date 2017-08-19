@@ -9,4 +9,6 @@ interface ProviderInterface
      * @return string[]
      */
     public function getAvailableValues(): array;
+
+    public function getDefaultValue(): string;
 }

@@ -13,6 +13,9 @@
 
 	<srv:view.focuser.autofocus />
 	<srv:view.position.calibration />
+	<srv:view.camera.preview />
+	<srv:view.camera.capture />
+
 	<com:RepositionView />
 </div>
 

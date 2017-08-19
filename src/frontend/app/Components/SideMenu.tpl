@@ -37,15 +37,21 @@
 					</li>
 				</ul>
 			</li>
-			<li>
-				<a href="#/places/list">
-					<i class="fa fa-map-marker"></i> <span>Camera</span>
+			<li class="treeview active">
+				<a>
+					<i class="fa fa-dashboard"></i> <span>Camera</span>
+					<span class="pull-right-container">
+              		<i class="fa fa-angle-left pull-right"></i>
+					</span>
 				</a>
-			</li>
-			<li>
-				<a href="#/users/list">
-					<i class="fa fa-user"></i> <span>Focuser</span>
-				</a>
+				<ul class="treeview-menu menu-open" style="display: block;">
+					<li>
+						<a href="#/camera/preview"><i class="fa fa-circle-o"></i> Preview</a>
+					</li>
+					<li>
+						<a href="#/camera/capture"><i class="fa fa-circle-o"></i> Capture</a>
+					</li>
+				</ul>
 			</li>
 		</ul>
     </section>

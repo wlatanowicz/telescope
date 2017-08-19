@@ -41,4 +41,9 @@ class TelescopeProvider implements ProviderInterface
     {
         return array_keys($this->telescopes);
     }
+
+    public function getDefaultValue(): string
+    {
+        return $this->default;
+    }
 }

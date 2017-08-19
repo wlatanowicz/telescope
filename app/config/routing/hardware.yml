@@ -5,6 +5,13 @@ available:
     _format: json
   methods: [GET]
 
+available-default:
+  path: /available/{deviceKind}/default
+  defaults:
+    _controller: ctrl-hw-available:getDefault
+    _format: json
+  methods: [GET]
+
 camera-image-expose:
   path: /camera/{name}/image
   defaults:

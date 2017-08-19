@@ -41,4 +41,9 @@ class CameraProvider implements ProviderInterface
     {
         return array_keys($this->cameras);
     }
+
+    public function getDefaultValue(): string
+    {
+        return $this->default;
+    }
 }
