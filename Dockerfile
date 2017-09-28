@@ -15,7 +15,8 @@ RUN add-apt-repository -y ppa:ondrej/php \
 	&& apt-get install -y php7.1 php7.1-mbstring php7.1-mcrypt php7.1-curl \
  		php7.1-intl php7.1-bcmath php7.1-xml php7.1-xsl php7.1-zip php7.1-pgsql \
 		php7.1-xdebug php7.1-sqlite php7.1-apc php7.1-redis \
-		php7.1-imagick
+		php7.1-imagick \
+	&& update-alternatives --set php /usr/bin/php7.1
 
 RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
 	&& php composer-setup.php \
