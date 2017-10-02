@@ -5,6 +5,7 @@ namespace wlatanowicz\AppBundle\Hardware\Local;
 
 use Psr\Log\LoggerInterface;
 use wlatanowicz\AppBundle\Data\BinaryImage;
+use wlatanowicz\AppBundle\Data\BinaryImages;
 use wlatanowicz\AppBundle\Factory\SonyExposureTimeStringFactory;
 use wlatanowicz\AppBundle\Hardware\CameraInterface;
 use wlatanowicz\AppBundle\Hardware\Helper\FileSystem;
@@ -59,7 +60,7 @@ class Camera implements CameraInterface
         $this->logger = $logger;
     }
 
-    public function exposure(float $time): BinaryImage
+    public function exposure(float $time): BinaryImages
     {
         $timeAsString = $this->exposureTimeStringFactory->exposureStringFromFloat($time);
         $this->logger->info(
@@ -77,8 +78,9 @@ class Camera implements CameraInterface
             ]
         );
 
-        $tempfile = $this->filesystem->tempName($this->temp);
-        $this->filesystem->unlink($tempfile);
+        $tempdir = $this->filesystem->tempName($this->temp);
+        $this->filesystem->unlink($tempdir);
+        $this->filesystem->mkdir($tempdir);
 
         if ($timeAsString == SonyExposureTimeStringFactory::BULB) {
             $cmd = "{$this->bin}"
@@ -88,23 +90,32 @@ class Camera implements CameraInterface
                 . " --wait-event={$time}s"
                 . " --set-config capture=off"
                 . " --wait-event-and-download=10s"
-                . " --filename={$tempfile}";
+                . " --filename={$tempdir}/img.%C";
         } else {
             $cmd = "{$this->bin}"
                 . " --quiet"
                 . " --force-overwrite"
                 . " --capture-image-and-download"
-                . " --filename={$tempfile}";
+                . " --filename={$tempdir}/img.%C";
         }
 
         $this->process->exec($cmd);
 
-        $data = $this->filesystem->fileGetContents($tempfile);
-        $this->filesystem->unlink($tempfile);
+        $images = [];
+        $extensions = ['JPG', 'ARW'];
+
+        foreach ($extensions as $extension) {
+            $file = $tempdir . "/img." . $extension;
+            if ($this->filesystem->fileExists($file)) {
+                $data = $this->filesystem->fileGetContents($file);
+                $this->filesystem->unlink($file);
+                $images[] = new BinaryImage($data);
+            }
+        }
 
         $this->logger->info("Finished exposure");
 
-        return new BinaryImage($data);
+        return new BinaryImages($images);
     }
 
     public function setIso(int $iso)
@@ -138,8 +149,9 @@ class Camera implements CameraInterface
     {
         switch ($format) {
             case self::FORMAT_RAW: $formatIdx = 2; break;
-            default:
             case self::FORMAT_JPEG: $formatIdx = 1; break;
+            default:
+            case self::FORMAT_BOTH: $formatIdx = 3; break;
         }
 
         $cmd = "{$this->bin}"
@@ -172,7 +184,9 @@ class Camera implements CameraInterface
 
         $rawFormat = $this->getCurentSettingFromCommandOutput($output);
 
-        if ($rawFormat === "RAW") {
+        if ($rawFormat === "RAW+JPEG") {
+            $format = self::FORMAT_BOTH;
+        } elseif ($rawFormat === "RAW") {
             $format = self::FORMAT_RAW;
         } elseif ($rawFormat === "Standard" || $rawFormat === "Fine") {
             $format = self::FORMAT_JPEG;

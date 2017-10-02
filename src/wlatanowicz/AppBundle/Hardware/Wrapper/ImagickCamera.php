@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace wlatanowicz\AppBundle\Hardware\Wrapper;
 
+use wlatanowicz\AppBundle\Data\BinaryImage;
 use wlatanowicz\AppBundle\Data\ImagickImage;
 use wlatanowicz\AppBundle\Factory\ImagickImageFactory;
 use wlatanowicz\AppBundle\Hardware\CameraInterface;
@@ -33,7 +34,7 @@ class ImagickCamera implements ImagickCameraInterface
 
     public function exposure(int $time): ImagickImage
     {
-        $image = $this->camera->exposure($time);
-        return $this->imagickImageFactory->fromBinaryImage($image);
+        $images = $this->camera->exposure($time);
+        return $this->imagickImageFactory->fromBinaryImage($images->getImageByMimetype(BinaryImage::MIMETYPE_JPEG));
     }
 }

@@ -45,10 +45,15 @@ class CameraExpose extends AbstractJob
 
         $camera = $this->provider->getCamera($cameraName);
 
-        $image = $camera->exposure($time);
-        $fileName = $fileName . "." . $image->getFileExtension();
-        $this->jobManager->saveCurrentJobResult($fileName, $image->getData());
+        $images = $camera->exposure($time);
+        $files = [];
 
-        return $fileName;
+        foreach ($images->getImages() as $image) {
+            $file = $fileName . "." . $image->getFileExtension();
+            $this->jobManager->saveCurrentJobResult($file, $image->getData());
+            $files[] = $file;
+        }
+
+        return $files;
     }
 }

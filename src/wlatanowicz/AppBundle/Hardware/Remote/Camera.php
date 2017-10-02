@@ -6,7 +6,7 @@ namespace wlatanowicz\AppBundle\Hardware\Remote;
 use GuzzleHttp\ClientInterface;
 use JMS\Serializer\SerializerInterface;
 use Psr\Log\LoggerInterface;
-use wlatanowicz\AppBundle\Data\BinaryImage;
+use wlatanowicz\AppBundle\Data\BinaryImages;
 use wlatanowicz\AppBundle\Hardware\CameraInterface;
 
 class Camera implements CameraInterface
@@ -42,7 +42,7 @@ class Camera implements CameraInterface
         $this->logger = $logger;
     }
 
-    public function exposure(float $time): BinaryImage
+    public function exposure(float $time): BinaryImages
     {
         $this->logger->info(
             "Starting exposure (time={time}s)",
@@ -57,11 +57,11 @@ class Camera implements CameraInterface
         $json = $this->client->request('GET', 'image?' . http_build_query($query) )->getBody()->getContents();
 
         /**
-         * @var $object BinaryImage
+         * @var $object BinaryImages
          */
         $object = $this->serializer->deserialize(
             $json,
-            BinaryImage::class,
+            BinaryImages::class,
             'json'
         );
 

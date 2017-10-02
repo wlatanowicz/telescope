@@ -1,4 +1,4 @@
-#!/usr/bin/env LC_CTYPE=C php7.0
+#!/usr/bin/php
 <?php
 
 use Symfony\Bundle\FrameworkBundle\Console\Application;

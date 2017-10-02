@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace Unit\wlatanowicz\AppBundle\Job;
 
 use wlatanowicz\AppBundle\Data\BinaryImage;
+use wlatanowicz\AppBundle\Data\BinaryImages;
 use wlatanowicz\AppBundle\Hardware\CameraInterface;
 use wlatanowicz\AppBundle\Hardware\Provider\CameraProvider as CameraProvider;
 use wlatanowicz\AppBundle\Helper\JobManager as JobManager;
@@ -56,7 +57,9 @@ class CameraExposeTest extends \PHPUnit_Framework_TestCase
         $time = 5;
 
         $binData = "some bin data";
-        $binImage = new BinaryImage($binData, "image/jpeg");
+        $binImages = new BinaryImages([
+            new BinaryImage($binData, "image/jpeg")
+        ]);
 
         $fileName = "filename";
 
@@ -70,7 +73,7 @@ class CameraExposeTest extends \PHPUnit_Framework_TestCase
             ->expects($this->once())
             ->method('exposure')
             ->with($time)
-            ->willReturn($binImage);
+            ->willReturn($binImages);
 
         $this->jobManagerMock
             ->expects($this->once())

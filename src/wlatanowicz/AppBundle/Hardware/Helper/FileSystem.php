@@ -25,6 +25,16 @@ class FileSystem
         return $result;
     }
 
+    public function fileExists($path): bool
+    {
+        return file_exists($path);
+    }
+
+    public function mkdir($path)
+    {
+        mkdir($path, 0700, true);
+    }
+
     public function tempName(string $temp): string
     {
         return tempnam($temp, "");

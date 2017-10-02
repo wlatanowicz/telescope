@@ -38,9 +38,9 @@ class Image
         $time = floatval($request->query->get('time'));
 
         $camera = $this->cameraProvider->getCamera($name);
-        $image = $camera->exposure($time);
+        $images = $camera->exposure($time);
 
-        $json = $this->serializer->serialize($image, 'json');
+        $json = $this->serializer->serialize($images, 'json');
         return new JsonResponse($json, 200, [], true);
     }
 }

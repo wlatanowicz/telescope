@@ -8,6 +8,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use wlatanowicz\AppBundle\Controller\Hardware\Camera\Image;
 use wlatanowicz\AppBundle\Data\BinaryImage;
+use wlatanowicz\AppBundle\Data\BinaryImages;
 use wlatanowicz\AppBundle\Hardware\CameraInterface;
 use wlatanowicz\AppBundle\Hardware\FocuserInterface;
 use wlatanowicz\AppBundle\Hardware\Provider\CameraProvider;
@@ -56,7 +57,9 @@ class ImageTest extends \PHPUnit_Framework_TestCase
         $name = "some-camera";
         $time = 187;
 
-        $image = new BinaryImage("binary stream", "image/jpeg");
+        $images = new BinaryImages([
+            new BinaryImage("binary stream", "image/jpeg")
+        ]);
         $json = '{"some":"json"}';
 
         $this->cameraProviderMock
@@ -69,13 +72,13 @@ class ImageTest extends \PHPUnit_Framework_TestCase
             ->expects($this->once())
             ->method('exposure')
             ->with($time)
-            ->willReturn($image);
+            ->willReturn($images);
 
         $this->serializerMock
             ->expects($this->once())
             ->method('serialize')
             ->with(
-                $image,
+                $images,
                 'json'
             )
             ->willReturn($json);

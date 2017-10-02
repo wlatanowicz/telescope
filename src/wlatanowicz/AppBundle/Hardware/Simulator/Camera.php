@@ -5,6 +5,7 @@ namespace wlatanowicz\AppBundle\Hardware\Simulator;
 
 use Psr\Log\LoggerInterface;
 use wlatanowicz\AppBundle\Data\BinaryImage;
+use wlatanowicz\AppBundle\Data\BinaryImages;
 use wlatanowicz\AppBundle\Data\ImagickImage;
 use wlatanowicz\AppBundle\Factory\ImagickImageFactory;
 use wlatanowicz\AppBundle\Hardware\CameraInterface;
@@ -81,7 +82,7 @@ class Camera implements CameraInterface
         $this->focusSlope2 = 0.2;
     }
 
-    public function exposure(float $time): BinaryImage
+    public function exposure(float $time): BinaryImages
     {
         $start = time();
 
@@ -109,7 +110,9 @@ class Camera implements CameraInterface
 
         $this->logger->info("Finished exposure");
 
-        return new BinaryImage($imagickImage->getImageBlob(), BinaryImage::MIMETYPE_JPEG);
+        return new BinaryImages([
+            new BinaryImage($imagickImage->getImageBlob(), BinaryImage::MIMETYPE_JPEG)
+        ]);
     }
 
     public function setIso(int $iso) {}
