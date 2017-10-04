@@ -12,6 +12,18 @@ services:
     tags:
       - { name: logger.metadata, color: green, display: 'Sony Camera' }
 
+  camera-local-mac:
+    class: wlatanowicz\AppBundle\Hardware\Local\Camera
+    arguments:
+      - '@sys-process'
+      - '@sys-filesystem'
+      - '@factory-sony-exposure-time'
+      - 'umask 0000 && /opt/local/bin/gphoto2'
+      - '/tmp'
+      - '@logger'
+    tags:
+      - { name: logger.metadata, color: green, display: 'Sony Camera' }
+
   camera-remote:
     class: wlatanowicz\AppBundle\Hardware\Remote\Camera
     arguments:
@@ -26,6 +38,21 @@ services:
     arguments:
       -
         base_uri: 'http://192.168.0.50/index.php/hardware/camera/sony/'
+
+  camera-remote-mac:
+    class: wlatanowicz\AppBundle\Hardware\Remote\Camera
+    arguments:
+      - '@camera-remote-mac-client'
+      - '@jms_serializer'
+      - '@logger'
+    tags:
+      - { name: logger.metadata, color: green, display: 'Remote Camera' }
+
+  camera-remote-mac-client:
+    class: GuzzleHttp\Client
+    arguments:
+      -
+        base_uri: 'http://localhost/index.php/hardware/camera/sony-mac/'
 
   camera-sim:
     class: wlatanowicz\AppBundle\Hardware\Simulator\Camera
@@ -55,7 +82,9 @@ services:
       -
         local: '@camera-local'
         sony: '@camera-local'
+        sony-mac: '@camera-local-mac'
         remote: '@camera-remote'
+        remote-mac: '@camera-remote-mac'
         sim: '@camera-sim'
         sim-fast: '@camera-sim-fast'
       - "%default_camera%"
