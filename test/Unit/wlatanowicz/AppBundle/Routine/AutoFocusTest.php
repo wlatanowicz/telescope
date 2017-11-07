@@ -4,9 +4,12 @@ declare(strict_types=1);
 namespace Unit\wlatanowicz\AppBundle\Routine;
 
 use Psr\Log\LoggerInterface;
+use wlatanowicz\AppBundle\Data\BinaryImage;
+use wlatanowicz\AppBundle\Data\BinaryImages;
 use wlatanowicz\AppBundle\Data\ImagickImage;
+use wlatanowicz\AppBundle\Factory\ImagickImageFactory;
+use wlatanowicz\AppBundle\Hardware\CameraInterface;
 use wlatanowicz\AppBundle\Hardware\FocuserInterface;
-use wlatanowicz\AppBundle\Hardware\ImagickCameraInterface;
 use wlatanowicz\AppBundle\Routine\AutoFocus\SimpleRecursive;
 use wlatanowicz\AppBundle\Routine\MeasureInterface;
 
@@ -19,7 +22,7 @@ class AutoFocusTest extends \PHPUnit_Framework_TestCase
     private $focuser;
 
     /**
-     * @var ImagickCameraInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @var CameraInterface|\PHPUnit_Framework_MockObject_MockObject
      */
     private $camera;
 
@@ -27,6 +30,11 @@ class AutoFocusTest extends \PHPUnit_Framework_TestCase
      * @var LoggerInterface|\PHPUnit_Framework_MockObject_MockObject
      */
     private $logger;
+
+    /**
+     * @var ImagickImageFactory|\PHPUnit_Framework_MockObject_MockObject
+     */
+    private $imagickImageFactory;
 
     private $currentFocuserPosition;
 
@@ -38,6 +46,7 @@ class AutoFocusTest extends \PHPUnit_Framework_TestCase
         $this->focuser = $this->focuserMock();
         $this->camera = $this->cameraMock();
         $this->logger = $this->createMock(LoggerInterface::class);
+        $this->imagickImageFactory = $this->imagickImageFactoryMock();
     }
 
     /**
@@ -61,7 +70,8 @@ class AutoFocusTest extends \PHPUnit_Framework_TestCase
         );
 
         $autofocus = new SimpleRecursive(
-            $this->logger
+            $this->logger,
+            $this->imagickImageFactory
         );
 
         $autofocus->setPartials($partials);
@@ -126,7 +136,8 @@ class AutoFocusTest extends \PHPUnit_Framework_TestCase
             ->willReturn(1);
 
         $autofocus = new SimpleRecursive(
-            $this->logger
+            $this->logger,
+            $this->imagickImageFactory
         );
 
         $autofocus->setPartials($partials);
@@ -170,17 +181,28 @@ class AutoFocusTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
-    private function cameraMock(): ImagickCameraInterface
+    private function cameraMock(): CameraInterface
     {
-        $imagickImage = new ImagickImage(new \Imagick());
-
-        $camera = $this->createMock(ImagickCameraInterface::class);
+        $binaryImages = new BinaryImages([]);
+        $camera = $this->createMock(CameraInterface::class);
         $camera
             ->expects($this->any())
             ->method('exposure')
-            ->willReturn($imagickImage);
+            ->willReturn($binaryImages);
 
         return $camera;
+    }
+
+    private function imagickImageFactoryMock(): ImagickImageFactory
+    {
+        $imagickImage = new ImagickImage(new \Imagick());
+        $mock = $this->createMock(ImagickImageFactory::class);
+        $mock
+            ->expects($this->any())
+            ->method('fromBinaryImages')
+            ->willReturn($imagickImage);
+
+        return $mock;
     }
 
     private function focuserMock(): FocuserInterface

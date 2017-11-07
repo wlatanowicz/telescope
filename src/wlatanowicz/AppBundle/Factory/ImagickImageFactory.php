@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace wlatanowicz\AppBundle\Factory;
 
 use wlatanowicz\AppBundle\Data\BinaryImage;
+use wlatanowicz\AppBundle\Data\BinaryImages;
 use wlatanowicz\AppBundle\Data\ImagickImage;
 use wlatanowicz\AppBundle\Data\Range;
 use wlatanowicz\AppBundle\Data\RGBMatrix;
@@ -27,6 +28,16 @@ class ImagickImageFactory
 
     public function fromBinaryImage(BinaryImage $binaryImage): ImagickImage
     {
+        $imagick = new \Imagick();
+        $imagick->readImageBlob(
+            $binaryImage->getData()
+        );
+        return new ImagickImage($imagick);
+    }
+
+    public function fromBinaryImages(BinaryImages $binaryImages): ImagickImage
+    {
+        $binaryImage = $binaryImages->getImageByMimetype(BinaryImage::MIMETYPE_JPEG);
         $imagick = new \Imagick();
         $imagick->readImageBlob(
             $binaryImage->getData()

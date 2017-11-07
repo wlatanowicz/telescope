@@ -9,7 +9,6 @@ imports:
     - { resource: controllers/hardware.yml }
     - { resource: hardware/cameras.yml }
     - { resource: hardware/focusers.yml }
-    - { resource: hardware/imagick-cameras.yml }
     - { resource: hardware/radios.yml }
     - { resource: hardware/telescopes.yml }
 

@@ -46,7 +46,7 @@ services:
   command-focuser-measure:
     class: wlatanowicz\AppBundle\Command\Focuser\MeasureCommand
     arguments:
-      - '@imagick-camera-provider'
+      - '@camera-provider'
       - '@focuser-provider'
       - '@logger'
     tags:

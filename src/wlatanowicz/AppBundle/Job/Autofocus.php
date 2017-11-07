@@ -5,6 +5,7 @@ namespace wlatanowicz\AppBundle\Job;
 
 use Psr\Log\LoggerInterface;
 use wlatanowicz\AppBundle\Hardware\Helper\FileSystem;
+use wlatanowicz\AppBundle\Hardware\Provider\CameraProvider;
 use wlatanowicz\AppBundle\Hardware\Provider\FocuserProvider;
 use wlatanowicz\AppBundle\Hardware\Provider\ImagickCroppedCameraProvider;
 use wlatanowicz\AppBundle\Helper\JobManager;
@@ -12,12 +13,13 @@ use wlatanowicz\AppBundle\Job\Params\AutofocusParams;
 use wlatanowicz\AppBundle\Routine\AutoFocus\SimpleRecursive;
 use wlatanowicz\AppBundle\Routine\AutoFocusInterface;
 use wlatanowicz\AppBundle\Routine\AutoFocusReport;
+use wlatanowicz\AppBundle\Routine\Measure\StarFWHM;
 use wlatanowicz\AppBundle\Routine\Provider\MeasureProvider;
 
 class Autofocus extends AbstractJob
 {
     /**
-     * @var ImagickCroppedCameraProvider
+     * @var CameraProvider
      */
     private $cameraProvider;
 
@@ -49,7 +51,7 @@ class Autofocus extends AbstractJob
     /**
      * Autofocus constructor.
      * @param JobManager $jobManager
-     * @param ImagickCroppedCameraProvider $cameraProvider
+     * @param CameraProvider $cameraProvider
      * @param FocuserProvider $focuserProvider
      * @param MeasureProvider $measureProvider
      * @param AutoFocusInterface $autofocus
@@ -57,7 +59,7 @@ class Autofocus extends AbstractJob
      */
     public function __construct(
         JobManager $jobManager,
-        ImagickCroppedCameraProvider $cameraProvider,
+        CameraProvider $cameraProvider,
         FocuserProvider $focuserProvider,
         MeasureProvider $measureProvider,
         AutoFocusInterface $autofocus,
@@ -92,7 +94,10 @@ class Autofocus extends AbstractJob
         $focuser = $this->focuserProvider->getFocuser($focuserName);
         $measure = $this->measureProvider->getMeasure($measureName);
 
-        $camera->setCroping(
+        /**
+         * @var $measure StarFWHM
+         */
+        $measure->setStar(
             $params->getRadius(),
             $params->hasX() ? $params->getX() : null,
             $params->hasY() ? $params->getY() : null
