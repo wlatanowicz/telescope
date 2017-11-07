@@ -46,7 +46,7 @@ class ExposeCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $camera = $input->getOption('camera');
-        $time = $this->floatFromString->floatFromString($input->getOption('time'));
+        $time = $this->floatFromString->floatFromString((string)$input->getOption('time'));
         $filename = $input->getOption('filename');
 
         $this->job->start(new CameraExposeParams(

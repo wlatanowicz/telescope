@@ -65,6 +65,15 @@ services:
     tags:
       - { name: logger.metadata, color: green, display: 'Camera Simulator' }
 
+  camera-sim-real:
+    class: wlatanowicz\AppBundle\Hardware\Simulator\RealCamera
+    arguments:
+      - '@focuser-sim'
+      - '@sys-filesystem'
+      - '@logger'
+    tags:
+      - { name: logger.metadata, color: green, display: 'Camera Simulator' }
+
   camera-sim-fast:
     class: wlatanowicz\AppBundle\Hardware\Simulator\SimpleCamera
     arguments:
@@ -87,4 +96,5 @@ services:
         remote-nikon: '@camera-nikon-remote'
         sim: '@camera-sim'
         sim-fast: '@camera-sim-fast'
+        sim-real: '@camera-sim-real'
       - "%default_camera%"
