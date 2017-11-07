@@ -3,15 +3,19 @@ declare(strict_types=1);
 
 namespace wlatanowicz\AppBundle\Factory;
 
-class SonyExposureTimeStringFactory extends AbstractExposureTimeStringFactory
+class NikonExposureTimeStringFactory extends AbstractExposureTimeStringFactory
 {
     const BULB = "Bulb";
 
     static $SPEEDS = [
+        "1/8000",
+        "1/6400",
+        "1/5000",
         "1/4000",
         "1/3200",
         "1/2500",
         "1/2000",
+        "1/1600",
         "1/1250",
         "1/1000",
         "1/800",
@@ -21,12 +25,12 @@ class SonyExposureTimeStringFactory extends AbstractExposureTimeStringFactory
         "1/320",
         "1/250",
         "1/200",
-        "1/200",
         "1/160",
         "1/125",
         "1/100",
         "1/80",
         "1/60",
+        "1/50",
         "1/40",
         "1/30",
         "1/25",
@@ -39,16 +43,16 @@ class SonyExposureTimeStringFactory extends AbstractExposureTimeStringFactory
         "1/5",
         "1/4",
         "1/3",
-        "4/10",
-        "5/10",
-        "6/10",
-        "8/10",
+        "10/25",
+        "1/2",
+        "10/16",
+        "10/13",
         "1",
         "13/10",
         "16/10",
         "2",
         "25/10",
-        "32/10",
+        "3",
         "4",
         "5",
         "6",

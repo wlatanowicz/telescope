@@ -1,7 +1,7 @@
 services:
 
-  camera-local:
-    class: wlatanowicz\AppBundle\Hardware\Local\Camera
+  camera-sony-local:
+    class: wlatanowicz\AppBundle\Hardware\Local\SonyCamera
     arguments:
       - '@sys-process'
       - '@sys-filesystem'
@@ -12,8 +12,8 @@ services:
     tags:
       - { name: logger.metadata, color: green, display: 'Sony Camera' }
 
-  camera-local-mac:
-    class: wlatanowicz\AppBundle\Hardware\Local\Camera
+  camera-sony-local-mac:
+    class: wlatanowicz\AppBundle\Hardware\Local\SonyCamera
     arguments:
       - '@sys-process'
       - '@sys-filesystem'
@@ -24,35 +24,74 @@ services:
     tags:
       - { name: logger.metadata, color: green, display: 'Sony Camera' }
 
-  camera-remote:
+  camera-nikon-local:
+    class: wlatanowicz\AppBundle\Hardware\Local\NikonCamera
+    arguments:
+      - '@sys-process'
+      - '@sys-filesystem'
+      - '@factory-nikon-exposure-time'
+      - 'umask 0000 && sudo /usr/local/bin/gphoto2'
+      - '/tmp'
+      - '@logger'
+    tags:
+      - { name: logger.metadata, color: green, display: 'Nikon Camera' }
+
+  camera-nikon-local-mac:
+    class: wlatanowicz\AppBundle\Hardware\Local\NikonCamera
+    arguments:
+      - '@sys-process'
+      - '@sys-filesystem'
+      - '@factory-nikon-exposure-time'
+      - 'umask 0000 && /opt/local/bin/gphoto2'
+      - '/tmp'
+      - '@logger'
+    tags:
+      - { name: logger.metadata, color: green, display: 'Nikon Camera' }
+
+  camera-sony-remote:
     class: wlatanowicz\AppBundle\Hardware\Remote\Camera
     arguments:
-      - '@camera-remote-client'
+      - '@camera-sony-remote-client'
       - '@jms_serializer'
       - '@logger'
     tags:
-      - { name: logger.metadata, color: green, display: 'Remote Camera' }
+      - { name: logger.metadata, color: green, display: 'Remote Sony Camera' }
 
-  camera-remote-client:
+  camera-sony-remote-client:
     class: GuzzleHttp\Client
     arguments:
       -
         base_uri: 'http://192.168.0.50/index.php/hardware/camera/sony/'
 
-  camera-remote-mac:
+  camera-sony-remote-mac:
     class: wlatanowicz\AppBundle\Hardware\Remote\Camera
     arguments:
-      - '@camera-remote-mac-client'
+      - '@camera-sony-remote-mac-client'
       - '@jms_serializer'
       - '@logger'
     tags:
       - { name: logger.metadata, color: green, display: 'Remote Camera' }
 
-  camera-remote-mac-client:
+  camera-sony-remote-mac-client:
     class: GuzzleHttp\Client
     arguments:
       -
         base_uri: 'http://localhost/index.php/hardware/camera/sony-mac/'
+
+  camera-nikon-remote:
+    class: wlatanowicz\AppBundle\Hardware\Remote\Camera
+    arguments:
+      - '@camera-nikon-remote-client'
+      - '@jms_serializer'
+      - '@logger'
+    tags:
+      - { name: logger.metadata, color: green, display: 'Remote Nikon Camera' }
+
+  camera-nikon-remote-client:
+    class: GuzzleHttp\Client
+    arguments:
+      -
+        base_uri: 'http://192.168.0.50/index.php/hardware/camera/nikon/'
 
   camera-sim:
     class: wlatanowicz\AppBundle\Hardware\Simulator\Camera
@@ -80,11 +119,14 @@ services:
     class: wlatanowicz\AppBundle\Hardware\Provider\CameraProvider
     arguments:
       -
-        local: '@camera-local'
-        sony: '@camera-local'
-        sony-mac: '@camera-local-mac'
-        remote: '@camera-remote'
-        remote-mac: '@camera-remote-mac'
+        local: '@camera-sony-local'
+        sony: '@camera-sony-local'
+        sony-mac: '@camera-sony-local-mac'
+        nikon: '@camera-nikon-local'
+        nikon-mac: '@camera-nikon-local-mac'
+        remote-sony: '@camera-sony-remote'
+        remote-sony-mac: '@camera-sony-remote-mac'
+        remote-nikon: '@camera-nikon-remote'
         sim: '@camera-sim'
         sim-fast: '@camera-sim-fast'
       - "%default_camera%"

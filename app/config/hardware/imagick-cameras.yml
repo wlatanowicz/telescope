@@ -38,7 +38,7 @@ services:
     class: wlatanowicz\AppBundle\Hardware\Provider\ImagickCroppedCameraProvider
     arguments:
       -
-        local: '@imagick-cropped-local'
-        remote: '@imagick-cropped-remote'
+        sony-local: '@imagick-cropped-local'
+        sony-remote: '@imagick-cropped-remote'
         sim: '@imagick-cropped-sim'
       - "%default_camera%"
