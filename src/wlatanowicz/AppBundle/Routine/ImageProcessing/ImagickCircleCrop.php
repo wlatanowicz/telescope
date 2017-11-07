@@ -11,6 +11,8 @@ class ImagickCircleCrop
 {
     public function crop(ImagickImage $imagickImage, int $radius, int $x = null, int $y = null): ImagickImage
     {
+        $imagick = $imagickImage->getImagick();
+        $imagickImage = new ImagickImage(clone $imagick);
         $x = $x ?? (int)round($imagickImage->getWidth() / 2);
         $y = $y ?? (int)round($imagickImage->getHeight() / 2);
 

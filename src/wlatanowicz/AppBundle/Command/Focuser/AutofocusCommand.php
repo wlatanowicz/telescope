@@ -9,8 +9,6 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use wlatanowicz\AppBundle\Job\Autofocus;
 use wlatanowicz\AppBundle\Job\Params\AutofocusParams;
-use wlatanowicz\AppBundle\Routine\AutoFocus\SimpleRecursive;
-use wlatanowicz\AppBundle\Routine\AutoFocusReport;
 
 class AutofocusCommand extends Command
 {

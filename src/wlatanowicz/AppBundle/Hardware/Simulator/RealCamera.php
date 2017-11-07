@@ -12,6 +12,12 @@ use wlatanowicz\AppBundle\Hardware\CameraInterface;
 use wlatanowicz\AppBundle\Hardware\FocuserInterface;
 use wlatanowicz\AppBundle\Hardware\Helper\FileSystem;
 
+/**
+ * Class RealCamera
+ * @package wlatanowicz\AppBundle\Hardware\Simulator
+ *
+ * Star center at x=967 y=525
+ */
 class RealCamera implements CameraInterface
 {
     const SIM_DOWNLOAD_AND_PREPARE_TIME = 4;

@@ -11,7 +11,7 @@ services:
     class: wlatanowicz\AppBundle\Routine\Measure\StarFWHM
     arguments:
       - '@image-processing-crop'
-      - 0.1
+      - 0.03
       - 0.5
 
   measure-provider:
@@ -23,3 +23,9 @@ services:
 
   image-processing-crop:
     class: wlatanowicz\AppBundle\Routine\ImageProcessing\ImagickCircleCrop
+
+  image-processing-af-report-generator:
+    class: wlatanowicz\AppBundle\Routine\ImageProcessing\AutoFocusReportGenerator
+    arguments:
+      - '@factory-imagick-image'
+      - '@image-processing-crop'

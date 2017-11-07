@@ -48,6 +48,7 @@ services:
     arguments:
       - '@camera-provider'
       - '@focuser-provider'
+      - '@image-processing-af-report-generator'
       - '@logger'
     tags:
         - { name: console.command }

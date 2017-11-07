@@ -1,17 +1,65 @@
 <?php
 declare(strict_types = 1);
 
-namespace wlatanowicz\AppBundle\Routine;
+namespace wlatanowicz\AppBundle\Routine\ImageProcessing;
 
 use wlatanowicz\AppBundle\Data\AutofocusResult;
 use wlatanowicz\AppBundle\Data\ImagickImage;
+use wlatanowicz\AppBundle\Factory\ImagickImageFactory;
 
-class AutoFocusReport
+class AutoFocusReportGenerator
 {
+    /**
+     * @var ImagickImageFactory
+     */
+    private $imagickImageFactory;
+
+    /**
+     * @var ImagickCircleCrop
+     */
+    private $imagickCircleCrop;
+
+    /**
+     * @var int|null
+     */
+    private $starRadius;
+
+    /**
+     * @var int|null
+     */
+    private $starX;
+
+    /**
+     * @var int|null
+     */
+    private $starY;
+
+    /**
+     * AutoFocusReport constructor.
+     * @param ImagickImageFactory $imagickImageFactory
+     */
+    public function __construct(ImagickImageFactory $imagickImageFactory, ImagickCircleCrop $imagickCircleCrop)
+    {
+        $this->imagickImageFactory = $imagickImageFactory;
+        $this->imagickCircleCrop = $imagickCircleCrop;
+    }
+
+    public function setStar(int $radius, int $x = null, int $y = null)
+    {
+        $this->starX = $x;
+        $this->starY = $y;
+        $this->starRadius = $radius;
+    }
+
     public function generateReport(AutofocusResult $autofocusResult): ImagickImage
     {
-        $tileWidth = $autofocusResult->getMaximum()->getImage()->getWidth();
-        $tileHeight = $autofocusResult->getMaximum()->getImage()->getHeight();
+        if ($this->starRadius) {
+            $tileHeight = $this->starRadius * 2;
+            $tileWidth = $this->starRadius * 2;
+        } else {
+            $tileWidth = $this->imagickImageFactory->fromBinaryImages($autofocusResult->getMaximum()->getImage())->getWidth();
+            $tileHeight = $this->imagickImageFactory->fromBinaryImages($autofocusResult->getMaximum()->getImage())->getHeight();
+        }
         $tileCount = count($autofocusResult->getPoints());
 
         $columnCount = (int)ceil(sqrt($tileCount));
@@ -34,8 +82,20 @@ class AutoFocusReport
                 $posY = $y * ($tileHeight + $annotationHeight);
 
                 if (isset($autofocusResult->getPoints()[$i])) {
+
+                    $tile = $this->imagickImageFactory->fromBinaryImages($autofocusResult->getPoints()[$i]->getImage());
+
+                    if ($this->starRadius) {
+                        $tile = $this->imagickCircleCrop->crop(
+                            $tile,
+                            $this->starRadius,
+                            $this->starX,
+                            $this->starY
+                        );
+                    }
+
                     $imagick->compositeImage(
-                        $autofocusResult->getPoints()[$i]->getImage()->getImagick(),
+                        $tile->getImagick(),
                         \Imagick::COMPOSITE_DEFAULT,
                         $posX,
                         $posY + $annotationHeight

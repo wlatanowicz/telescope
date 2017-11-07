@@ -12,7 +12,7 @@ use wlatanowicz\AppBundle\Helper\JobManager;
 use wlatanowicz\AppBundle\Job\Params\AutofocusParams;
 use wlatanowicz\AppBundle\Routine\AutoFocus\SimpleRecursive;
 use wlatanowicz\AppBundle\Routine\AutoFocusInterface;
-use wlatanowicz\AppBundle\Routine\AutoFocusReport;
+use wlatanowicz\AppBundle\Routine\ImageProcessing\AutoFocusReportGenerator;
 use wlatanowicz\AppBundle\Routine\Measure\StarFWHM;
 use wlatanowicz\AppBundle\Routine\Provider\MeasureProvider;
 
@@ -44,6 +44,11 @@ class Autofocus extends AbstractJob
     private $fileSystem;
 
     /**
+     * @var AutoFocusReportGenerator
+     */
+    private $reportGenerator;
+
+    /**
      * @var LoggerInterface
      */
     private $logger;
@@ -64,6 +69,7 @@ class Autofocus extends AbstractJob
         MeasureProvider $measureProvider,
         AutoFocusInterface $autofocus,
         FileSystem $fileSystem,
+        AutoFocusReportGenerator $reportGenerator,
         LoggerInterface $logger
     ) {
         parent::__construct($jobManager);
@@ -72,6 +78,7 @@ class Autofocus extends AbstractJob
         $this->measureProvider = $measureProvider;
         $this->autofocus = $autofocus;
         $this->fileSystem = $fileSystem;
+        $this->reportGenerator = $reportGenerator;
         $this->logger = $logger;
     }
 
@@ -103,6 +110,12 @@ class Autofocus extends AbstractJob
             $params->hasY() ? $params->getY() : null
         );
 
+        $this->reportGenerator->setStar(
+            $params->getRadius(),
+            $params->hasX() ? $params->getX() : null,
+            $params->hasY() ? $params->getY() : null
+        );
+
         /**
          * @var $autofocus SimpleRecursive
          */
@@ -126,8 +139,7 @@ class Autofocus extends AbstractJob
             ? $params->getReportFile()
             : "af-report-" . date('Y-m-d-H-i-s') . ".jpeg";
 
-        $reporter = new AutoFocusReport();
-        $report = $reporter->generateReport($result);
+        $report = $this->reportGenerator->generateReport($result);
         $this->fileSystem->filePutContents(
             $this->jobManager->getCurrentJobResultDirPath() . '/' . $reportfilename,
             $report->getImageBlob()
