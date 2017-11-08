@@ -6,7 +6,7 @@ services:
       - '@camera-provider'
       - '@focuser-provider'
       - '@measure-provider'
-      - '@autofocus-default'
+      - '@autofocus-provider'
       - '@sys-filesystem'
       - '@image-processing-af-report-generator'
       - '@logger'

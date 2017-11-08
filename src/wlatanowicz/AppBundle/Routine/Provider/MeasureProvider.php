@@ -3,9 +3,10 @@ declare(strict_types = 1);
 
 namespace wlatanowicz\AppBundle\Routine\Provider;
 
+use wlatanowicz\AppBundle\Hardware\Provider\ProviderInterface;
 use wlatanowicz\AppBundle\Routine\MeasureInterface;
 
-class MeasureProvider
+class MeasureProvider implements ProviderInterface
 {
     /**
      * @var MeasureInterface[]
@@ -35,5 +36,15 @@ class MeasureProvider
     public function getMeasure(string $name = null): MeasureInterface
     {
         return $this->measures[$name ?? $this->default];
+    }
+
+    public function getAvailableValues(): array
+    {
+        return array_keys($this->measures);
+    }
+
+    public function getDefaultValue(): string
+    {
+        return $this->default;
     }
 }

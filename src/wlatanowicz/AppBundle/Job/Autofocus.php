@@ -7,13 +7,12 @@ use Psr\Log\LoggerInterface;
 use wlatanowicz\AppBundle\Hardware\Helper\FileSystem;
 use wlatanowicz\AppBundle\Hardware\Provider\CameraProvider;
 use wlatanowicz\AppBundle\Hardware\Provider\FocuserProvider;
-use wlatanowicz\AppBundle\Hardware\Provider\ImagickCroppedCameraProvider;
 use wlatanowicz\AppBundle\Helper\JobManager;
 use wlatanowicz\AppBundle\Job\Params\AutofocusParams;
-use wlatanowicz\AppBundle\Routine\AutoFocus\SimpleRecursive;
 use wlatanowicz\AppBundle\Routine\AutoFocusInterface;
 use wlatanowicz\AppBundle\Routine\ImageProcessing\AutoFocusReportGenerator;
 use wlatanowicz\AppBundle\Routine\Measure\StarFWHM;
+use wlatanowicz\AppBundle\Routine\Provider\AutoFocusProvider;
 use wlatanowicz\AppBundle\Routine\Provider\MeasureProvider;
 
 class Autofocus extends AbstractJob
@@ -34,9 +33,9 @@ class Autofocus extends AbstractJob
     private $measureProvider;
 
     /**
-     * @var AutoFocusInterface
+     * @var AutoFocusProvider
      */
-    private $autofocus;
+    private $autofocusProvider;
 
     /**
      * @var FileSystem
@@ -59,7 +58,9 @@ class Autofocus extends AbstractJob
      * @param CameraProvider $cameraProvider
      * @param FocuserProvider $focuserProvider
      * @param MeasureProvider $measureProvider
-     * @param AutoFocusInterface $autofocus
+     * @param AutoFocusProvider $autoFocusProvider
+     * @param FileSystem $fileSystem
+     * @param AutoFocusReportGenerator $reportGenerator
      * @param LoggerInterface $logger
      */
     public function __construct(
@@ -67,7 +68,7 @@ class Autofocus extends AbstractJob
         CameraProvider $cameraProvider,
         FocuserProvider $focuserProvider,
         MeasureProvider $measureProvider,
-        AutoFocusInterface $autofocus,
+        AutoFocusProvider $autoFocusProvider,
         FileSystem $fileSystem,
         AutoFocusReportGenerator $reportGenerator,
         LoggerInterface $logger
@@ -76,7 +77,7 @@ class Autofocus extends AbstractJob
         $this->cameraProvider = $cameraProvider;
         $this->focuserProvider = $focuserProvider;
         $this->measureProvider = $measureProvider;
-        $this->autofocus = $autofocus;
+        $this->autofocusProvider = $autoFocusProvider;
         $this->fileSystem = $fileSystem;
         $this->reportGenerator = $reportGenerator;
         $this->logger = $logger;
@@ -97,9 +98,14 @@ class Autofocus extends AbstractJob
             ? $params->getMeasureName()
             : null;
 
+        $autofocusName = $params->hasAutofocusName()
+            ? $params->getAutofocusName()
+            : null;
+
         $camera = $this->cameraProvider->getCamera($cameraName);
         $focuser = $this->focuserProvider->getFocuser($focuserName);
         $measure = $this->measureProvider->getMeasure($measureName);
+        $autofocus = $this->autofocusProvider->getAutoFocus($autofocusName);
 
         /**
          * @var $measure StarFWHM
@@ -116,21 +122,20 @@ class Autofocus extends AbstractJob
             $params->hasY() ? $params->getY() : null
         );
 
-        /**
-         * @var $autofocus SimpleRecursive
-         */
-        $autofocus = $this->autofocus;
-        $autofocus->setPartials($params->getPartials());
-        $autofocus->setIterations($params->getIterations());
-        $autofocus->setTriesArray($params->getTries());
+        $options = [
+            'partials' => $params->getPartials(),
+            'iterations' => $params->getIterations(),
+            'tries' => $params->getTries(),
+        ];
 
-        $result = $this->autofocus->autofocus(
+        $result = $autofocus->autofocus(
             $measure,
             $camera,
             $focuser,
             $params->getMin(),
             $params->getMax(),
-            $params->getTime()
+            $params->getTime(),
+            $options
         );
 
         $focuser->setPosition($result->getMaximum()->getPosition());

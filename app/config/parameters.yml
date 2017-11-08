@@ -6,6 +6,7 @@ parameters:
   default_telescope: 'stellarium'
   default_radio: 'local'
   default_measure: 'fwhm'
+  default_autofocus: 'linear'
 
   gphoto_bin: 'umask 0000 && sudo /usr/local/bin/gphoto2' #linux
 

@@ -1,9 +1,18 @@
 services:
-  autofocus-default:
+  autofocus-recursive:
     class: wlatanowicz\AppBundle\Routine\AutoFocus\SimpleRecursive
     arguments:
       - '@logger'
       - '@factory-imagick-image'
+    tags:
+      - { name: logger.metadata, color: blue, display: 'AutoFocus' }
+
+  autofocus-linear:
+    class: wlatanowicz\AppBundle\Routine\AutoFocus\DoubleLinear
+    arguments:
+      - '@logger'
+      - '@factory-imagick-image'
+      - '@math-linear-regression'
     tags:
       - { name: logger.metadata, color: blue, display: 'AutoFocus' }
 
@@ -29,3 +38,14 @@ services:
     arguments:
       - '@factory-imagick-image'
       - '@image-processing-crop'
+
+  math-linear-regression:
+    class: wlatanowicz\AppBundle\Routine\Math\LinearRegression
+
+  autofocus-provider:
+    class: wlatanowicz\AppBundle\Routine\Provider\AutoFocusProvider
+    arguments:
+      -
+        recursive: '@autofocus-recursive'
+        linear: '@autofocus-linear'
+      - '%default_autofocus%'
