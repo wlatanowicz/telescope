@@ -49,33 +49,29 @@ abstract class AbstractGphotoCamera implements CameraInterface
         $this->logger = $logger;
     }
 
+    abstract protected function getCameraModel(): string;
+
+    protected function execGphoto(string $cmd): array
+    {
+        $model = $this->getCameraModel();
+        $fullCmd = "{$this->bin} --camera=\"$model\" --quiet {$cmd}";
+        return $this->process->exec($fullCmd);
+    }
+
     protected function getCameraConfig(string $config): string
     {
-        $cmd = "{$this->bin}"
-            . " --quiet"
-            . " --get-config {$config}";
-
-        $output = $this->process->exec($cmd);
-
+        $output = $this->execGphoto("--get-config {$config}");
         return $this->getCurentSettingFromCommandOutput($output);
     }
 
     protected function setCameraConfigIndex(string $config, int $index)
     {
-        $cmd = "{$this->bin}"
-            . " --quiet"
-            . " --set-config-index {$config}={$index}";
-
-        $this->process->exec($cmd);
+        $this->execGphoto("--set-config-index {$config}={$index}");
     }
 
-    protected function setCameraConfig(string $config, mixed $value)
+    protected function setCameraConfig(string $config, string $value)
     {
-        $cmd = "{$this->bin}"
-            . " --quiet"
-            . " --set-config {$config}={$value}";
-
-        $this->process->exec($cmd);
+        $this->execGphoto("--set-config {$config}={$value}");
     }
 
     private function getCurentSettingFromCommandOutput(array $output): string

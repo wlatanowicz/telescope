@@ -53,23 +53,19 @@ class SonyCamera extends AbstractGphotoCamera
         $this->filesystem->mkdir($tempdir);
 
         if ($timeAsString == SonyExposureTimeStringFactory::BULB) {
-            $cmd = "{$this->bin}"
-                . " --quiet"
-                . " --force-overwrite"
+            $cmd = "--force-overwrite"
                 . " --set-config capture=on"
                 . " --wait-event={$time}s"
                 . " --set-config capture=off"
                 . " --wait-event-and-download=10s"
                 . " --filename={$tempdir}/img.%C";
         } else {
-            $cmd = "{$this->bin}"
-                . " --quiet"
-                . " --force-overwrite"
+            $cmd = "--force-overwrite"
                 . " --capture-image-and-download"
                 . " --filename={$tempdir}/img.%C";
         }
 
-        $this->process->exec($cmd);
+        $this->execGphoto($cmd);
 
         $images = [];
         $extensions = ['JPG', 'ARW'];
@@ -144,6 +140,11 @@ class SonyCamera extends AbstractGphotoCamera
 
     public function getBatteryLevel(): float
     {
-        return floatval($this->getCameraConfig('batteylevel'));
+        return floatval($this->getCameraConfig('batterylevel'));
+    }
+
+    protected function getCameraModel(): string
+    {
+        return 'Sony SLT-A58 (Control)';
     }
 }

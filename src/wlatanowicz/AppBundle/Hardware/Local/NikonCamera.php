@@ -53,9 +53,7 @@ class NikonCamera extends AbstractGphotoCamera
         $this->filesystem->mkdir($tempdir);
 
         if ($timeAsString == NikonExposureTimeStringFactory::BULB) {
-            $cmd = "{$this->bin}"
-                . " --quiet"
-                . " --force-overwrite"
+            $cmd = "--force-overwrite"
                 . " --set-config capture=on"
                 . " --wait-event={$time}s"
                 . " --set-config capture=off"
@@ -63,14 +61,12 @@ class NikonCamera extends AbstractGphotoCamera
                 . " --filename={$tempdir}/img.%C";
             throw new NotImplementedException('Bulb is not implemented for Nikon');
         } else {
-            $cmd = "{$this->bin}"
-                . " --quiet"
-                . " --force-overwrite"
+            $cmd = "--force-overwrite"
                 . " --capture-image-and-download"
                 . " --filename={$tempdir}/img.%C";
         }
 
-        $this->process->exec($cmd);
+        $this->execGphoto($cmd);
 
         $images = [];
         $extensions = ['JPG', 'NEF'];
@@ -149,6 +145,11 @@ class NikonCamera extends AbstractGphotoCamera
 
     public function getBatteryLevel(): float
     {
-        return floatval($this->getCameraConfig('batteylevel'));
+        return floatval($this->getCameraConfig('batterylevel'));
+    }
+
+    protected function getCameraModel(): string
+    {
+        return 'Nikon DSC D70 (PTP mode)';
     }
 }
