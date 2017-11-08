@@ -7,6 +7,7 @@ use wlatanowicz\AppBundle\Data\BinaryImage;
 use wlatanowicz\AppBundle\Data\ImagickImage;
 use wlatanowicz\AppBundle\Factory\ImagickImageFactory;
 use wlatanowicz\AppBundle\Factory\RGBMatrixFactory;
+use wlatanowicz\AppBundle\Routine\ImageProcessing\ImagickCircleCrop;
 use wlatanowicz\AppBundle\Routine\Measure\Exception\CannotMeasureException;
 use wlatanowicz\AppBundle\Routine\Measure\StarFWHM as StarFWHM;
 
@@ -22,7 +23,20 @@ class StarFWHMTest extends \PHPUnit_Framework_TestCase
         float $half,
         int $pixelCount
     ) {
+        /**
+         * @var $cropMock ImagickCircleCrop|\PHPUnit_Framework_MockObject_MockObject
+         */
+        $cropMock = $this->createMock(ImagickCircleCrop::class);
+
+        $cropMock
+            ->expects($this->once())
+            ->method('crop')
+            ->will($this->returnCallback(function($image){
+                return $image;
+            }));
+
         $starFWHM = new StarFWHM(
+            $cropMock,
             $threshold,
             $half
         );
@@ -73,13 +87,26 @@ class StarFWHMTest extends \PHPUnit_Framework_TestCase
      * @test
      * @dataProvider dataProviderForExceptions
      */
-    public function itShouldThrowExcrption(
+    public function itShouldThrowException(
         string $filename,
         float $threshold,
         float $half,
         string $exception
     ) {
+        /**
+         * @var $cropMock ImagickCircleCrop|\PHPUnit_Framework_MockObject_MockObject
+         */
+        $cropMock = $this->createMock(ImagickCircleCrop::class);
+
+        $cropMock
+            ->expects($this->once())
+            ->method('crop')
+            ->will($this->returnCallback(function($image){
+                return $image;
+            }));
+
         $starFWHM = new StarFWHM(
+            $cropMock,
             $threshold,
             $half
         );

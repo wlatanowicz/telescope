@@ -44,7 +44,10 @@ class AppKernel extends Kernel
 
     public function registerContainerConfiguration(LoaderInterface $loader)
     {
-        $loader->load($this->getRootDir().'/config/config.yml');
+        $configFile = php_uname('s') == 'Darwin'
+            ? 'config_mac.yml'
+            : 'config.yml';
+        $loader->load($this->getRootDir() . '/config/' . $configFile);
     }
 
     protected function getKernelParameters()

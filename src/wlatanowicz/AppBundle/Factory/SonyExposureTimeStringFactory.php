@@ -3,14 +3,9 @@ declare(strict_types=1);
 
 namespace wlatanowicz\AppBundle\Factory;
 
-class SonyExposureTimeStringFactory
+class SonyExposureTimeStringFactory extends AbstractExposureTimeStringFactory
 {
     const BULB = "Bulb";
-
-    const MAX_NON_BULB = 30;
-    const MIN_BULB = 4;
-
-    const COMPARE_ERROR = 0.00000001;
 
     static $SPEEDS = [
         "1/4000",
@@ -66,48 +61,4 @@ class SonyExposureTimeStringFactory
         "30",
     ];
 
-    /**
-     * @var FloatFromStringFactory
-     */
-    private $floatFromString;
-
-    /**
-     * SonyExposureTimeStringFactory constructor.
-     * @param FloatFromStringFactory $floatFromString
-     */
-    public function __construct(FloatFromStringFactory $floatFromString)
-    {
-        $this->floatFromString = $floatFromString;
-    }
-
-    public function exposureStringFromFloat(float $time): string
-    {
-        if ($time > self::MAX_NON_BULB) {
-            return self::BULB;
-        }
-
-        foreach (self::$SPEEDS as $speed) {
-            if ($this->equal($time, $speed)) {
-                return $speed;
-            }
-
-            if ($this->less($time, $speed)) {
-                return $speed;
-            }
-        }
-
-        return self::BULB;
-    }
-
-    private function equal(float $timeAsFloat, string $timeAsString): bool
-    {
-        $timeFromString = $this->floatFromString->floatFromString($timeAsString);
-
-        return abs($timeFromString - $timeAsFloat) <= self::COMPARE_ERROR;
-    }
-
-    private function less(float $timeAsFloat, string $timeAsString): bool
-    {
-        return $this->floatFromString->floatFromString($timeAsString) > $timeAsFloat;
-    }
 }

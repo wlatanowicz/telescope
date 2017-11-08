@@ -6,3 +6,7 @@ parameters:
   default_telescope: 'stellarium'
   default_radio: 'local'
   default_measure: 'fwhm'
+
+  gphoto_bin: 'umask 0000 && sudo /usr/local/bin/gphoto2' #linux
+
+  camera_uri: 'http://192.168.0.50/index.php/hardware/camera'

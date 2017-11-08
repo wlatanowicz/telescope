@@ -3,13 +3,15 @@ services:
     class: wlatanowicz\AppBundle\Routine\AutoFocus\SimpleRecursive
     arguments:
       - '@logger'
+      - '@factory-imagick-image'
     tags:
       - { name: logger.metadata, color: blue, display: 'AutoFocus' }
 
   measure-star-fwhm:
     class: wlatanowicz\AppBundle\Routine\Measure\StarFWHM
     arguments:
-      - 0.1
+      - '@image-processing-crop'
+      - 0.03
       - 0.5
 
   measure-provider:
@@ -18,3 +20,12 @@ services:
       -
         fwhm: '@measure-star-fwhm'
       - '%default_measure%'
+
+  image-processing-crop:
+    class: wlatanowicz\AppBundle\Routine\ImageProcessing\ImagickCircleCrop
+
+  image-processing-af-report-generator:
+    class: wlatanowicz\AppBundle\Routine\ImageProcessing\AutoFocusReportGenerator
+    arguments:
+      - '@factory-imagick-image'
+      - '@image-processing-crop'

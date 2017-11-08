@@ -136,7 +136,7 @@ class Camera implements CameraInterface
 
     private function getImage(): BinaryImage
     {
-        $path = __DIR__ . "/Resources/" . $this->imageName;
+        $path = __DIR__ . "/Resources/Camera/" . $this->imageName;
         $binary = $this->fileSystem->fileGetContents($path);
         return new BinaryImage(
             $binary,
