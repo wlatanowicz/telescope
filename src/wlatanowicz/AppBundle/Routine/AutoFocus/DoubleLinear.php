@@ -84,7 +84,7 @@ class DoubleLinear implements AutoFocusInterface
             $focuser,
             $bestPosition,
             $time,
-            0
+            -1
         );
 
         $measures[] = $best;

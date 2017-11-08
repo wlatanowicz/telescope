@@ -20,8 +20,6 @@ services:
     class: wlatanowicz\AppBundle\Routine\Measure\StarFWHM
     arguments:
       - '@image-processing-crop'
-      - 0.03
-      - 0.5
 
   measure-provider:
     class: wlatanowicz\AppBundle\Routine\Provider\MeasureProvider

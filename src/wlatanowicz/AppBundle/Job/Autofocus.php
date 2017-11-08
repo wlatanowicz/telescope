@@ -107,20 +107,21 @@ class Autofocus extends AbstractJob
         $measure = $this->measureProvider->getMeasure($measureName);
         $autofocus = $this->autofocusProvider->getAutoFocus($autofocusName);
 
-        /**
-         * @var $measure StarFWHM
-         */
-        $measure->setStar(
-            $params->getRadius(),
-            $params->hasX() ? $params->getX() : null,
-            $params->hasY() ? $params->getY() : null
-        );
+        $starRadius = $params->getRadius();
+        $starX = $params->hasX() ? $params->getX() : null;
+        $starY = $params->hasY() ? $params->getY() : null;
 
         $this->reportGenerator->setStar(
-            $params->getRadius(),
-            $params->hasX() ? $params->getX() : null,
-            $params->hasY() ? $params->getY() : null
+            $starRadius,
+            $starX,
+            $starY
         );
+
+        $measure->setOptions([
+            'starRadius' => $starRadius,
+            'starX' => $starX,
+            'starY' => $starY,
+        ]);
 
         $options = [
             'partials' => $params->getPartials(),
