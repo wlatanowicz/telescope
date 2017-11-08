@@ -14,6 +14,7 @@ interface AutoFocusInterface
         FocuserInterface $focuser,
         int $minPosition,
         int $maxPosition,
-        int $time
+        int $time,
+        array $options = []
     ): AutofocusResult;
 }

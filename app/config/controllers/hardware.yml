@@ -30,4 +30,5 @@ services:
         cameras: '@camera-provider'
         telescopes: '@telescope-provider'
         focusers: '@focuser-provider'
+        autofocuses: '@autofocus-provider'
       - '@jms_serializer'

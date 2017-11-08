@@ -74,8 +74,10 @@ class AutoFocusTest extends \PHPUnit_Framework_TestCase
             $this->imagickImageFactory
         );
 
-        $autofocus->setPartials($partials);
-        $autofocus->setIterations($iterations);
+        $options = [
+            'partials' => $partials,
+            'iterations' => $iterations,
+        ];
 
         $result = $autofocus->autofocus(
             $measure,
@@ -83,7 +85,8 @@ class AutoFocusTest extends \PHPUnit_Framework_TestCase
             $this->focuser,
             $minPosition,
             $maxPosition,
-            1
+            1,
+            $options
         );
 
         $minExpected = $focusPoint - abs($tolerance);
@@ -140,8 +143,10 @@ class AutoFocusTest extends \PHPUnit_Framework_TestCase
             $this->imagickImageFactory
         );
 
-        $autofocus->setPartials($partials);
-        $autofocus->setIterations($iterations);
+        $options = [
+            'partials' => $partials,
+            'iterations' => $iterations,
+        ];
 
         $result = $autofocus->autofocus(
             $measure,
@@ -149,7 +154,8 @@ class AutoFocusTest extends \PHPUnit_Framework_TestCase
             $this->focuser,
             $minPosition,
             $maxPosition,
-            1
+            1,
+            $options
         );
 
         $focusPoint = ($maxPosition + $minPosition) / 2;

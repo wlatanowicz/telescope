@@ -35,11 +35,12 @@ class StarFWHMTest extends \PHPUnit_Framework_TestCase
                 return $image;
             }));
 
-        $starFWHM = new StarFWHM(
-            $cropMock,
-            $threshold,
-            $half
-        );
+        $starFWHM = new StarFWHM($cropMock);
+
+        $starFWHM->setOptions([
+            'threshold' => $threshold,
+            'half' => $half,
+        ]);
 
         $binData = file_get_contents(__DIR__ . "/../Resources/" . $filename);
         $binImage = new BinaryImage($binData);
@@ -105,11 +106,12 @@ class StarFWHMTest extends \PHPUnit_Framework_TestCase
                 return $image;
             }));
 
-        $starFWHM = new StarFWHM(
-            $cropMock,
-            $threshold,
-            $half
-        );
+        $starFWHM = new StarFWHM($cropMock);
+
+        $starFWHM->setOptions([
+            'threshold' => $threshold,
+            'half' => $half,
+        ]);
 
         $binData = file_get_contents(__DIR__ . "/../Resources/" . $filename);
         $binImage = new BinaryImage($binData);
