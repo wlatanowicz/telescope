@@ -1,0 +1,2 @@
+parameters:
+  gphoto_bin: 'umask 0000 && /opt/local/bin/gphoto2' #mac

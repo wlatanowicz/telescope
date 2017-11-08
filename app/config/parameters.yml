@@ -8,6 +8,5 @@ parameters:
   default_measure: 'fwhm'
 
   gphoto_bin: 'umask 0000 && sudo /usr/local/bin/gphoto2' #linux
-  #gphoto_bin: 'umask 0000 && /opt/local/bin/gphoto2' #mac
 
   camera_uri: 'http://192.168.0.50/index.php/hardware/camera'
