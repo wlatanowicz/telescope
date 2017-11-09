@@ -189,7 +189,7 @@ class AutoFocusTest extends \PHPUnit_Framework_TestCase
 
     private function cameraMock(): CameraInterface
     {
-        $binaryImages = new BinaryImages([]);
+        $binaryImages = new BinaryImages([new BinaryImage('')]);
         $camera = $this->createMock(CameraInterface::class);
         $camera
             ->expects($this->any())

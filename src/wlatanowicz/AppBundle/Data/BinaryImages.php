@@ -19,6 +19,9 @@ class BinaryImages
      */
     public function __construct(array $images)
     {
+        if (count($images) < 1) {
+            throw new \Exception('No images given');
+        }
         $this->images = $images;
     }
 
