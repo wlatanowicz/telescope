@@ -5,19 +5,20 @@ namespace wlatanowicz\AppBundle\Job;
 
 use Psr\Log\LoggerInterface;
 use wlatanowicz\AppBundle\Hardware\Helper\FileSystem;
+use wlatanowicz\AppBundle\Hardware\Provider\CameraProvider;
 use wlatanowicz\AppBundle\Hardware\Provider\FocuserProvider;
-use wlatanowicz\AppBundle\Hardware\Provider\ImagickCroppedCameraProvider;
 use wlatanowicz\AppBundle\Helper\JobManager;
 use wlatanowicz\AppBundle\Job\Params\AutofocusParams;
-use wlatanowicz\AppBundle\Routine\AutoFocus\SimpleRecursive;
 use wlatanowicz\AppBundle\Routine\AutoFocusInterface;
-use wlatanowicz\AppBundle\Routine\AutoFocusReport;
+use wlatanowicz\AppBundle\Routine\ImageProcessing\AutoFocusReportGenerator;
+use wlatanowicz\AppBundle\Routine\Measure\StarFWHM;
+use wlatanowicz\AppBundle\Routine\Provider\AutoFocusProvider;
 use wlatanowicz\AppBundle\Routine\Provider\MeasureProvider;
 
 class Autofocus extends AbstractJob
 {
     /**
-     * @var ImagickCroppedCameraProvider
+     * @var CameraProvider
      */
     private $cameraProvider;
 
@@ -32,14 +33,19 @@ class Autofocus extends AbstractJob
     private $measureProvider;
 
     /**
-     * @var AutoFocusInterface
+     * @var AutoFocusProvider
      */
-    private $autofocus;
+    private $autofocusProvider;
 
     /**
      * @var FileSystem
      */
     private $fileSystem;
+
+    /**
+     * @var AutoFocusReportGenerator
+     */
+    private $reportGenerator;
 
     /**
      * @var LoggerInterface
@@ -49,27 +55,31 @@ class Autofocus extends AbstractJob
     /**
      * Autofocus constructor.
      * @param JobManager $jobManager
-     * @param ImagickCroppedCameraProvider $cameraProvider
+     * @param CameraProvider $cameraProvider
      * @param FocuserProvider $focuserProvider
      * @param MeasureProvider $measureProvider
-     * @param AutoFocusInterface $autofocus
+     * @param AutoFocusProvider $autoFocusProvider
+     * @param FileSystem $fileSystem
+     * @param AutoFocusReportGenerator $reportGenerator
      * @param LoggerInterface $logger
      */
     public function __construct(
         JobManager $jobManager,
-        ImagickCroppedCameraProvider $cameraProvider,
+        CameraProvider $cameraProvider,
         FocuserProvider $focuserProvider,
         MeasureProvider $measureProvider,
-        AutoFocusInterface $autofocus,
+        AutoFocusProvider $autoFocusProvider,
         FileSystem $fileSystem,
+        AutoFocusReportGenerator $reportGenerator,
         LoggerInterface $logger
     ) {
         parent::__construct($jobManager);
         $this->cameraProvider = $cameraProvider;
         $this->focuserProvider = $focuserProvider;
         $this->measureProvider = $measureProvider;
-        $this->autofocus = $autofocus;
+        $this->autofocusProvider = $autoFocusProvider;
         $this->fileSystem = $fileSystem;
+        $this->reportGenerator = $reportGenerator;
         $this->logger = $logger;
     }
 
@@ -88,31 +98,45 @@ class Autofocus extends AbstractJob
             ? $params->getMeasureName()
             : null;
 
+        $autofocusName = $params->hasAutofocusName()
+            ? $params->getAutofocusName()
+            : null;
+
         $camera = $this->cameraProvider->getCamera($cameraName);
         $focuser = $this->focuserProvider->getFocuser($focuserName);
         $measure = $this->measureProvider->getMeasure($measureName);
+        $autofocus = $this->autofocusProvider->getAutoFocus($autofocusName);
 
-        $camera->setCroping(
-            $params->getRadius(),
-            $params->hasX() ? $params->getX() : null,
-            $params->hasY() ? $params->getY() : null
+        $starRadius = $params->getRadius();
+        $starX = $params->hasX() ? $params->getX() : null;
+        $starY = $params->hasY() ? $params->getY() : null;
+
+        $this->reportGenerator->setStar(
+            $starRadius,
+            $starX,
+            $starY
         );
 
-        /**
-         * @var $autofocus SimpleRecursive
-         */
-        $autofocus = $this->autofocus;
-        $autofocus->setPartials($params->getPartials());
-        $autofocus->setIterations($params->getIterations());
-        $autofocus->setTriesArray($params->getTries());
+        $measure->setOptions([
+            'starRadius' => $starRadius,
+            'starX' => $starX,
+            'starY' => $starY,
+        ]);
 
-        $result = $this->autofocus->autofocus(
+        $options = [
+            'partials' => $params->getPartials(),
+            'iterations' => $params->getIterations(),
+            'tries' => $params->getTries(),
+        ];
+
+        $result = $autofocus->autofocus(
             $measure,
             $camera,
             $focuser,
             $params->getMin(),
             $params->getMax(),
-            $params->getTime()
+            $params->getTime(),
+            $options
         );
 
         $focuser->setPosition($result->getMaximum()->getPosition());
@@ -121,8 +145,7 @@ class Autofocus extends AbstractJob
             ? $params->getReportFile()
             : "af-report-" . date('Y-m-d-H-i-s') . ".jpeg";
 
-        $reporter = new AutoFocusReport();
-        $report = $reporter->generateReport($result);
+        $report = $this->reportGenerator->generateReport($result);
         $this->fileSystem->filePutContents(
             $this->jobManager->getCurrentJobResultDirPath() . '/' . $reportfilename,
             $report->getImageBlob()

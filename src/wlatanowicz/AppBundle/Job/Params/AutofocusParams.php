@@ -26,6 +26,12 @@ class AutofocusParams implements JobParamsInterface
     private $measureName;
 
     /**
+     * @var string|null
+     * @Type("string")
+     */
+    private $autofocusName;
+
+    /**
      * @var int
      * @Type("int")
      */
@@ -105,6 +111,7 @@ class AutofocusParams implements JobParamsInterface
         string $cameraName = null,
         string $focuserName = null,
         string $measureName = null,
+        string $autofocusName = null,
         int $min,
         int $max,
         int $time,
@@ -119,6 +126,7 @@ class AutofocusParams implements JobParamsInterface
         $this->cameraName = $cameraName;
         $this->focuserName = $focuserName;
         $this->measureName = $measureName;
+        $this->autofocusName = $autofocusName;
         $this->min = $min;
         $this->max = $max;
         $this->time = $time;
@@ -156,6 +164,14 @@ class AutofocusParams implements JobParamsInterface
     }
 
     /**
+     * @return bool
+     */
+    public function hasAutofocusName(): bool
+    {
+        return $this->autofocusName !== null;
+    }
+
+    /**
      * @return string
      */
     public function getCameraName(): string
@@ -177,6 +193,14 @@ class AutofocusParams implements JobParamsInterface
     public function getMeasureName(): string
     {
         return $this->measureName;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAutofocusName(): string
+    {
+        return $this->autofocusName;
     }
 
     /**

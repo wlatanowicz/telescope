@@ -10,15 +10,15 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use wlatanowicz\AppBundle\Data\AutofocusPoint;
 use wlatanowicz\AppBundle\Data\AutofocusResult;
+use wlatanowicz\AppBundle\Hardware\Provider\CameraProvider;
 use wlatanowicz\AppBundle\Hardware\Provider\FocuserProvider;
-use wlatanowicz\AppBundle\Hardware\Provider\ImagickCroppedCameraProvider;
-use wlatanowicz\AppBundle\Routine\AutoFocusReport;
+use wlatanowicz\AppBundle\Routine\ImageProcessing\AutoFocusReportGenerator;
 use wlatanowicz\AppBundle\Routine\Measure\StarFWHM;
 
 class MeasureCommand extends Command
 {
     /**
-     * @var ImagickCroppedCameraProvider
+     * @var CameraProvider
      */
     private $cameraProvider;
 
@@ -33,19 +33,26 @@ class MeasureCommand extends Command
     private $logger;
 
     /**
+     * @var AutoFocusReportGenerator
+     */
+    private $reportGenerator;
+
+    /**
      * MeasureCommand constructor.
-     * @param ImagickCroppedCameraProvider $cameraProvider
+     * @param CameraProvider $cameraProvider
      * @param FocuserProvider $focuserProvider
      */
     public function __construct(
-        ImagickCroppedCameraProvider $cameraProvider,
+        CameraProvider $cameraProvider,
         FocuserProvider $focuserProvider,
+        AutoFocusReportGenerator $reportGenerator,
         LoggerInterface $logger
     ) {
         parent::__construct(null);
 
         $this->cameraProvider = $cameraProvider;
         $this->focuserProvider = $focuserProvider;
+        $this->reportGenerator = $reportGenerator;
         $this->logger = $logger;
     }
 
@@ -89,13 +96,19 @@ class MeasureCommand extends Command
         $camera = $this->cameraProvider->getCamera($cameraName);
         $focuser = $this->focuserProvider->getFocuser($focuserName);
 
-        $camera->setCroping(
+        $measure = new StarFWHM($threshold);
+        $measure->setStar(
             $radius,
             $x,
             $y
         );
 
-        $measure = new StarFWHM($threshold);
+        $this->reportGenerator->setStar(
+            $radius,
+            $x,
+            $y
+        );
+
 
         $image = $camera->exposure($time);
 
@@ -115,8 +128,7 @@ class MeasureCommand extends Command
         echo "Measured value: {$measureValue}\n";
 
         if ($reportFile !== null) {
-            $reporter = new AutoFocusReport();
-            $report = $reporter->generateReport($result);
+            $report = $this->reportGenerator->generateReport($result);
             file_put_contents($reportFile, $report->getImageBlob());
         }
     }

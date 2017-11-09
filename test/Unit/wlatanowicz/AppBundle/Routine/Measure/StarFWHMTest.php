@@ -7,6 +7,7 @@ use wlatanowicz\AppBundle\Data\BinaryImage;
 use wlatanowicz\AppBundle\Data\ImagickImage;
 use wlatanowicz\AppBundle\Factory\ImagickImageFactory;
 use wlatanowicz\AppBundle\Factory\RGBMatrixFactory;
+use wlatanowicz\AppBundle\Routine\ImageProcessing\ImagickCircleCrop;
 use wlatanowicz\AppBundle\Routine\Measure\Exception\CannotMeasureException;
 use wlatanowicz\AppBundle\Routine\Measure\StarFWHM as StarFWHM;
 
@@ -22,10 +23,24 @@ class StarFWHMTest extends \PHPUnit_Framework_TestCase
         float $half,
         int $pixelCount
     ) {
-        $starFWHM = new StarFWHM(
-            $threshold,
-            $half
-        );
+        /**
+         * @var $cropMock ImagickCircleCrop|\PHPUnit_Framework_MockObject_MockObject
+         */
+        $cropMock = $this->createMock(ImagickCircleCrop::class);
+
+        $cropMock
+            ->expects($this->once())
+            ->method('crop')
+            ->will($this->returnCallback(function($image){
+                return $image;
+            }));
+
+        $starFWHM = new StarFWHM($cropMock);
+
+        $starFWHM->setOptions([
+            'threshold' => $threshold,
+            'half' => $half,
+        ]);
 
         $binData = file_get_contents(__DIR__ . "/../Resources/" . $filename);
         $binImage = new BinaryImage($binData);
@@ -73,16 +88,30 @@ class StarFWHMTest extends \PHPUnit_Framework_TestCase
      * @test
      * @dataProvider dataProviderForExceptions
      */
-    public function itShouldThrowExcrption(
+    public function itShouldThrowException(
         string $filename,
         float $threshold,
         float $half,
         string $exception
     ) {
-        $starFWHM = new StarFWHM(
-            $threshold,
-            $half
-        );
+        /**
+         * @var $cropMock ImagickCircleCrop|\PHPUnit_Framework_MockObject_MockObject
+         */
+        $cropMock = $this->createMock(ImagickCircleCrop::class);
+
+        $cropMock
+            ->expects($this->once())
+            ->method('crop')
+            ->will($this->returnCallback(function($image){
+                return $image;
+            }));
+
+        $starFWHM = new StarFWHM($cropMock);
+
+        $starFWHM->setOptions([
+            'threshold' => $threshold,
+            'half' => $half,
+        ]);
 
         $binData = file_get_contents(__DIR__ . "/../Resources/" . $filename);
         $binImage = new BinaryImage($binData);

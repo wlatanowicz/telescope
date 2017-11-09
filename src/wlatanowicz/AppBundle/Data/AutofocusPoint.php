@@ -26,7 +26,7 @@ class AutofocusPoint
      * @param float $measure
      * @param $image
      */
-    public function __construct(int $position, float $measure, ImagickImage $image)
+    public function __construct(int $position, float $measure, BinaryImages $image)
     {
         $this->position = $position;
         $this->measure = $measure;
@@ -52,7 +52,7 @@ class AutofocusPoint
     /**
      * @return mixed
      */
-    public function getImage(): ImagickImage
+    public function getImage(): BinaryImages
     {
         return $this->image;
     }

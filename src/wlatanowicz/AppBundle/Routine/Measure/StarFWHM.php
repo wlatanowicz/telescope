@@ -5,35 +5,62 @@ namespace wlatanowicz\AppBundle\Routine\Measure;
 
 use wlatanowicz\AppBundle\Data\ImagickImage;
 use wlatanowicz\AppBundle\Data\Range;
+use wlatanowicz\AppBundle\Routine\ImageProcessing\ImagickCircleCrop;
 use wlatanowicz\AppBundle\Routine\Measure\Exception\CannotMeasureException;
 use wlatanowicz\AppBundle\Routine\MeasureInterface;
 
 class StarFWHM implements MeasureInterface
 {
-    /**
-     * @var float
+    private static $OPTION_DEFAULTS = [
+        'half' => 0.5,
+        'threshold' => 0.03,
+        'starRadius' => 50,
+        'starX' => null,
+        'starY' => null,
+    ];
+
+     /**
+     * @var ImagickCircleCrop
      */
-    private $threshold;
+    private $imagickCircleCrop;
 
     /**
-     * @var float
+     * @var array
      */
-    private $half;
+    private $options;
 
     /**
-     * MeasureStarDimensions constructor.
-     * @param $threshold
+     * StarFWHM constructor.
+     * @param ImagickCircleCrop $imagickCircleCrop
      */
-    public function __construct(float $threshold, float $half = 0.5)
+    public function __construct(
+        ImagickCircleCrop $imagickCircleCrop
+    ) {
+        $this->imagickCircleCrop = $imagickCircleCrop;
+        $this->options = [];
+    }
+
+    public function setOptions(array $options)
     {
-        $this->threshold = $threshold;
-        $this->half = $half;
+        $this->options = $options;
     }
 
     public function measure(ImagickImage $image): float
     {
-        $width = $image->getWidth();
-        $height = $image->getHeight();
+        $options = array_replace(self::$OPTION_DEFAULTS, $this->options);
+
+        $croppedImage = $this->imagickCircleCrop->crop(
+            $image,
+            $options['starRadius'],
+            $options['starX'],
+            $options['starY']
+        );
+
+        $threshold = $options['threshold'];
+        $half = $options['half'];
+
+        $width = $croppedImage->getWidth();
+        $height = $croppedImage->getHeight();
 
         $range = Range::ONE();
 
@@ -44,8 +71,8 @@ class StarFWHM implements MeasureInterface
 
         for ($y = 0; $y < $height; $y++) {
             for ($x = 0; $x < $width; $x++) {
-                $value = $image->getBrightness($x, $y)->inRange($range)->getValue();
-                if ($value > $this->threshold) {
+                $value = $croppedImage->getBrightness($x, $y)->inRange($range)->getValue();
+                if ($value > $threshold) {
                     $maxValue = $maxValue === null || $value > $maxValue
                         ? $value
                         : $maxValue;
@@ -57,11 +84,11 @@ class StarFWHM implements MeasureInterface
             throw new CannotMeasureException("No pixels above threshold");
         }
 
-        $halfWidthThreshold = $this->threshold + (($maxValue - $this->threshold) * $this->half);
+        $halfWidthThreshold = $threshold + (($maxValue - $threshold) * $half);
 
         for ($y = 0; $y < $height; $y++) {
             for ($x = 0; $x < $width; $x++) {
-                if ($image->getBrightness($x, $y)->inRange($range)->getValue() > $halfWidthThreshold) {
+                if ($croppedImage->getBrightness($x, $y)->inRange($range)->getValue() > $halfWidthThreshold) {
                     $area++;
                 }
             }

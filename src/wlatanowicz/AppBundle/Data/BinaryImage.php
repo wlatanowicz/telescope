@@ -12,6 +12,7 @@ class BinaryImage
     const MIMETYPE_BIN = 'application/octet-stream';
     const MIMETYPE_JPEG = 'image/jpeg';
     const MIMETYPE_SONY_RAW = 'image/x-sony-arw';
+    const MIMETYPE_NIKON_RAW = 'image/x-nikon-nef';
 
     /**
      * @var array
@@ -21,6 +22,7 @@ class BinaryImage
         self::MIMETYPE_BIN => 'bin',
         self::MIMETYPE_JPEG => 'jpeg',
         self::MIMETYPE_SONY_RAW => 'arw',
+        self::MIMETYPE_NIKON_RAW => 'nef',
     ];
 
     /**
@@ -88,6 +90,11 @@ class BinaryImage
         if (substr($this->data, 0, 3) === 'II*')
         {
             return self::MIMETYPE_SONY_RAW;
+        }
+
+        if (substr($this->data, 0, 3) === "MM\x00")
+        {
+            return self::MIMETYPE_NIKON_RAW;
         }
 
         return self::MIMETYPE_BIN;

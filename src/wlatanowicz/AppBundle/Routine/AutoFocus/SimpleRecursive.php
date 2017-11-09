@@ -6,7 +6,8 @@ namespace wlatanowicz\AppBundle\Routine\AutoFocus;
 use Psr\Log\LoggerInterface;
 use wlatanowicz\AppBundle\Data\AutofocusPoint;
 use wlatanowicz\AppBundle\Data\AutofocusResult;
-use wlatanowicz\AppBundle\Hardware\ImagickCameraInterface;
+use wlatanowicz\AppBundle\Factory\ImagickImageFactory;
+use wlatanowicz\AppBundle\Hardware\CameraInterface;
 use wlatanowicz\AppBundle\Hardware\FocuserInterface;
 use wlatanowicz\AppBundle\Routine\AutoFocusInterface;
 use wlatanowicz\AppBundle\Routine\Measure\Exception\CannotMeasureException;
@@ -14,6 +15,12 @@ use wlatanowicz\AppBundle\Routine\MeasureInterface;
 
 class SimpleRecursive implements AutoFocusInterface
 {
+    protected static $OPTION_DEFAULTS = [
+        "tries" => [1],
+        "partials" => 5,
+        "iterations" => 5,
+    ];
+
     /**
      * @var AutofocusPoint[]
      */
@@ -39,21 +46,24 @@ class SimpleRecursive implements AutoFocusInterface
      */
     private $iterations;
 
+    /**
+     * @var ImagickImageFactory
+     */
+    private $imagickImageFactory;
+
     public function __construct(
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        ImagickImageFactory $imagickImageFactory
     ) {
+        $this->imagickImageFactory = $imagickImageFactory;
         $this->logger = $logger;
         $this->measureCache = [];
-
-        $this->partials = 5;
-        $this->iterations = 5;
-        $this->tries = [1];
     }
 
     /**
      * @param int $partials
      */
-    public function setPartials(int $partials)
+    private function setPartials(int $partials)
     {
         $this->partials = $partials;
     }
@@ -61,22 +71,29 @@ class SimpleRecursive implements AutoFocusInterface
     /**
      * @param int $iterations
      */
-    public function setIterations(int $iterations)
+    private function setIterations(int $iterations)
     {
         $this->iterations = $iterations;
     }
 
-    /**
-     * @param int $tries
-     */
-    public function setTries(int $tries)
-    {
-        $this->tries = [$tries];
-    }
-
-    public function setTriesArray(array $tries)
+    private function setTries(array $tries)
     {
         $this->tries = $tries;
+    }
+
+    private function applyOptions(array $options)
+    {
+        $options = array_replace(self::$OPTION_DEFAULTS, $options);
+
+        if (is_array($options['tries'])) {
+            $this->setTries($options['tries']);
+        } else {
+            $this->setTries([$options['tries']]);
+        }
+
+        $this->setPartials($options['partials']);
+
+        $this->setIterations($options['iterations']);
     }
 
     private function getTriesForIteration(int $iteration)
@@ -88,12 +105,15 @@ class SimpleRecursive implements AutoFocusInterface
 
     public function autofocus(
         MeasureInterface $measure,
-        ImagickCameraInterface $camera,
+        CameraInterface $camera,
         FocuserInterface $focuser,
         int $minPosition,
         int $maxPosition,
-        int $time
+        int $time,
+        array $options = []
     ): AutofocusResult {
+        $this->applyOptions($options);
+
         $this->measureCache = [];
         $start = time();
 
@@ -185,7 +205,7 @@ class SimpleRecursive implements AutoFocusInterface
 
     private function recursiveAutoFocus(
         MeasureInterface $measure,
-        ImagickCameraInterface $camera,
+        CameraInterface $camera,
         FocuserInterface $focuser,
         int $min,
         int $max,
@@ -327,7 +347,7 @@ class SimpleRecursive implements AutoFocusInterface
 
     private function getMeasureForPosition(
         MeasureInterface $measure,
-        ImagickCameraInterface $camera,
+        CameraInterface $camera,
         FocuserInterface $focuser,
         int $position,
         int $time,
@@ -359,8 +379,10 @@ class SimpleRecursive implements AutoFocusInterface
                 $currentMeasurement = null;
                 $currentImage = $camera->exposure($time);
 
+                $image = $this->imagickImageFactory->fromBinaryImages($currentImage);
+
                 try {
-                    $currentMeasurement = $measure->measure($currentImage);
+                    $currentMeasurement = $measure->measure($image);
                 } catch(CannotMeasureException $ex) {
                     $this->logger->warning(
                         "Measurement failed ({message})",

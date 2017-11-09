@@ -31,5 +31,10 @@ services:
     arguments:
       - '@factory-float-from-string'
 
+  factory-nikon-exposure-time:
+    class: wlatanowicz\AppBundle\Factory\NikonExposureTimeStringFactory
+    arguments:
+      - '@factory-float-from-string'
+
   factory-float-from-string:
     class: wlatanowicz\AppBundle\Factory\FloatFromStringFactory

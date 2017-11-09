@@ -9,4 +9,6 @@ use wlatanowicz\AppBundle\Data\ImagickImage;
 interface MeasureInterface
 {
     public function measure(ImagickImage $image): float;
+
+    public function setOptions(array $options);
 }

@@ -9,8 +9,6 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use wlatanowicz\AppBundle\Job\Autofocus;
 use wlatanowicz\AppBundle\Job\Params\AutofocusParams;
-use wlatanowicz\AppBundle\Routine\AutoFocus\SimpleRecursive;
-use wlatanowicz\AppBundle\Routine\AutoFocusReport;
 
 class AutofocusCommand extends Command
 {
@@ -40,6 +38,7 @@ class AutofocusCommand extends Command
             ->addOption('time', null, InputOption::VALUE_REQUIRED, 'Exposure time (seconds)', 4)
             ->addOption('focuser', null, InputOption::VALUE_REQUIRED, 'Focuser name', null)
             ->addOption('measure', null, InputOption::VALUE_REQUIRED, 'Measure name', null)
+            ->addOption('algorithm', null, InputOption::VALUE_REQUIRED, 'Algorithm name', null)
             ->addOption('x', null, InputOption::VALUE_REQUIRED, 'Star position x coordinate', null)
             ->addOption('y', null, InputOption::VALUE_REQUIRED, 'Star position y coordinate', null)
             ->addOption('radius', 'r', InputOption::VALUE_REQUIRED, 'Measure area radius', 40)
@@ -58,6 +57,7 @@ class AutofocusCommand extends Command
         $cameraName = $input->getOption('camera');
         $focuserName = $input->getOption('focuser');
         $measureName = $input->getOption('measure');
+        $autofocusName = $input->getOption('algorithm');
 
         $time = intval($input->getOption('time'), 10);
 
@@ -89,6 +89,7 @@ class AutofocusCommand extends Command
                 $cameraName,
                 $focuserName,
                 $measureName,
+                $autofocusName,
                 $min,
                 $max,
                 $time,
