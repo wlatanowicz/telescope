@@ -69,7 +69,7 @@ class NikonCamera extends AbstractGphotoCamera
         $this->execGphoto($cmd);
 
         $images = [];
-        $extensions = ['JPG', 'NEF'];
+        $extensions = ['jpg', 'nef'];
 
         foreach ($extensions as $extension) {
             $file = $tempdir . "/img." . $extension;
