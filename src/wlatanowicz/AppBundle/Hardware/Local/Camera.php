@@ -102,7 +102,7 @@ class Camera implements CameraInterface
         $this->process->exec($cmd);
 
         $images = [];
-        $extensions = ['JPG', 'ARW'];
+        $extensions = ['jpg', 'arw'];
 
         foreach ($extensions as $extension) {
             $file = $tempdir . "/img." . $extension;
