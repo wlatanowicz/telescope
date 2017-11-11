@@ -78,16 +78,26 @@ class DoubleLinear implements AutoFocusInterface
 
         $bestPosition = $this->calculateBestPosition($descendingPolynomial, $ascendingPolynomial);
 
-        $best = $this->getMeasureForPosition(
-            $measure,
-            $camera,
-            $focuser,
-            $bestPosition,
-            $time,
-            -1
-        );
+        $bestAlreadyMeasured = array_merge(array_filter(
+                $measures,
+                function(AutofocusPoint $p) use ($bestPosition) {
+                    return $p->getPosition() === $bestPosition;
+                }
+            ));
 
-        $measures[] = $best;
+        if (count($bestAlreadyMeasured) > 0) {
+            $best = $bestAlreadyMeasured[0];
+        } else {
+            $best = $this->getMeasureForPosition(
+                $measure,
+                $camera,
+                $focuser,
+                $bestPosition,
+                $time,
+                -1
+            );
+            $measures[] = $best;
+        }
 
         usort(
             $measures,
