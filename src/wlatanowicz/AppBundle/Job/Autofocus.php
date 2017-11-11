@@ -9,9 +9,7 @@ use wlatanowicz\AppBundle\Hardware\Provider\CameraProvider;
 use wlatanowicz\AppBundle\Hardware\Provider\FocuserProvider;
 use wlatanowicz\AppBundle\Helper\JobManager;
 use wlatanowicz\AppBundle\Job\Params\AutofocusParams;
-use wlatanowicz\AppBundle\Routine\AutoFocus\AutoFocusInterface;
 use wlatanowicz\AppBundle\Routine\ImageProcessing\AutoFocusReportGenerator;
-use wlatanowicz\AppBundle\Routine\Measure\StarFWHM;
 use wlatanowicz\AppBundle\Routine\Provider\AutoFocusProvider;
 use wlatanowicz\AppBundle\Routine\Provider\MeasureProvider;
 

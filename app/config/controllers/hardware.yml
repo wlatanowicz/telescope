@@ -14,7 +14,7 @@ services:
   ctrl-hw-focuser-position:
     class: wlatanowicz\AppBundle\Controller\Hardware\Focuser\Position
     arguments:
-      - '@camera-provider'
+      - '@focuser-provider'
       - '@jms_serializer'
 
   ctrl-hw-telescope-position:
@@ -31,4 +31,5 @@ services:
         telescopes: '@telescope-provider'
         focusers: '@focuser-provider'
         autofocuses: '@autofocus-provider'
+        measures: '@measure-provider'
       - '@jms_serializer'

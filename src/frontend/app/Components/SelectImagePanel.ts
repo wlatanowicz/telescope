@@ -16,6 +16,7 @@ export default class SelectImagePanel extends ImagePanel implements EventRespond
     }
 
 	_marker = null;
+	_circle = null;
 
     protected _Selection: PixelCoordinates;
 
@@ -24,15 +25,36 @@ export default class SelectImagePanel extends ImagePanel implements EventRespond
         return this._Selection;
     }
 
+    protected _Radius: number = 40;
+
+    set Radius(r: number)
+	{
+		this._Radius = r;
+		if (this._circle) {
+			this._circle.setRadius(this.RenderingRadius);
+		}
+	}
+
+	get Radius(): number
+	{
+		return this._Radius;
+	}
+
+	get RenderingRadius(): number
+	{
+        return this._Radius / 8;
+	}
+
 	createMainElement()
     {
+    	this._marker = null;
 		var d = super.createMainElement();
 
 		this._map.on( 'click', (e) => {
 
 			var pixel = new PixelCoordinates(
-                Math.round(this._height * e.latlng.lat / (this._bounds.getSouth() - this._bounds.getNorth())),
-				Math.round(this._width * e.latlng.lng / (this._bounds.getEast() - this._bounds.getWest()))
+				Math.round(this._width * e.latlng.lng / (this._bounds.getEast() - this._bounds.getWest())),
+                Math.round(this._height * e.latlng.lat / (this._bounds.getSouth() - this._bounds.getNorth()))
 			);
 
 			var latlon = e.latlng;
@@ -63,19 +85,21 @@ export default class SelectImagePanel extends ImagePanel implements EventRespond
 		var label = pixel.x + " x " + pixel.y;
 
 		if (this._marker) {
-			this._marker.setLatLng([latlon.lat, latlon.lng]).bindPopup(label).openPopup();
-		} else {
-			var crosshair = L.icon({
-				iconUrl: 'assets/crosshair.png',
-
-				iconSize: [7, 7], // size of the icon
-				iconAnchor: [4, 4], // point of the icon which will correspond to marker's location
-				popupAnchor: [0, -3] // point from which the popup should open relative to the iconAnchor
-			});
-
-			this._marker = L.marker([latlon.lat, latlon.lng], {icon: crosshair}).addTo(this._map).bindPopup(label).openPopup();
-
-			//L.circle([latlon.lat, latlon.lng], 4).addTo(this._map);
+            this._marker.remove();
+        }
+		if (this._circle) {
+			this._circle.remove();
 		}
+
+		var crosshair = L.icon({
+			iconUrl: 'assets/crosshair.png',
+
+			iconSize: [7, 7], // size of the icon
+			iconAnchor: [4, 4], // point of the icon which will correspond to marker's location
+			popupAnchor: [0, -3] // point from which the popup should open relative to the iconAnchor
+		});
+
+		this._marker = L.marker([latlon.lat, latlon.lng], {icon: crosshair}).addTo(this._map).bindPopup(label).openPopup();
+		this._circle = L.circle([latlon.lat, latlon.lng], {radius: this.RenderingRadius}).addTo(this._map);
 	}
 }

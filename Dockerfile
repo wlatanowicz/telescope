@@ -28,31 +28,40 @@ COPY Docker/apache2.conf /etc/apache2/apache2.conf
 RUN rm /etc/apache2/sites-available/* /etc/apache2/conf-enabled/*
 RUN a2enmod rewrite
 
-EXPOSE 80
-
 RUN curl -sL https://deb.nodesource.com/setup_6.x | bash - \
 	&& apt-get install -y nodejs \
-	&& npm -g install gulp
-
-COPY . /app
+	&& npm -g install gulp \
+	&& npm -g install yarn
 
 WORKDIR /app
 
-RUN rm -Rf \
-    vendor \
-    var \
-    src/frontend/node_modules
+COPY composer.json composer.json
+COPY composer.lock composer.lock
 
-RUN composer install
+RUN composer install \
+  --no-scripts \
+  --no-autoloader \
+  --no-progress
+
+COPY src/frontend/package.json src/frontend/package.json
+COPY src/frontend/yarn.lock src/frontend/yarn.lock
 
 RUN pushd src/frontend \
-	&& npm install \
+	&& yarn install \
+	&& popd
+
+COPY . /app
+
+RUN composer install --no-progress
+
+RUN pushd src/frontend \
 	&& gulp build \
 	&& popd
 
-RUN mkdir /app/var \
-	&& chmod a+rw /app/var
+RUN mkdir var \
+	&& chmod a+rw var
 
 VOLUME /app/var
+EXPOSE 80
 
 CMD apache2 -DFOREGROUND

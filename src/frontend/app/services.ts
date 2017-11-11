@@ -107,5 +107,21 @@ export default
             new ByName("client.http"),
             new ByValue("focusers")
         ]
-    )
+    ),
+
+    "component.selector.measure": new ByConstructor(
+        ResourceSelector,
+        [
+            new ByName("client.http"),
+            new ByValue("measures")
+        ]
+    ),
+
+    "component.selector.autofocus": new ByConstructor(
+        ResourceSelector,
+        [
+            new ByName("client.http"),
+            new ByValue("autofocuses")
+        ]
+    ),
 };
