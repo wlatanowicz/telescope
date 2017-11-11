@@ -1,7 +1,6 @@
 parameters:
   kernel.secret: ThisIsVerySecret
-  default_camera: 'remote'
-  default_iamgick_camera: 'remote'
+  default_camera: 'remote-sony'
   default_focuser: 'node'
   default_telescope: 'stellarium'
   default_radio: 'local'

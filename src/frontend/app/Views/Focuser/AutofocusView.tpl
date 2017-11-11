@@ -9,13 +9,23 @@
                         Focuser name:
                     </com:Label>
                     <def:component.selector.focuser ID="FocuserName" />
-                </div>
 
-                <div class="form-group">
                     <com:Label ForControl="CameraName">
                         Camera name:
                     </com:Label>
                     <def:component.selector.camera ID="CameraName" />
+                </div>
+
+                <div class="form-group">
+                    <com:Label ForControl="AutofocusName">
+                        Autofocus name:
+                    </com:Label>
+                    <def:component.selector.autofocus ID="AutofocusName" />
+
+                    <com:Label ForControl="MeasureName">
+                        Measure name:
+                    </com:Label>
+                    <def:component.selector.measure ID="MeasureName" />
                 </div>
 
                 <div class="form-group">
@@ -51,7 +61,7 @@
                     <com:Label ForControl="MinPosition">
                         Measure area radius:
                     </com:Label>
-                    <com:TextBox ID="Radius" Value="40" />
+                    <com:TextBox ID="Radius" Value="40" on:Change="SourceTemplateControl.radiusChanged" />
                 </div>
 
                 <div class="form-group">
@@ -73,6 +83,18 @@
                         Iterations:
                     </com:Label>
                     <com:TextBox ID="Iterations" Value="5" />
+                </div>
+                <div class="form-group">
+                    <com:Label ForControl="Partials">
+                        Partials:
+                    </com:Label>
+                    <com:TextBox ID="Partials" Value="7" />
+                </div>
+                <div class="form-group">
+                    <com:Label ForControl="Tries">
+                        Tries:
+                    </com:Label>
+                    <com:TextBox ID="Tries" Value="1" />
                 </div>
             </div>
 

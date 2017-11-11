@@ -1,5 +1,4 @@
 import DropDownList from "@framework/WebControls/FormControls/DropDownList";
-import TextBox from "@framework/WebControls/FormControls/TextBox";
 import Http from "@framework/Data/Http";
 
 export default class ResourceSelector extends DropDownList

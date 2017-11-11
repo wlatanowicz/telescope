@@ -56,18 +56,27 @@ export default class AutofocusView extends TemplateControl
         this.$('ImageY').Value = position.y;
     }
 
+    radiusChanged(sender)
+    {
+        this.$('Image').Radius = parseInt(sender.Value);
+    }
+
     autofocusClicked()
     {
         this.focuser.autofocus(
             this.$('CameraName').Value,
             this.$('FocuserName').Value,
+            this.$('AutofocusName').Value,
+            this.$('MeasureName').Value,
             this.$('ExposureTime').Value,
             this.$('MinPosition').Value,
             this.$('MaxPosition').Value,
             this.$('ImageX').Value,
             this.$('ImageY').Value,
             this.$('Radius').Value,
-            this.$('Iterations').Value
+            this.$('Iterations').Value,
+            this.$('Partials').Value,
+            this.$('Tries').Value
         );
     }
 }
