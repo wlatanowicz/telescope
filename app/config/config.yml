@@ -3,7 +3,9 @@ imports:
     - { resource: services.yml }
     - { resource: factories.yml }
     - { resource: jobs.yml }
-    - { resource: routines.yml }
+    - { resource: routines/measures.yml }
+    - { resource: routines/autofocus.yml }
+    - { resource: routines/other.yml }
     - { resource: commands.yml }
     - { resource: controllers/api.yml }
     - { resource: controllers/hardware.yml }

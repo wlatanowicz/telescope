@@ -8,7 +8,7 @@ use wlatanowicz\AppBundle\Data\Range;
 use wlatanowicz\AppBundle\Routine\ImageProcessing\ImagickCircleCrop;
 use wlatanowicz\AppBundle\Routine\Measure\Exception\CannotMeasureException;
 
-class StarFWHM implements MeasureInterface
+class StarSpan implements MeasureInterface
 {
     private static $OPTION_DEFAULTS = [
         'half' => 0.5,
@@ -86,11 +86,23 @@ class StarFWHM implements MeasureInterface
         $halfWidthThreshold = $threshold + (($maxValue - $threshold) * $half);
 
         for ($y = 0; $y < $height; $y++) {
+            $firstInLine = null;
+            $lastInLine = null;
+
             for ($x = 0; $x < $width; $x++) {
                 if ($croppedImage->getBrightness($x, $y)->inRange($range)->getValue() > $halfWidthThreshold) {
-                    $area++;
+                    if ($firstInLine === null) {
+                        $firstInLine = $x;
+                    }
+                    $lastInLine = $x;
                 }
             }
+
+            if ($firstInLine !== null && $lastInLine !== null) {
+                $horizontalSpan = $lastInLine - $firstInLine;
+                $area += $horizontalSpan;
+            }
+
         }
 
         if ($area <= 0) {

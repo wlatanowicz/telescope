@@ -4,7 +4,7 @@ declare(strict_types = 1);
 namespace wlatanowicz\AppBundle\Routine\Provider;
 
 use wlatanowicz\AppBundle\Hardware\Provider\ProviderInterface;
-use wlatanowicz\AppBundle\Routine\MeasureInterface;
+use wlatanowicz\AppBundle\Routine\Measure\MeasureInterface;
 
 class MeasureProvider implements ProviderInterface
 {

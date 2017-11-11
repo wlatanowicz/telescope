@@ -1,0 +1,18 @@
+services:
+  measure-star-fwhm:
+    class: wlatanowicz\AppBundle\Routine\Measure\StarFWHM
+    arguments:
+      - '@image-processing-crop'
+
+  measure-star-span:
+    class: wlatanowicz\AppBundle\Routine\Measure\StarSpan
+    arguments:
+      - '@image-processing-crop'
+
+  measure-provider:
+    class: wlatanowicz\AppBundle\Routine\Provider\MeasureProvider
+    arguments:
+      -
+        fwhm: '@measure-star-fwhm'
+        span: '@measure-star-span'
+      - '%default_measure%'

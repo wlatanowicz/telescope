@@ -11,10 +11,9 @@ use wlatanowicz\AppBundle\Data\Polynomial;
 use wlatanowicz\AppBundle\Factory\ImagickImageFactory;
 use wlatanowicz\AppBundle\Hardware\FocuserInterface;
 use wlatanowicz\AppBundle\Hardware\CameraInterface;
-use wlatanowicz\AppBundle\Routine\AutoFocusInterface;
 use wlatanowicz\AppBundle\Routine\Math\LinearRegression;
 use wlatanowicz\AppBundle\Routine\Measure\Exception\CannotMeasureException;
-use wlatanowicz\AppBundle\Routine\MeasureInterface;
+use wlatanowicz\AppBundle\Routine\Measure\MeasureInterface;
 
 class DoubleLinear implements AutoFocusInterface
 {

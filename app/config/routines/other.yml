@@ -1,0 +1,12 @@
+services:
+  image-processing-crop:
+    class: wlatanowicz\AppBundle\Routine\ImageProcessing\ImagickCircleCrop
+
+  image-processing-af-report-generator:
+    class: wlatanowicz\AppBundle\Routine\ImageProcessing\AutoFocusReportGenerator
+    arguments:
+      - '@factory-imagick-image'
+      - '@image-processing-crop'
+
+  math-linear-regression:
+    class: wlatanowicz\AppBundle\Routine\Math\LinearRegression

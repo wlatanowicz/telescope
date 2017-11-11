@@ -16,30 +16,6 @@ services:
     tags:
       - { name: logger.metadata, color: blue, display: 'AutoFocus' }
 
-  measure-star-fwhm:
-    class: wlatanowicz\AppBundle\Routine\Measure\StarFWHM
-    arguments:
-      - '@image-processing-crop'
-
-  measure-provider:
-    class: wlatanowicz\AppBundle\Routine\Provider\MeasureProvider
-    arguments:
-      -
-        fwhm: '@measure-star-fwhm'
-      - '%default_measure%'
-
-  image-processing-crop:
-    class: wlatanowicz\AppBundle\Routine\ImageProcessing\ImagickCircleCrop
-
-  image-processing-af-report-generator:
-    class: wlatanowicz\AppBundle\Routine\ImageProcessing\AutoFocusReportGenerator
-    arguments:
-      - '@factory-imagick-image'
-      - '@image-processing-crop'
-
-  math-linear-regression:
-    class: wlatanowicz\AppBundle\Routine\Math\LinearRegression
-
   autofocus-provider:
     class: wlatanowicz\AppBundle\Routine\Provider\AutoFocusProvider
     arguments:

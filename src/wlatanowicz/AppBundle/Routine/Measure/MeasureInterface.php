@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace wlatanowicz\AppBundle\Routine;
+namespace wlatanowicz\AppBundle\Routine\Measure;
 
 
 use wlatanowicz\AppBundle\Data\ImagickImage;

@@ -9,9 +9,8 @@ use wlatanowicz\AppBundle\Data\AutofocusResult;
 use wlatanowicz\AppBundle\Factory\ImagickImageFactory;
 use wlatanowicz\AppBundle\Hardware\CameraInterface;
 use wlatanowicz\AppBundle\Hardware\FocuserInterface;
-use wlatanowicz\AppBundle\Routine\AutoFocusInterface;
 use wlatanowicz\AppBundle\Routine\Measure\Exception\CannotMeasureException;
-use wlatanowicz\AppBundle\Routine\MeasureInterface;
+use wlatanowicz\AppBundle\Routine\Measure\MeasureInterface;
 
 class SimpleRecursive implements AutoFocusInterface
 {
