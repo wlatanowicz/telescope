@@ -53,3 +53,14 @@ services:
     tags:
         - { name: console.command }
 
+  command-routine-measure-plot:
+    class: wlatanowicz\AppBundle\Command\Routine\MeasurePlot
+    arguments:
+      - '@focuser-provider'
+      - '@measure-provider'
+      - '@camera-provider'
+      - '@factory-imagick-image'
+      - '@sys-filesystem'
+      - '@logger'
+    tags:
+        - { name: console.command }
