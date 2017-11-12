@@ -9,10 +9,16 @@ services:
     arguments:
       - '@image-processing-crop'
 
+  measure-star-radius:
+    class: wlatanowicz\AppBundle\Routine\Measure\StarRadius
+    arguments:
+      - '@image-processing-crop'
+
   measure-provider:
     class: wlatanowicz\AppBundle\Routine\Provider\MeasureProvider
     arguments:
       -
         fwhm: '@measure-star-fwhm'
         span: '@measure-star-span'
+        radius: '@measure-star-radius'
       - '%default_measure%'
