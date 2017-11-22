@@ -5,6 +5,7 @@ namespace wlatanowicz\AppBundle\Hardware\Local;
 
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Intl\Exception\NotImplementedException;
+use Symfony\Component\Translation\Exception\NotFoundResourceException;
 use wlatanowicz\AppBundle\Data\BinaryImage;
 use wlatanowicz\AppBundle\Data\BinaryImages;
 use wlatanowicz\AppBundle\Factory\NikonExposureTimeStringFactory;
@@ -17,6 +18,8 @@ class NikonCamera extends AbstractGphotoCamera
      * @var NikonExposureTimeStringFactory
      */
     private $exposureTimeStringFactory;
+
+    private $gpio = 10;
 
     public function __construct(
         Process $process,
@@ -53,23 +56,43 @@ class NikonCamera extends AbstractGphotoCamera
         $this->filesystem->mkdir($tempdir);
 
         if ($timeAsString == NikonExposureTimeStringFactory::BULB) {
-            $cmd = "--force-overwrite"
-                . " --set-config capture=on"
-                . " --wait-event={$time}s"
-                . " --set-config capture=off"
-                . " --wait-event-and-download=10s"
-                . " --filename={$tempdir}/img.%C";
-            throw new NotImplementedException('Bulb is not implemented for Nikon');
+            $filesBefore = $this->listCameraFiles();
+
+            $this->setCameraConfigIndex("capturemode", 3);
+            $this->initGpio();
+            $this->exposeViaGpio($time);
+
+            $tries = 0;
+            do {
+                $tries++;
+                if ($tries > 30) {
+                    throw new \Exception('Cannot list images after exposure');
+                }
+
+                sleep(2);
+
+                $filesAfter = $this->listCameraFiles();
+            } while (count($filesAfter) <= count($filesBefore));
+
+            $newFiles = array_diff($filesAfter, $filesBefore);
+
+            foreach ($newFiles as $file) {
+                $fileNum = $file + 1;
+                $cmd = "--force-overwrite"
+                    . " --get-file={$fileNum}"
+                    . " --filename={$tempdir}/img.%C";
+                $this->execGphoto($cmd);
+            }
         } else {
             $cmd = "--force-overwrite"
                 . " --capture-image-and-download"
                 . " --filename={$tempdir}/img.%C";
+            $this->execGphoto($cmd);
         }
 
-        $this->execGphoto($cmd);
 
         $images = [];
-        $extensions = ['jpg', 'nef'];
+        $extensions = ['jpg', 'nef', 'JPG', 'NEF'];
 
         foreach ($extensions as $extension) {
             $file = $tempdir . "/img." . $extension;
@@ -151,5 +174,48 @@ class NikonCamera extends AbstractGphotoCamera
     protected function getCameraModel(): string
     {
         return 'Nikon DSC D70 (PTP mode)';
+    }
+
+    private function sudoExec($cmd)
+    {
+        $this->process->exec("sudo bash -c \"{$cmd}\"");
+    }
+
+    private function initGpio()
+    {
+        if (!is_dir("/sys/class/gpio/")) {
+            throw new NotFoundResourceException("RPi GPIO port not found");
+        }
+        if (!is_dir("/sys/class/gpio/gpio{$this->gpio}")) {
+            $this->sudoExec("echo {$this->gpio} > /sys/class/gpio/export");
+        }
+        $this->sudoExec("echo out > /sys/class/gpio/gpio{$this->gpio}/direction");
+    }
+
+    private function driveGpio(int $state)
+    {
+        $this->sudoExec("echo $state > /sys/class/gpio/gpio{$this->gpio}/value");
+    }
+
+    private function exposeViaGpio(float $time)
+    {
+        $start = microtime(true);
+
+        $this->driveGpio(1);
+        usleep(500);
+        $this->driveGpio(0);
+
+        $timeLeft = $time - (microtime(true) - $start);
+        usleep((int)round($timeLeft * 1000000));
+
+        $this->driveGpio(1);
+        usleep(500);
+        $this->driveGpio(0);
+    }
+
+    private function listCameraFiles(): array
+    {
+        $files = $this->execGphoto("--list-files");
+        return array_keys($files);
     }
 }
