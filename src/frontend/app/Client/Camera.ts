@@ -19,8 +19,9 @@ export default class Camera
         );
     }
 
-    getInfo(sessionId, resultFile)
+    getInfo(sessionId, resultFiles)
     {
+        let resultFile = resultFiles.filter((f) => f.endsWith('.jpeg'))[0];
         return this.rpc.getInfo(sessionId, resultFile);
     }
 }
