@@ -29,6 +29,12 @@ services:
 
   telescope-sim:
     class: wlatanowicz\AppBundle\Hardware\Simulator\Telescope
+    arguments:
+      - 500
+      - '%kernel.cache_dir%/state/telescope-simulator'
+      - '@logger'
+      - '@sys-filesystem'
+      - '@jms_serializer'
 
   telescope-remote-client:
     class: GuzzleHttp\Client

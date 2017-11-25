@@ -65,6 +65,17 @@ services:
     tags:
       - { name: logger.metadata, color: green, display: 'Camera Simulator' }
 
+  camera-sim-shift:
+    class: wlatanowicz\AppBundle\Hardware\Simulator\ShiftCamera
+    arguments:
+      - '@telescope-sim'
+      - '@sys-filesystem'
+      - '@factory-imagick-image'
+      - 'stars.jpg'
+      - '@logger'
+    tags:
+      - { name: logger.metadata, color: green, display: 'Camera Simulator' }
+
   camera-sim-real:
     class: wlatanowicz\AppBundle\Hardware\Simulator\RealCamera
     arguments:
@@ -97,4 +108,5 @@ services:
         sim: '@camera-sim'
         sim-fast: '@camera-sim-fast'
         sim-real: '@camera-sim-real'
+        sim-shift: '@camera-sim-shift'
       - "%default_camera%"

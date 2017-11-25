@@ -1,6 +1,6 @@
 <com:RouteView Path="/position/calibration">
     <div class="form-horizontal">
-        <div class="box-body" style="display: inline-block; width: 30%;">
+        <div class="box-body" style="margin-left: 20px; display: inline-block; width: 30%;">
             <div class="form-group">
                 <com:Label ForControl="RaShift">
                     RA calibration shift:
@@ -20,13 +20,13 @@
                 <com:Label ForControl="TelescopeName">
                     Telescope name:
                 </com:Label>
-                <com:TextBox ID="TelescopeName" Text="sim" />
+                <def:component.selector.telescope ID="TelescopeName" />
             </div>
             <div class="form-group">
                 <com:Label ForControl="CameraName">
                     Camera name:
                 </com:Label>
-                <com:TextBox ID="CameraName" Text="sim-fast" />
+                <def:component.selector.camera ID="CameraName" />
             </div>
             <div class="form-group">
                 <com:Label ForControl="ExposeTime">

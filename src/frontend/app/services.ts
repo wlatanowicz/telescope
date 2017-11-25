@@ -101,6 +101,14 @@ export default
         ]
     ),
 
+    "component.selector.telescope": new ByConstructor(
+        ResourceSelector,
+        [
+            new ByName("client.http"),
+            new ByValue("telescopes")
+        ]
+    ),
+
     "component.selector.focuser": new ByConstructor(
         ResourceSelector,
         [

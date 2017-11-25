@@ -37,7 +37,7 @@ export default class CalibrationView extends TemplateControl
 
     startCalibrationClicked()
     {
-        let telescopeName = this.$('TelescopeName').Text;
+        let telescopeName = this.$('TelescopeName').Value;
         this.telescope.getPosition(telescopeName).done(function (response) {
             this.primaryCoordinates = new Coordinates(
                 response.result.right_ascension,
@@ -49,7 +49,7 @@ export default class CalibrationView extends TemplateControl
 
     makePrimaryExposition()
     {
-        let cameraName = this.$('CameraName').Text;
+        let cameraName = this.$('CameraName').Value;
         let exposeTime = this.converters.int(this.$('ExposeTime').Text);
         this.camera.expose(cameraName, exposeTime).done(function (response) {
             this.previewExposureFinished(response, "PrimaryImage");
@@ -77,7 +77,7 @@ export default class CalibrationView extends TemplateControl
 
     slewTelescope()
     {
-        let telescopeName = this.$('TelescopeName').Text;
+        let telescopeName = this.$('TelescopeName').Value;
         this.secondaryCoordinates = new Coordinates(
             this.primaryCoordinates.RightAscension + this.converters.float(this.$('RaShift').Value),
             this.primaryCoordinates.Declination + this.converters.float(this.$('DecShift').Value)
@@ -92,7 +92,7 @@ export default class CalibrationView extends TemplateControl
 
     makeSecondaryExposition()
     {
-        let cameraName = this.$('CameraName').Text;
+        let cameraName = this.$('CameraName').Value;
         let exposeTime = this.converters.int(this.$('ExposeTime').Text);
         this.camera.expose(cameraName, exposeTime).done(function (response) {
             this.previewExposureFinished(response, "SecondaryImage");
