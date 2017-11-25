@@ -20,6 +20,7 @@ class NikonCamera extends AbstractGphotoCamera
     private $exposureTimeStringFactory;
 
     private $gpio = 10;
+    private $gpioActiveTime = 200000;
 
     public function __construct(
         Process $process,
@@ -202,14 +203,14 @@ class NikonCamera extends AbstractGphotoCamera
         $start = microtime(true);
 
         $this->driveGpio(1);
-        usleep(500);
+        usleep($this->gpioActiveTime);
         $this->driveGpio(0);
 
         $timeLeft = $time - (microtime(true) - $start);
         usleep((int)round($timeLeft * 1000000));
 
         $this->driveGpio(1);
-        usleep(500);
+        usleep($this->gpioActiveTime);
         $this->driveGpio(0);
     }
 
