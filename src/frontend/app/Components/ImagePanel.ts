@@ -9,7 +9,16 @@ export default class ImagePanel extends Panel
 	_bounds = null;
 	_layer = null;
 
-	createMainElement()
+
+    get Width(): any {
+        return this._width;
+    }
+
+    get Height(): any {
+        return this._height;
+    }
+
+    createMainElement()
     {
 		var d = super.createMainElement();
 

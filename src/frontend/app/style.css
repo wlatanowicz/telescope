@@ -8,6 +8,6 @@
 .autofocus__image-preview {
     width: 50%;
     height: calc( 100vh - 130px );
-    float: right;
+    display: inline-block;
     cursor: default;
 }

@@ -6,6 +6,7 @@ namespace wlatanowicz\AppBundle\Hardware\Simulator;
 use Psr\Log\LoggerInterface;
 use wlatanowicz\AppBundle\Data\BinaryImage;
 use wlatanowicz\AppBundle\Data\BinaryImages;
+use wlatanowicz\AppBundle\Data\Coordinates;
 use wlatanowicz\AppBundle\Data\ImagickImage;
 use wlatanowicz\AppBundle\Factory\ImagickImageFactory;
 use wlatanowicz\AppBundle\Hardware\CameraInterface;
@@ -44,12 +45,7 @@ class ShiftCamera implements CameraInterface
     /**
      * @var float
      */
-    private $decSpeed;
-
-    /**
-     * @var float
-     */
-    private $raSpeed;
+    private $speed;
 
     /**
      * @var float
@@ -77,9 +73,9 @@ class ShiftCamera implements CameraInterface
 
         $this->logger = $logger;
 
-        $this->angle = 15;
-        $this->decSpeed = 100;
-        $this->raSpeed = 100;
+        $this->angle = 15 * (M_PI / 180.0);
+        $this->speed = 100;
+        $this->speed = 100;
     }
 
     public function exposure(float $time): BinaryImages
@@ -148,14 +144,17 @@ class ShiftCamera implements CameraInterface
     {
         $coordinates = $this->telescope->getPosition();
 
-        $deltaX = $coordinates->getRightAscension();
-        $deltaY = $coordinates->getDeclination();
+        $dec = $coordinates->getDeclination();
+        $ra = Coordinates::FULL_SCALE_ANGLE * $coordinates->getRightAscension() / Coordinates::FULL_SCALE_HOURS;
+
+        $deltaX = $this->speed * ($ra * cos($this->angle) + $dec * sin($this->angle));
+        $deltaY = $this->speed * ($ra * sin($this->angle) + $dec * cos($this->angle));
 
         $imagickImage->getImagick()->extentImage(
             $imagickImage->getImagick()->getImageWidth(),
             $imagickImage->getImagick()->getImageHeight(),
             (int)round($deltaX),
-            (int)round($deltaY)
+            -(int)round($deltaY)
         );
     }
 }

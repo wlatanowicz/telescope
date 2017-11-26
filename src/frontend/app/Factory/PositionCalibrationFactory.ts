@@ -16,16 +16,16 @@ export default class PositionCalibrationFactory
         let secondaryDec = secondaryCoordinates.Declination;
 
         let starAngle = Math.atan2(
-            secondaryStar.x - primaryStar.x,
-            secondaryStar.y - primaryStar.y
+            primaryStar.y - secondaryStar.y,
+            secondaryStar.x - primaryStar.x
         );
 
         let slewAngle = Math.atan2(
-            secondaryRa - primaryRa,
-            secondaryDec - primaryDec
+            secondaryDec - primaryDec,
+            secondaryRa - primaryRa
         );
 
-        let diffAngle = starAngle - slewAngle;
+        let diffAngle = Math.PI + starAngle - slewAngle;
 
         let starShift = Math.sqrt(
             Math.pow(secondaryStar.x - primaryStar.x, 2)
@@ -37,21 +37,49 @@ export default class PositionCalibrationFactory
             + Math.pow(primaryDec - secondaryDec, 2)
         );
 
-        let diffShift = slewShift == starShift
-            ? 1
-            : slewShift / starShift;
+        let diffShift = slewShift / starShift;
 
         while (diffAngle > Math.PI) {
-            diffAngle -= Math.PI;
+            diffAngle -= 2 * Math.PI;
         }
 
         while (diffAngle < -Math.PI) {
-            diffAngle += Math.PI;
+            diffAngle += 2 * Math.PI;
         }
 
         return new PositionCalibration(
             diffAngle,
             diffShift
+        );
+    }
+
+    calculateTargetCoordinates(
+        calibration: PositionCalibration,
+        primaryCoordinates: Coordinates,
+        primaryStar: PixelCoordinates,
+        secondaryStar: PixelCoordinates
+    ): Coordinates {
+        let starAngle = Math.atan2(
+            primaryStar.y - secondaryStar.y,
+            secondaryStar.x - primaryStar.x
+        );
+
+        let starShift = Math.sqrt(
+            Math.pow(secondaryStar.x - primaryStar.x, 2)
+            + Math.pow(secondaryStar.y - primaryStar.y, 2)
+        );
+
+        let slewAngle = Math.PI + starAngle + calibration.AngleDiff;
+        let slewShift = starShift * calibration.LengthRatio;
+
+        let deltaRa = Math.cos(slewAngle) * slewShift;
+        let deltaDec = Math.sin(slewAngle) * slewShift;
+
+        deltaRa = 24.0 * deltaRa / 360.0;
+
+        return new Coordinates(
+            primaryCoordinates.RightAscension + deltaRa,
+            primaryCoordinates.Declination + deltaDec
         );
     }
 }

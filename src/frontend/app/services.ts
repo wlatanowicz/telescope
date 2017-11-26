@@ -15,6 +15,7 @@ import ResourceSelector from "@app/Components/ResourceSelector";
 import parameters from "@app/parameters";
 import PreviewView from "@app/Views/Camera/PreviewView";
 import CaptureView from "@app/Views/Camera/CaptureView";
+import RepositionView from "@app/Views/Position/RepositionView";
 
 export default
 {
@@ -81,6 +82,16 @@ export default
 
     "view.position.calibration": new ByConstructor(
         CalibrationView,
+        [
+            new ByName("registry.position_calibration"),
+            new ByName("factory.position_calibration"),
+            new ByName("client.camera"),
+            new ByName("client.telescope"),
+        ]
+    ),
+
+    "view.position.reposition": new ByConstructor(
+        RepositionView,
         [
             new ByName("registry.position_calibration"),
             new ByName("factory.position_calibration"),
